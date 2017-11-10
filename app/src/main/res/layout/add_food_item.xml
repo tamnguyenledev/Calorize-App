@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cvAddFoodItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginBottom="@dimen/activity_vertical_margin"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/card_view_size">
+
+        <!-- Change add icon later -->
+        <ImageView
+            android:id="@+id/addIconImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            app:srcCompat="@drawable/plus_circle_outline"
+            android:layout_marginStart="@dimen/activity_small_margin"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_small_margin"
+            android:layout_toEndOf="@+id/addIconImg"
+            android:text="@string/add"
+            android:textColor="@android:color/black"
+            android:layout_centerVertical="true"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            />
+
+    </RelativeLayout>
+
+
+</android.support.v7.widget.CardView>
