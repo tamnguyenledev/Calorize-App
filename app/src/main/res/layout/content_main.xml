@@ -19,13 +19,6 @@
         android:id="@+id/flContent"
         >
 
-
     </FrameLayout>
-
-
-
-
-
-
 
 </RelativeLayout>

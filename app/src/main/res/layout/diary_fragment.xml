@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+    <!--
+    add context for FrameLayout later
+    tools:context=
+    -->
+
+    <!--
+    not sure yet
+   <include
+       layout="@layout/diary_food_list"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       />
+    -->
+
+</android.support.constraint.ConstraintLayout>
