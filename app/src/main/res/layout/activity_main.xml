@@ -37,7 +37,13 @@
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@android:drawable/ic_dialog_email"/>
 
-    <include layout="@layout/content_main"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/content_main"
+        android:layout_margin="@dimen/activity_small_margin"
+        />
+
 
 </android.support.design.widget.CoordinatorLayout>
 

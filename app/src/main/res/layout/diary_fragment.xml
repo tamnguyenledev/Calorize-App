@@ -1,22 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    >
+    android:padding="@dimen/activity_small_margin"
+    tools:context="com.example.tamnguyen.calorizeapp.MainActivity">
     <!--
-    add context for FrameLayout later
-    tools:context=
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
     -->
 
-    <!--
-    not sure yet
-   <include
-       layout="@layout/diary_food_list"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent"
-       />
-    -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/llForDateManipulation"
+        >
 
-</android.support.constraint.ConstraintLayout>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/btnPrevDay"
+            android:text="<"
+            />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:id="@+id/btnToday"
+            android:text="Today"
+            />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/btnNextDay"
+            android:text=">"
+            />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollViewForMain"
+        android:layout_below="@+id/llForDateManipulation"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+
+            <!-- Add circular progress bar and stuff -->
+            <include layout="@layout/show_progress"/>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/breakfastTab"
+                >
+
+                <TextView
+                    android:id="@+id/breakfastLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/breakfast_label_main"
+                    android:textColor="@android:color/black"
+                    android:layout_marginTop="@dimen/activity_small_margin"
+                    android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvBreakfastCaloAmount"
+                    android:layout_below="@+id/breakfastLabel"
+                    android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    tools:text="25 out of 600 calories"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvCaloriesAmount"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    tools:text="25"
+                    android:textColor="@color/colorAccent"
+                    android:textStyle="bold"
+                    />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+</RelativeLayout>
