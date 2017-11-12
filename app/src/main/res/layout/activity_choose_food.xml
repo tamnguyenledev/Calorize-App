@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="@dimen/activity_small_margin"
+    >
+
+    <!-- add context
+    tools:context=
+    -->
+
+    <!-- add AppBar -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:id="@+id/searchBar"
+        >
+
+        <!-- Change color later -->
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src=""
+            app:srcCompat="?android:attr/actionModeWebSearchDrawable"
+            android:background="@android:color/darker_gray"
+            android:layout_marginTop="@dimen/activity_small_margin"
+            android:layout_marginLeft="@dimen/activity_small_margin"
+            android:layout_marginBottom="@dimen/activity_small_margin"
+            android:id="@+id/searchIcon"
+            android:padding="@dimen/activity_xsmall_margin"
+            />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/searchIcon"
+            android:background="@android:color/darker_gray"
+            android:layout_marginTop="@dimen/activity_small_margin"
+            android:layout_marginRight="@dimen/activity_small_margin"
+            android:padding="@dimen/activity_xsmall_margin"
+            />
+
+    </RelativeLayout>
+
+    <include
+        layout="@layout/food_list"
+        android:layout_below="@+id/searchBar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        />
+
+
+</RelativeLayout>

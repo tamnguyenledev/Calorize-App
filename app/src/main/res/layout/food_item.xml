@@ -63,7 +63,7 @@
             android:textColor="@color/colorAccent"
             android:textStyle="bold"
             tools:text="100"
-            android:textSize="@dimen/text_number_size"/>
+            android:textSize="@dimen/number_text_size_med"/>
 
         <View
             android:layout_width="match_parent"

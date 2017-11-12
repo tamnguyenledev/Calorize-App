@@ -7,7 +7,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/activity_small_margin"
-    tools:context="com.example.tamnguyen.calorizeapp.MainActivity">
+    >
+    <!--
+    add context later
+    tools:context=
+    -->
     <!--
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -62,7 +66,7 @@
 
 
             <!-- Add circular progress bar and stuff -->
-            <include layout="@layout/show_progress"/>
+            <include layout="@layout/show_calo_intake"/>
 
 
             <RelativeLayout
@@ -79,33 +83,133 @@
                     android:textColor="@android:color/black"
                     android:layout_marginTop="@dimen/activity_small_margin"
                     android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
                     />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/tvBreakfastCaloAmount"
+                    android:id="@+id/tvRecommendCaloBreakfast"
                     android:layout_below="@+id/breakfastLabel"
                     android:layout_marginLeft="@dimen/activity_vertical_margin"
-                    tools:text="25 out of 600 calories"
+                    tools:text="Recommended: 30% of your daily intake (600kcal)"
                     />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/tvCaloriesAmount"
+                    android:id="@+id/tvCaloriesAmountBreakfast"
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
-                    tools:text="25"
-                    android:textColor="@color/colorAccent"
-                    android:textStyle="bold"
+                    android:layout_marginRight="@dimen/activity_small_margin"
+                    tools:text="125"
+                    android:textColor="@android:color/black"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    />
+
+                <include
+                    layout="@layout/food_list"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_below="@id/tvRecommendCaloBreakfast"
                     />
 
             </RelativeLayout>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/lunchTab"
+                >
+
+                <TextView
+                    android:id="@+id/lunchLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lunch_label_main"
+                    android:textColor="@android:color/black"
+                    android:layout_marginTop="@dimen/activity_small_margin"
+                    android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvRecommendCaloLunch"
+                    android:layout_below="@+id/lunchLabel"
+                    android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    tools:text="Recommended: 40% of your daily intake (800kcal)"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvCaloriesAmountLunch"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_small_margin"
+                    tools:text="100"
+                    android:textColor="@android:color/black"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    />
+
+                <include
+                    layout="@layout/food_list"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_below="@id/tvRecommendCaloLunch"
+                    />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/dinnerTab"
+                >
+
+                <TextView
+                    android:id="@+id/dinnerLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dinner_label_main"
+                    android:textColor="@android:color/black"
+                    android:layout_marginTop="@dimen/activity_small_margin"
+                    android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvRecommendCaloDinner"
+                    android:layout_below="@+id/dinnerLabel"
+                    android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    tools:text="Recommended: 30% of your daily intake (600kcal)"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvCaloriesAmountDinner"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_small_margin"
+                    tools:text="200"
+                    android:textColor="@android:color/black"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    />
+
+                <include
+                    layout="@layout/food_list"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_below="@id/tvRecommendCaloDinner"
+                    />
+
+            </RelativeLayout>
         </LinearLayout>
-
-
     </ScrollView>
 
 </RelativeLayout>

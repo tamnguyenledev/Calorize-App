@@ -4,6 +4,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_small_margin">8dp</dimen>
     <dimen name="activity_xsmall_margin">4dp</dimen>
-    <dimen name="text_number_size">14sp</dimen>
+    <dimen name="number_text_size_med">14sp</dimen>
     <dimen name="card_view_size">50dp</dimen>
+    <dimen name="number_text_size_big">20sp</dimen>
 </resources>
