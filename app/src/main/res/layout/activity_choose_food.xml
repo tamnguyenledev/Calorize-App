@@ -25,9 +25,8 @@
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src=""
             app:srcCompat="?android:attr/actionModeWebSearchDrawable"
-            android:background="@android:color/darker_gray"
+            android:background="@android:color/white"
             android:layout_marginTop="@dimen/activity_small_margin"
             android:layout_marginLeft="@dimen/activity_small_margin"
             android:layout_marginBottom="@dimen/activity_small_margin"
@@ -39,10 +38,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/searchIcon"
-            android:background="@android:color/darker_gray"
+            android:background="@android:color/white"
             android:layout_marginTop="@dimen/activity_small_margin"
             android:layout_marginRight="@dimen/activity_small_margin"
             android:padding="@dimen/activity_xsmall_margin"
+            android:hint="Enter food type"
             />
 
     </RelativeLayout>

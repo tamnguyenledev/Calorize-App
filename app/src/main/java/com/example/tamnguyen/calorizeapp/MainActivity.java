@@ -2,28 +2,80 @@ package com.example.tamnguyen.calorizeapp;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
+
+    @BindView(R.id.llFabAddBreakfast)
+    LinearLayout fabAddBreakfast;
+    @BindView(R.id.llFabAddLunch)
+    LinearLayout fabAddLunch;
+    @BindView(R.id.llFabAddDinner)
+    LinearLayout fabAddDinner;
+    @BindView(R.id.llFabAddExercise)
+    LinearLayout fabAddExercise;
+    @BindView(R.id.fabFrame)
+    FrameLayout fabSubMenu;
+
+    private boolean fabExpanded = false;
+
+    @BindView(R.id.fab)
+    FloatingActionButton fabAddItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        fabSubMenu.setVisibility(View.INVISIBLE);
+
+        fabAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+                if (fabExpanded == true) {
+                    closeSubMenuFab();
+                }
+                else {
+                    openSubMenuFab();
+                }
             }
         });
+    }
+
+    private void openSubMenuFab() {
+
+        /*
+        fabAddBreakfast.setVisibility(View.VISIBLE);
+        fabAddLunch.setVisibility(View.VISIBLE);
+        fabAddDinner.setVisibility(View.VISIBLE);
+        fabAddExercise.setVisibility(View.VISIBLE);
+        */
+        fabSubMenu.setVisibility(View.VISIBLE);
+        fabAddItem.setImageResource(R.drawable.ic_close);
+        fabExpanded = true;
+    }
+
+    private void closeSubMenuFab() {
+
+        /*
+        fabAddBreakfast.setVisibility(View.INVISIBLE);
+        fabAddLunch.setVisibility(View.INVISIBLE);
+        fabAddDinner.setVisibility(View.INVISIBLE);
+        fabAddExercise.setVisibility(View.INVISIBLE);
+        */
+        fabSubMenu.setVisibility(View.INVISIBLE);
+        fabAddItem.setImageResource(R.drawable.ic_add);
+        fabExpanded = false;
     }
 
     @Override

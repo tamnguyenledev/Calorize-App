@@ -13,7 +13,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/card_view_size">
+        android:layout_height="@dimen/food_item_card_view_size">
 
         <!-- add food image here -->
         <ImageView

@@ -35,7 +35,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email"/>
+        app:srcCompat="@drawable/ic_add"
+        app:fabSize="normal"
+        />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -43,6 +45,9 @@
         android:id="@+id/content_main"
         android:layout_margin="@dimen/activity_small_margin"
         />
+
+    <include
+        layout="@layout/fab_submenu"/>
 
 </android.support.design.widget.CoordinatorLayout>
 
