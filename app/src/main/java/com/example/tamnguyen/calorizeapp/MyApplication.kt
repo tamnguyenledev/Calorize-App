@@ -3,11 +3,16 @@ package com.example.tamnguyen.calorizeapp
 import android.app.Application
 import android.content.Context
 import android.content.res.Configuration
+import com.facebook.FacebookSdk
 
 /**
  * Created by hoangdung on 11/27/17.
  */
 class MyApplication : Application(){
+    override fun onCreate() {
+        super.onCreate()
+    }
+
     companion object {
         fun getNavigationBarHeight(context: Context, orientation: Int): Int {
             val resources = context.getResources()

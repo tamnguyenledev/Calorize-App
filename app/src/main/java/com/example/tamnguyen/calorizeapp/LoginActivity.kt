@@ -1,21 +1,45 @@
 package com.example.tamnguyen.calorizeapp
 
+import android.content.Intent
 import android.graphics.Typeface
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.RelativeLayout
 import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
+import butterknife.OnClick
+import com.facebook.CallbackManager
+import java.util.*
+import java.util.Arrays.asList
+import com.google.firebase.auth.AuthResult
+import android.support.annotation.NonNull
+import android.util.Log
+import android.widget.Toast
+import com.google.firebase.auth.FacebookAuthProvider
+import com.google.firebase.auth.AuthCredential
+import com.facebook.AccessToken
+import com.facebook.FacebookException
+import com.facebook.login.LoginResult
+import com.facebook.FacebookCallback
+import com.facebook.login.LoginManager
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FirebaseAuth
+
 
 class LoginActivity : AppCompatActivity() {
 
+    private val readPermissions = Arrays.asList(
+            "email", "public_profile")
     val APP_NAME_FONT = "DancingScript-Regular.ttf"
     val LOGIN_BUTTON_FONT = "HelveticaNeue-Light.otf"
     var appNameText: TextView? = null
     var loginBtn: Button? = null
+    private var mCallbackManager: CallbackManager? = null
+    private val mAuth = FirebaseAuth.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -34,6 +58,45 @@ class LoginActivity : AppCompatActivity() {
         (btnParams as RelativeLayout.LayoutParams?)?.bottomMargin = resources.getDimension(R.dimen.login_btn_margin_bottom).toInt() +
               if (MyApplication.hasSoftNavBar(this)) MyApplication.getNavigationBarHeight(this,resources.configuration.orientation)
               else 0
+        loginBtn?.setOnClickListener {
+            v ->
+            LoginManager.getInstance().logInWithReadPermissions(this,readPermissions);
+        }
+        //Login Setup
+        mCallbackManager = CallbackManager.Factory.create()
+        LoginManager.getInstance().registerCallback(mCallbackManager, object : FacebookCallback<LoginResult> {
+            override fun onSuccess(loginResult: LoginResult) {
+                handleFacebookAccessToken(loginResult.accessToken)
+            }
 
+            override fun onCancel() {
+
+            }
+
+            override fun onError(error: FacebookException) {
+                Log.d("D",error.message)
+            }
+        })
+    }
+    fun handleFacebookAccessToken(token: AccessToken) {
+        val credential = FacebookAuthProvider.getCredential(token.token)
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener {
+                    task: Task<AuthResult> ->
+                    if(task.isSuccessful)
+                    {
+                        var intent = Intent(this,MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+                    else{
+                        Toast.makeText(this,"Something wrong, Try again later!!!",Toast.LENGTH_LONG)
+                    }
+                }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        mCallbackManager?.onActivityResult(requestCode,resultCode,data)
     }
 }
