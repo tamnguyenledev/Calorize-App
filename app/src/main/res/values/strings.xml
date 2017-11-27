@@ -8,4 +8,7 @@
     <string name="txt_previous"><![CDATA[<]]></string>
     <string name="txt_next"><![CDATA[>]]></string>
     <string name="txt_today">Today</string>
+    <string name="facebook_app_id">1738591952853998</string>
+    <string name="fb_login_protocol_scheme">fb1738591952853998</string>
+
 </resources>
