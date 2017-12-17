@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1080565436135",
+    "firebase_url": "https://calorizeapp.firebaseio.com",
+    "project_id": "calorizeapp",
+    "storage_bucket": "calorizeapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1080565436135:android:cc00a0c24afa9e7a",
+        "android_client_info": {
+          "package_name": "com.example.tamnguyen.calorizeapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1080565436135-aagk1i0fllvu5b94v3vov77uke48p96a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tamnguyen.calorizeapp",
+            "certificate_hash": "6fac97477f5c1ef47043b97f0b90689b41156416"
+          }
+        },
+        {
+          "client_id": "1080565436135-r7lf4fsdva7ve93dnqtidjbcv0l72kul.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4Kf5xIlKnP8M-Nh-EtUCXx-QiOSu3Uwo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1080565436135-r7lf4fsdva7ve93dnqtidjbcv0l72kul.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
