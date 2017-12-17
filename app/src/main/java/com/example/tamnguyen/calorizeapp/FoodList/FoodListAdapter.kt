@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.food_item.view.*
 public class FoodListAdapter(val mContext: Context, val mGroups: List<ExpandableGroup<Food>>) :
         ExpandableRecyclerViewAdapter<FoodListAdapter.MealViewHolder,FoodListAdapter.FoodViewHolder>(mGroups) {
 
-
+    var listener: OnItemClickListener? = null
     override fun onCreateGroupViewHolder(parent: ViewGroup?, viewType: Int): MealViewHolder {
         val inflater = LayoutInflater.from(mContext)
         return MealViewHolder(inflater.inflate(R.layout.meal_item,parent,false))
@@ -36,6 +36,7 @@ public class FoodListAdapter(val mContext: Context, val mGroups: List<Expandable
 
     override fun onBindChildViewHolder(holder: FoodViewHolder, flatPosition: Int, group: ExpandableGroup<*>, childIndex: Int) {
         holder.setInfo(group.items.get(childIndex) as Food)
+        holder.itemView.setOnClickListener{v -> listener?.onItemClick(group.items.get(childIndex) as Food) }
     }
 
 

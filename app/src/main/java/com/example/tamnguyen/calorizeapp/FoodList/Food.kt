@@ -18,5 +18,5 @@ public class Food : Parcelable{
     public var unit: String? = null
     public var photoUrl: String? = null
     public var foodName: String? = null
-
+    public var massPerUnit: Float? = null
 }

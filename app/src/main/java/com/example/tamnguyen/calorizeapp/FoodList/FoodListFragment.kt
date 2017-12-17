@@ -21,7 +21,6 @@ import java.util.*
  */
 class FoodListFragment : Fragment() {
 
-
     lateinit var mAdapter: FoodListAdapter
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -37,8 +36,6 @@ class FoodListFragment : Fragment() {
         mAdapter = FoodListAdapter(context!!,getMockData())
         rvDiaryFoodList.layoutManager = LinearLayoutManager(context!!)
         rvDiaryFoodList.adapter = mAdapter
-        mAdapter.notifyDataSetChanged()
-
 
     }
 
@@ -59,5 +56,8 @@ class FoodListFragment : Fragment() {
                 dinner
         )
         return meals
+    }
+    public fun setItemClickListener(listener: OnItemClickListener){
+        mAdapter?.listener = listener
     }
 }// Required empty public constructor
