@@ -6,5 +6,5 @@ import java.text.FieldPosition
  * Created by hoangdung on 12/17/17.
  */
 public interface OnItemClickListener{
-    fun onItemClick(food: Food)
+    public fun onItemClick(food: Food)
 }
