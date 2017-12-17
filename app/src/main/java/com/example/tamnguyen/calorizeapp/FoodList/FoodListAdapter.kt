@@ -16,8 +16,10 @@ import kotlinx.android.synthetic.main.food_item.view.*
 /**
  * Created by hoangdung on 12/17/17.
  */
-public class FoodListAdapter(val mContext: Context, val mGroups: MutableList<out ExpandableGroup<*>>) :
+public class FoodListAdapter(val mContext: Context, val mGroups: List<ExpandableGroup<Food>>) :
         ExpandableRecyclerViewAdapter<FoodListAdapter.MealViewHolder,FoodListAdapter.FoodViewHolder>(mGroups) {
+
+
     override fun onCreateGroupViewHolder(parent: ViewGroup?, viewType: Int): MealViewHolder {
         val inflater = LayoutInflater.from(mContext)
         return MealViewHolder(inflater.inflate(R.layout.meal_item,parent,false))
@@ -37,10 +39,10 @@ public class FoodListAdapter(val mContext: Context, val mGroups: MutableList<out
     }
 
 
-    public class FoodViewHolder(itemView: View) : ChildViewHolder(itemView) {
-        lateinit var foodName: TextView
-        lateinit var foodUnit: TextView
-        lateinit var foodCalo: TextView
+    class FoodViewHolder(itemView: View) : ChildViewHolder(itemView) {
+        var foodName: TextView
+        var foodUnit: TextView
+        var foodCalo: TextView
         init{
             foodName = itemView.findViewById(R.id.tvFoodName)
             foodUnit = itemView.findViewById(R.id.tvMeasurement)
@@ -52,7 +54,7 @@ public class FoodListAdapter(val mContext: Context, val mGroups: MutableList<out
             foodUnit.text = food.unit
         }
     }
-    public class MealViewHolder(itemView: View) : GroupViewHolder(itemView){
+    class MealViewHolder(itemView: View) : GroupViewHolder(itemView){
         lateinit var mealName: TextView
         init {
             mealName = itemView.findViewById(R.id.tvMealName)
