@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
+	<!--colorPrimary is the same as colorPink-->
+    <color name="colorPrimary">#ff3d7f</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="loginButtonNormalColor">#30ffffff</color>
     <color name="loginButtonSelectColor">#80ffffff</color>
+    <color name="colorPink">#ff3d7f</color>
+    <color name="colorYellow">#f4dd14</color>
+    <color name="colorGreen">#cbe86b</color>
+    <color name="colorBlue">#03a9f4</color>
 </resources>
