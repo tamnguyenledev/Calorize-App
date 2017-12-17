@@ -105,12 +105,7 @@ public class MainActivity extends AppCompatActivity {
         pager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
-                switch (position){
-                    case 1:
-                        foodListFragment = new FoodListFragment();
-                        return foodListFragment;
-                }
-                return null;
+                return new FoodListFragment();
             }
 
             @Override
