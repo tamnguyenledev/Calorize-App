@@ -1,6 +1,5 @@
 package com.example.tamnguyen.calorizeapp;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -13,12 +12,9 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import com.example.tamnguyen.calorizeapp.FoodList.Food;
 import com.example.tamnguyen.calorizeapp.FoodList.FoodListFragment;
-import com.example.tamnguyen.calorizeapp.FoodList.OnItemClickListener;
+import com.example.tamnguyen.calorizeapp.Progress.ProgressFragment;
 import com.gigamole.navigationtabstrip.NavigationTabStrip;
-
-import org.jetbrains.annotations.NotNull;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -105,7 +101,13 @@ public class MainActivity extends AppCompatActivity {
         pager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
-                return new FoodListFragment();
+                switch (position)
+                {
+                    case 2:
+                        return new ProgressFragment();
+                    default:
+                        return new FoodListFragment();
+                }
             }
 
             @Override
