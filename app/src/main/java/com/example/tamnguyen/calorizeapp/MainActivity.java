@@ -1,21 +1,24 @@
 package com.example.tamnguyen.calorizeapp;
 
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.Signature;
+import com.example.tamnguyen.calorizeapp.FoodList.Food;
+import com.example.tamnguyen.calorizeapp.FoodList.FoodListFragment;
+import com.example.tamnguyen.calorizeapp.FoodList.OnItemClickListener;
+import com.gigamole.navigationtabstrip.NavigationTabStrip;
+
+import org.jetbrains.annotations.NotNull;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,21 +26,25 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.llFabAddBreakfast)
-    LinearLayout fabAddBreakfast;
+    public LinearLayout fabAddBreakfast;
     @BindView(R.id.llFabAddLunch)
-    LinearLayout fabAddLunch;
+    public LinearLayout fabAddLunch;
     @BindView(R.id.llFabAddDinner)
-    LinearLayout fabAddDinner;
+    public LinearLayout fabAddDinner;
     @BindView(R.id.llFabAddExercise)
-    LinearLayout fabAddExercise;
+    public LinearLayout fabAddExercise;
     @BindView(R.id.fabFrame)
-    FrameLayout fabSubMenu;
-
+    public FrameLayout fabSubMenu;
+    @BindView(R.id.tab)
+    public NavigationTabStrip tabStrip;
+    @BindView(R.id.pager)
+    public ViewPager pager;
     private boolean fabExpanded = false;
 
     @BindView(R.id.fab)
-    FloatingActionButton fabAddItem;
+    public FloatingActionButton fabAddItem;
 
+    FoodListFragment foodListFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //Set up Tabstrip and Viewpager
+        setupTab();
     }
 
     private void openSubMenuFab() {
@@ -86,6 +96,24 @@ public class MainActivity extends AppCompatActivity {
         fabExpanded = false;
     }
 
+    private void setupTab(){
+        setupPager();
+        tabStrip.setTitles("Diary","Food","Progress","Profile");
+        tabStrip.setViewPager(pager);
+    }
+    private void setupPager(){
+        pager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
+            @Override
+            public Fragment getItem(int position) {
+                return new FoodListFragment();
+            }
+
+            @Override
+            public int getCount() {
+                return 4;
+            }
+        });
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -107,4 +135,5 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

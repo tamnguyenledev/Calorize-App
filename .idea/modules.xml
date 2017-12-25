@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://B:\Repos\CalorizeApp\Calorize-App.iml" filepath="B:\Repos\CalorizeApp\Calorize-App.iml" />
       <module fileurl="file://$PROJECT_DIR$/CalorizeApp.iml" filepath="$PROJECT_DIR$/CalorizeApp.iml" />
+      <module fileurl="file://U:\android-studio-workspace\Calorize-App\CalorizeApp.iml" filepath="U:\android-studio-workspace\Calorize-App\CalorizeApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
