@@ -34,8 +34,8 @@ class FoodListFragment : Fragment() {
         //Init RecyclerView and Adapter
 
         mAdapter = FoodListAdapter(context!!,getMockData())
-        rvDiaryFoodList.layoutManager = LinearLayoutManager(context!!)
-        rvDiaryFoodList.adapter = mAdapter
+        //rvDiaryFoodList.layoutManager = LinearLayoutManager(context!!)
+        //rvDiaryFoodList.adapter = mAdapter
 
     }
 

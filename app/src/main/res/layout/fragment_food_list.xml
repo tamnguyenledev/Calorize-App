@@ -22,9 +22,12 @@
             android:background="@android:color/white"
             android:id="@+id/searchIcon"
             android:padding="@dimen/activity_xsmall_margin"
+            android:layout_alignBottom="@+id/etSearchFood"
+            android:layout_alignTop="@+id/etSearchFood"
             />
 
         <EditText
+            android:id="@+id/etSearchFood"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/searchIcon"
