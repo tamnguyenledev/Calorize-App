@@ -1,8 +1,9 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     tools:context="com.example.tamnguyen.calorizeapp.Progress.ProgressFragment">
 
   <uk.co.daentech.circulardemo.widgets.ProgressCircle
@@ -15,4 +16,8 @@
         app:progressColor="#BBD452"
         app:incompleteProgressColor="#D4D4D4"
         app:strokeWidth="35dp"/>
-</FrameLayout>
+  <uk.co.daentech.circulardemo.widgets.ProgressBar
+      android:id="@+id/progress_bar_protein"
+      android:layout_width="50dp"
+      android:layout_height="wrap_content"/>
+</LinearLayout>

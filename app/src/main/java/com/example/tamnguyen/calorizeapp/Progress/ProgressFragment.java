@@ -13,6 +13,7 @@ import com.example.tamnguyen.calorizeapp.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import uk.co.daentech.circulardemo.widgets.ProgressBar;
 import uk.co.daentech.circulardemo.widgets.ProgressCircle;
 
 /**
@@ -22,6 +23,8 @@ public class ProgressFragment extends Fragment
 {
     @BindView(R.id.progress_circle)
     ProgressCircle progressCircle;
+    @BindView(R.id.progress_bar_protein)
+    ProgressBar progressBarProtein;
 
     public ProgressFragment()
     {
@@ -34,6 +37,9 @@ public class ProgressFragment extends Fragment
         super.onStart();
         progressCircle.setProgress(0.7f);
         progressCircle.startAnimation();
+
+        progressBarProtein.setProgress(0.4f);
+        progressBarProtein.startAnimation();
     }
 
     @Override
