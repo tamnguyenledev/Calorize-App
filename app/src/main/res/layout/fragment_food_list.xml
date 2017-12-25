@@ -1,23 +1,154 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.example.tamnguyen.calorizeapp.FoodList.FoodListFragment">
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- TODO: Update blank fragment layout -->
-    <EditText
-        android:id="@+id/etSearch"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_food_search"
-        />
-
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/rvDiaryFoodList"
+        android:background="@color/colorPink"
+        android:id="@+id/searchBar"
+        android:padding="@dimen/activity_xsmall_margin"
+        android:layout_margin="@dimen/activity_xsmall_margin"
         >
 
-    </android.support.v7.widget.RecyclerView>
-</LinearLayout>
+        <!-- Change color later -->
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="?android:attr/actionModeWebSearchDrawable"
+            android:background="@android:color/white"
+            android:id="@+id/searchIcon"
+            android:padding="@dimen/activity_xsmall_margin"
+            />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/searchIcon"
+            android:background="@android:color/white"
+            android:padding="@dimen/activity_xsmall_margin"
+            android:hint="Enter food type"
+            />
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/searchBar"
+        >
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                      xmlns:tools="http://schemas.android.com/tools"
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:orientation="vertical"
+                      android:padding="@dimen/activity_small_margin"
+                      tools:context="com.example.tamnguyen.calorizeapp.FoodList.FoodListFragment">
+
+
+            <!-- TODO: Update blank fragment layout -->
+            <!--
+            <EditText
+                android:id="@+id/etSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_food_search"
+                />
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/rvDiaryFoodList"
+                >
+
+            </android.support.v7.widget.RecyclerView>
+            -->
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/llBreakfast"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/breakfast_label"
+                    android:textColor="@android:color/black"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    />
+
+                <include
+                    layout="@layout/food_list"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/activity_xsmall_margin"
+                    android:id="@+id/breakfastFoodList"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/llLunch"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/activity_small_margin"
+                android:layout_below="@id/llBreakfast"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lunch_label"
+                    android:textColor="@android:color/black"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    />
+
+                <include
+                    layout="@layout/food_list"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/activity_xsmall_margin"
+                    android:id="@+id/lunchFoodList"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/llDinner"
+                android:orientation="vertical"
+                android:layout_below="@id/llLunch"
+                android:layout_marginTop="@dimen/activity_small_margin"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dinner_label"
+                    android:textColor="@android:color/black"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    />
+
+                <include
+                    layout="@layout/food_list"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/activity_xsmall_margin"
+                    android:id="@+id/dinnerFoodList"
+                    />
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+    </ScrollView>
+</RelativeLayout>

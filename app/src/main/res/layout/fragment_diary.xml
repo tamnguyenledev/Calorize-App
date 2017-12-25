@@ -79,7 +79,7 @@
                     android:id="@+id/breakfastLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/breakfast_label_main"
+                    android:text="@string/breakfast_label"
                     android:textColor="@android:color/black"
                     android:layout_marginTop="@dimen/activity_small_margin"
                     android:layout_marginLeft="@dimen/activity_vertical_margin"
@@ -126,7 +126,7 @@
                     android:id="@+id/lunchLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/lunch_label_main"
+                    android:text="@string/lunch_label"
                     android:textColor="@android:color/black"
                     android:layout_marginTop="@dimen/activity_small_margin"
                     android:layout_marginLeft="@dimen/activity_vertical_margin"
@@ -173,7 +173,7 @@
                     android:id="@+id/dinnerLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/dinner_label_main"
+                    android:text="@string/dinner_label"
                     android:textColor="@android:color/black"
                     android:layout_marginTop="@dimen/activity_small_margin"
                     android:layout_marginLeft="@dimen/activity_vertical_margin"
@@ -209,6 +209,24 @@
                     />
 
             </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Today's picture"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@android:color/black"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                />
+
+            <ImageView
+                android:layout_width="200dp"
+                android:layout_height="300dp"
+                android:id="@+id/ivDailyPicture"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/activity_small_margin"
+                />
+
         </LinearLayout>
     </ScrollView>
 
