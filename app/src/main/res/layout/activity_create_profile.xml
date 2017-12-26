@@ -115,6 +115,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@android:color/black"
                 android:layout_marginLeft="@dimen/activity_small_margin"
+                style="@style/Base.Widget.AppCompat.Spinner.Underlined"
                 />
 
         </LinearLayout>
