@@ -14,6 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.tamnguyen.calorizeapp.FoodList.Food;
 import com.example.tamnguyen.calorizeapp.FoodList.FoodListFragment;
 
 import com.example.tamnguyen.calorizeapp.FoodList.OnItemClickListener;
@@ -21,6 +22,7 @@ import com.example.tamnguyen.calorizeapp.Profile.ProfileFragment;
 import com.gigamole.navigationtabstrip.NavigationTabStrip;
 
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.net.MalformedURLException;
@@ -121,7 +123,12 @@ public class MainActivity extends AppCompatActivity {
                     case 3:
                         return new ProfileFragment();
                     default:
-                        return new FoodListFragment();
+                        return FoodListFragment.Companion.newInstance(new OnItemClickListener() {
+                            @Override
+                            public void onItemClick(@NotNull Food food) {
+                                //TODO: Do whatever when the item in Food List Fragment is clicked
+                            }
+                        });
                 }
             }
 

@@ -3,11 +3,15 @@ package com.example.tamnguyen.calorizeapp.FoodList
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 
 import com.example.tamnguyen.calorizeapp.R
+import com.google.firebase.database.DatabaseError
+import kotlinx.android.synthetic.main.food_list.*
 import java.util.*
 
 
@@ -15,8 +19,15 @@ import java.util.*
  * A simple [Fragment] subclass.
  */
 class FoodListFragment : Fragment() {
-
+    companion object {
+        fun newInstance(listener: OnItemClickListener) : FoodListFragment{
+            val fragment = FoodListFragment()
+            fragment.listener = listener
+            return fragment
+        }
+    }
     lateinit var mAdapter: FoodListAdapter
+    lateinit var listener: OnItemClickListener
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -26,33 +37,22 @@ class FoodListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //Init RecyclerView and Adapter
+        //Init RecyclerView
+        rvDiaryFoodList.layoutManager = LinearLayoutManager(context!!)
 
-        mAdapter = FoodListAdapter(context!!,getMockData())
-        //rvDiaryFoodList.layoutManager = LinearLayoutManager(context!!)
-        //rvDiaryFoodList.adapter = mAdapter
+        //Load foods into RecyclerView
+        FoodDatabase.instance.getFoods(object: FoodDatabase.OnCompleteListener{
+            override fun onSuccess(meals: List<Meal>) {
+                mAdapter = FoodListAdapter(context!!,meals)
+                mAdapter.listener = listener
+                rvDiaryFoodList.adapter = mAdapter
+            }
 
-    }
+            override fun onFailure(err: DatabaseError) {
+                Toast.makeText(context!!,err.message,Toast.LENGTH_LONG).show()
+            }
 
-    private fun getMockData(): List<Meal>{
-        val food_1 = Food()
-        food_1.foodName = "Banana"
-        food_1.calorie = 200.toFloat()
-        food_1.unit = "1 trai"
+        })
 
-
-        val breakfast = Meal("Breakfast",Arrays.asList(food_1))
-        val lunch = Meal("Lunch",Arrays.asList(food_1))
-        val dinner = Meal("Dinner",Arrays.asList(food_1))
-
-        val meals = Arrays.asList(
-                breakfast,
-                lunch,
-                dinner
-        )
-        return meals
-    }
-    public fun setItemClickListener(listener: OnItemClickListener){
-        mAdapter?.listener = listener
     }
 }// Required empty public constructor
