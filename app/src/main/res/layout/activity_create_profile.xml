@@ -53,8 +53,7 @@
             android:src="@drawable/ic_camera"
             android:background="@android:color/white"
             android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            />
+            android:layout_centerVertical="true" />
 
     </RelativeLayout>
 
@@ -85,7 +84,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Your name here"
-                android:layout_marginLeft="@dimen/activity_small_margin"
+                android:layout_marginStart="@dimen/activity_small_margin"
                 android:inputType="text"
                 android:id="@+id/nameInput"
                 />
@@ -114,7 +113,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@android:color/black"
-                android:layout_marginLeft="@dimen/activity_small_margin"
+                android:layout_marginStart="@dimen/activity_small_margin"
                 style="@style/Base.Widget.AppCompat.Spinner.Underlined"
                 />
 
@@ -145,8 +144,8 @@
                 tools:text="06/09/1996"
                 android:textColor="@android:color/black"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_marginLeft="@dimen/activity_small_margin"
-                android:layout_toRightOf="@+id/dobLable"
+                android:layout_marginStart="@dimen/activity_small_margin"
+                android:layout_toEndOf="@+id/dobLable"
                 />
 
             <View
