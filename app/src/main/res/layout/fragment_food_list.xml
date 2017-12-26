@@ -53,26 +53,15 @@
                       tools:context="com.example.tamnguyen.calorizeapp.FoodList.FoodListFragment">
 
 
-            <!-- TODO: Update blank fragment layout -->
-            <!--
-            <EditText
-                android:id="@+id/etSearch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_food_search"
-                />
-
             <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/rvDiaryFoodList"
                 >
-
             </android.support.v7.widget.RecyclerView>
-            -->
 
 
-            <LinearLayout
+            <!--<LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/llBreakfast"
@@ -149,7 +138,7 @@
                     android:id="@+id/dinnerFoodList"
                     />
 
-            </LinearLayout>
+            </LinearLayout>-->
 
 
         </RelativeLayout>

@@ -34,12 +34,21 @@ dependencies {
     compile 'com.facebook.android:facebook-login:[4,5)'
     compile 'com.google.firebase:firebase-auth:11.6.0'
     compile 'com.google.firebase:firebase-core:11.6.0'
+    compile 'com.google.firebase:firebase-database:11.6.0'
     compile 'com.jakewharton:butterknife:8.8.1'
     compile 'com.thoughtbot:expandablerecyclerview:1.3'
     compile 'com.github.devlight.navigationtabstrip:navigationtabstrip:1.0.4'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+
+    compile 'de.hdodenhof:circleimageview:2.2.0'
+    compile 'com.reginald:editspinner:1.0.0'
+    implementation 'com.github.bumptech.glide:glide:4.4.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.4.0'
+
     compile project(':CircleProgress')
+
 }
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'org.jetbrains.kotlin.android.extensions'

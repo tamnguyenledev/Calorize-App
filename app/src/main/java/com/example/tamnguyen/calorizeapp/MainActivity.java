@@ -6,21 +6,37 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.tamnguyen.calorizeapp.FoodList.Food;
 import com.example.tamnguyen.calorizeapp.FoodList.FoodListFragment;
-import com.example.tamnguyen.calorizeapp.Progress.ProgressFragment;
+
+import com.example.tamnguyen.calorizeapp.FoodList.OnItemClickListener;
+import com.example.tamnguyen.calorizeapp.Profile.Profile;
+import com.example.tamnguyen.calorizeapp.Profile.ProfileFragment;
 import com.gigamole.navigationtabstrip.NavigationTabStrip;
+
+
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+
+
+import com.example.tamnguyen.calorizeapp.Progress.ProgressFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
-
     @BindView(R.id.llFabAddBreakfast)
     public LinearLayout fabAddBreakfast;
     @BindView(R.id.llFabAddLunch)
@@ -41,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     public FloatingActionButton fabAddItem;
 
     FoodListFragment foodListFragment;
+    ProfileFragment profileFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,12 +118,18 @@ public class MainActivity extends AppCompatActivity {
         pager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
-                switch (position)
-                {
+                switch (position){
                     case 2:
                         return new ProgressFragment();
+                    case 3:
+                        return new ProfileFragment();
                     default:
-                        return new FoodListFragment();
+                        return FoodListFragment.Companion.newInstance(new OnItemClickListener() {
+                            @Override
+                            public void onItemClick(@NotNull Food food) {
+                                //TODO: Do whatever when the item in Food List Fragment is clicked
+                            }
+                        });
                 }
             }
 
@@ -137,5 +160,4 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 }
