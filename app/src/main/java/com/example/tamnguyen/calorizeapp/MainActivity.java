@@ -12,11 +12,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tamnguyen.calorizeapp.FoodList.FoodListFragment;
 
 import com.example.tamnguyen.calorizeapp.FoodList.OnItemClickListener;
+import com.example.tamnguyen.calorizeapp.Profile.Profile;
 import com.example.tamnguyen.calorizeapp.Profile.ProfileFragment;
 import com.gigamole.navigationtabstrip.NavigationTabStrip;
 
@@ -33,7 +35,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
-
     @BindView(R.id.llFabAddBreakfast)
     public LinearLayout fabAddBreakfast;
     @BindView(R.id.llFabAddLunch)

@@ -82,12 +82,13 @@ class LoginActivity : AppCompatActivity() {
                             var intent = Intent(this,MainActivity::class.java)
                             intent.putExtra("name",json["name"] as String)
                             intent.putExtra("birthday",json["birthday"] as String)
+                            intent.putExtra("gender",json["gender"] as String)
                             intent.putExtra("picture",json.getJSONObject("picture").getJSONObject("data")["url"] as String)
                             startActivity(intent)
                             finish()
                         })
                         val params = Bundle()
-                        params.putString("fields","id,name,birthday,email,picture")
+                        params.putString("fields","id,name,birthday,gender,email,picture.type(large)")
                         request.parameters = params
                         request.executeAsync()
                     }
