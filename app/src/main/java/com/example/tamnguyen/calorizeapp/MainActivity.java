@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (fabExpanded == true) {
+                if (fabExpanded) {
                     closeSubMenuFab();
                 }
                 else {

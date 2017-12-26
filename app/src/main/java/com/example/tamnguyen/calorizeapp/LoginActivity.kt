@@ -32,6 +32,13 @@ class LoginActivity : AppCompatActivity() {
     private val mAuth = FirebaseAuth.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Use this code to see token in debugging mode
+        if (BuildConfig.DEBUG) {
+            FacebookSdk.setIsDebugEnabled(true);
+            FacebookSdk.addLoggingBehavior(LoggingBehavior.INCLUDE_ACCESS_TOKENS);
+        }
+
         setContentView(R.layout.activity_login)
         appNameText = findViewById(R.id.image_app_name)
         loginBtn = findViewById(R.id.login_button)
@@ -70,39 +77,33 @@ class LoginActivity : AppCompatActivity() {
     }
     fun handleFacebookAccessToken(token: AccessToken) {
         val credential = FacebookAuthProvider.getCredential(token.token)
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener {
-                    task: Task<AuthResult> ->
-                    if(task.isSuccessful)
-                    {
-                        //User signs in successfully with Authentication
-                        //Get user data from Facebook
-                        val request = GraphRequest.newMeRequest(token,{
-                            json, response ->
-                            var intent = Intent(this,MainActivity::class.java)
-                            intent.putExtra("name",json["name"] as String)
-                            intent.putExtra("birthday",json["birthday"] as String)
-                            intent.putExtra("gender",json["gender"] as String)
-                            intent.putExtra("picture",json.getJSONObject("picture").getJSONObject("data")["url"] as String)
-                            startActivity(intent)
-                            finish()
-                        })
-                        val params = Bundle()
-                        params.putString("fields","id,name,birthday,gender,email,picture.type(large)")
-                        request.parameters = params
-                        request.executeAsync()
+        mAuth.signInWithCredential(credential).addOnCompleteListener { task: Task<AuthResult> ->
+            if (task.isSuccessful) {
+                //User signs in successfully with Authentication
+                //Get user data from Facebook
+                val request = GraphRequest.newMeRequest(token, { json, response ->
+                    var intent = Intent(this, MainActivity::class.java).apply {
+                        putExtra("name", json["name"] as String)
+                        putExtra("birthday", json["birthday"] as String)
+                        putExtra("picture", json.getJSONObject("picture").getJSONObject("data")["url"] as String)
                     }
-                    else{
-                        Toast.makeText(this,"Something wrong, Try again later!!!",Toast.LENGTH_LONG)
-                    }
-                }
+                    startActivity(intent)
+                    finish()
+                })
+                val params = Bundle()
+                params.putString("fields", "id,name,birthday,email,picture")
+                request.parameters = params
+                request.executeAsync()
+            } else {
+                Toast.makeText(this, "Something wrong, Try again later!!!", Toast.LENGTH_LONG).show()
+            }
+        }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         mCallbackManager?.onActivityResult(requestCode,resultCode,data)
     }
-
-
 
 }
