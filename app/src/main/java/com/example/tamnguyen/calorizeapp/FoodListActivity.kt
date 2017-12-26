@@ -8,6 +8,7 @@ import com.example.tamnguyen.calorizeapp.FoodList.Food
 import com.example.tamnguyen.calorizeapp.FoodList.FoodListFragment
 import com.example.tamnguyen.calorizeapp.FoodList.OnItemClickListener
 import kotlinx.android.synthetic.main.activity_food_list.*
+import kotlinx.android.synthetic.main.add_food_toolbar.*
 
 class FoodListActivity : AppCompatActivity() {
 
