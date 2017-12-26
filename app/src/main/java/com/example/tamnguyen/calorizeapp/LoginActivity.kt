@@ -11,16 +11,26 @@ import android.widget.TextView
 import java.util.*
 import com.google.firebase.auth.AuthResult
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import com.facebook.*
 import com.google.firebase.auth.FacebookAuthProvider
 import com.facebook.login.LoginResult
 import com.facebook.login.LoginManager
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.common.api.ResultCallback
+import com.google.android.gms.common.api.Status
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
+import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.common.ConnectionResult
+import kotlinx.android.synthetic.main.activity_login.*
 
-
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedListener {
+    override fun onConnectionFailed(p0: ConnectionResult) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     private val readPermissions = Arrays.asList(
             "email", "public_profile","user_birthday")
@@ -28,6 +38,7 @@ class LoginActivity : AppCompatActivity() {
     val LOGIN_BUTTON_FONT = "HelveticaNeue-Light.otf"
     var appNameText: TextView? = null
     var loginBtn: Button? = null
+    var mGoogleApiClient: GoogleApiClient? = null
     private var mCallbackManager: CallbackManager? = null
     private val mAuth = FirebaseAuth.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,6 +85,23 @@ class LoginActivity : AppCompatActivity() {
                 Log.d("D",error.message)
             }
         })
+
+        //Login with google plus
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build()
+
+        mGoogleApiClient = GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build()
+
+
+        btnGGLogin?.setOnClickListener(View.OnClickListener {
+            val signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient)
+            startActivityForResult(signInIntent, 9001)
+        })
+
     }
     fun handleFacebookAccessToken(token: AccessToken) {
         val credential = FacebookAuthProvider.getCredential(token.token)
@@ -107,3 +135,4 @@ class LoginActivity : AppCompatActivity() {
     }
 
 }
+
