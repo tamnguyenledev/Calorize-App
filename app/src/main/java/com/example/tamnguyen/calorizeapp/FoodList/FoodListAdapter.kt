@@ -1,7 +1,6 @@
 package com.example.tamnguyen.calorizeapp.FoodList
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,6 @@ import com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup
 import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder
 import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder
-import kotlinx.android.synthetic.main.food_item.view.*
 
 /**
  * Created by hoangdung on 12/17/17.
@@ -51,7 +49,7 @@ public class FoodListAdapter(val mContext: Context, val mGroups: List<Expandable
         }
         public fun setInfo(food: Food){
             foodName.text = food.foodName
-            foodUnit.text = food.calo.toString()
+            foodUnit.text = food.calorie.toString()
             foodUnit.text = food.unit
         }
     }

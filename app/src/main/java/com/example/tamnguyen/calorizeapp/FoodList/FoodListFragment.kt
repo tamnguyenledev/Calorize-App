@@ -3,16 +3,11 @@ package com.example.tamnguyen.calorizeapp.FoodList
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.tamnguyen.calorizeapp.FoodList.Food
-import com.example.tamnguyen.calorizeapp.FoodList.FoodListAdapter
-import com.example.tamnguyen.calorizeapp.FoodList.Meal
 
 import com.example.tamnguyen.calorizeapp.R
-import kotlinx.android.synthetic.main.fragment_food_list.*
 import java.util.*
 
 
@@ -42,7 +37,7 @@ class FoodListFragment : Fragment() {
     private fun getMockData(): List<Meal>{
         val food_1 = Food()
         food_1.foodName = "Banana"
-        food_1.calo = 200.toFloat()
+        food_1.calorie = 200.toFloat()
         food_1.unit = "1 trai"
 
 
