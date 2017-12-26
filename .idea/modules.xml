@@ -5,8 +5,13 @@
       <module fileurl="file://$PROJECT_DIR$/Calorize-App.iml" filepath="$PROJECT_DIR$/Calorize-App.iml" />
       <module fileurl="file://B:\Repos\CalorizeApp\Calorize-App.iml" filepath="B:\Repos\CalorizeApp\Calorize-App.iml" />
       <module fileurl="file://U:\android-studio-workspace\Calorize-App\CalorizeApp.iml" filepath="U:\android-studio-workspace\Calorize-App\CalorizeApp.iml" />
+<<<<<<< HEAD
       <module fileurl="file://$PROJECT_DIR$/CalorizeApp.iml" filepath="$PROJECT_DIR$/CalorizeApp.iml" />
+=======
+      <module fileurl="file://$PROJECT_DIR$/CircleProgress/CircleProgress.iml" filepath="$PROJECT_DIR$/CircleProgress/CircleProgress.iml" />
+>>>>>>> 60bb11c0db0d4af068db810fd3cb6c6374de3442
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://U:\android-studio-workspace\Calorize-App\app\app.iml" filepath="U:\android-studio-workspace\Calorize-App\app\app.iml" />
     </modules>
   </component>
 </project>

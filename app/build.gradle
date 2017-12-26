@@ -39,6 +39,7 @@ dependencies {
     compile 'com.github.devlight.navigationtabstrip:navigationtabstrip:1.0.4'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    compile project(':CircleProgress')
 }
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'org.jetbrains.kotlin.android.extensions'
