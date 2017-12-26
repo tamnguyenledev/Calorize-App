@@ -34,6 +34,9 @@
             android:background="@android:color/white"
             android:padding="@dimen/activity_xsmall_margin"
             android:hint="Enter food type"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:maxLines="1"
             />
 
     </RelativeLayout>
@@ -53,12 +56,7 @@
                       tools:context="com.example.tamnguyen.calorizeapp.FoodList.FoodListFragment">
 
 
-            <android.support.v7.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/rvDiaryFoodList"
-                >
-            </android.support.v7.widget.RecyclerView>
+            <include layout="@layout/food_list_rv"/>
 
 
             <!--<LinearLayout
