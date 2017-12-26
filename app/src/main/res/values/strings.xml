@@ -10,7 +10,17 @@
     <string name="txt_today">Today</string>
     <string name="facebook_app_id">1738591952853998</string>
     <string name="fb_login_protocol_scheme">fb1738591952853998</string>
-
+    <string name="profile_ui_weight">Weight</string>
+    <string name="profile_ui_height">Height</string>
+    <string name="profile_ui_gender">Gender</string>
+    <string name="profile_ui_dateofbirth">Date of birth</string>
+    <string name="profile_ui_name">Name: </string>
+    <string name="profile_ui_edit_weight">Weight: </string>
+    <string name="profile_ui_edit_height">Height: </string>
+    <string name="profile_ui_edit_gender">Gender: </string>
+    <string name="profile_ui_edit_dateofbirth">Date of birth: </string>
+    <string name="kilogam">kg</string>
+    <string name="centimeter">cm</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="create_profile_label">Create profile</string>
