@@ -1,6 +1,5 @@
 package com.example.tamnguyen.calorizeapp;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -15,17 +14,20 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.example.tamnguyen.calorizeapp.FoodList.Food;
 import com.example.tamnguyen.calorizeapp.FoodList.FoodListFragment;
+
 import com.example.tamnguyen.calorizeapp.FoodList.OnItemClickListener;
 import com.example.tamnguyen.calorizeapp.Profile.ProfileFragment;
 import com.gigamole.navigationtabstrip.NavigationTabStrip;
 
-import org.jetbrains.annotations.NotNull;
+
 import org.json.JSONObject;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+
+
+import com.example.tamnguyen.calorizeapp.Progress.ProgressFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -114,16 +116,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public Fragment getItem(int position) {
                 switch (position){
-                    case 0:
-                        return new FoodListFragment();
-                    case 1:
-                        return new FoodListFragment();
                     case 2:
-                        return new FoodListFragment();
+                        return new ProgressFragment();
                     case 3:
                         return new ProfileFragment();
+                    default:
+                        return new FoodListFragment();
                 }
-                return null;
             }
 
             @Override
@@ -152,36 +151,5 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-    private Bundle getFacebookData(JSONObject object) {
-        Bundle bundle = new Bundle();
-
-        try {
-            String id = object.getString("id");
-            URL profile_pic;
-            try {
-                profile_pic = new URL("https://graph.facebook.com/" + id + "/picture?type=large");
-                Log.i("profile_pic", profile_pic + "");
-                bundle.putString("profile_pic", profile_pic.toString());
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-                return null;
-            }
-
-            bundle.putString("idFacebook", id);
-            if (object.has("first_name"))
-                bundle.putString("first_name", object.getString("first_name"));
-            if (object.has("last_name"))
-                bundle.putString("last_name", object.getString("last_name"));
-            if (object.has("email"))
-                bundle.putString("email", object.getString("email"));
-            if (object.has("gender"))
-                bundle.putString("gender", object.getString("gender"));
-
-        } catch (Exception e) {
-            Log.d("", "BUNDLE Exception : "+e.toString());
-        }
-
-        return bundle;
     }
 }

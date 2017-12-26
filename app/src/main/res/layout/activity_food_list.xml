@@ -6,27 +6,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.example.tamnguyen.calorizeapp.FoodListActivity">
-    <android.support.v7.widget.Toolbar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        >
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_close"
-            android:background="@color/colorPink"
-            android:id="@+id/ibClose"
-            />
-
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@android:color/white"
-            />
-    </android.support.v7.widget.Toolbar>
+    <include
+        layout="@layout/add_food_toolbar"
+        />
 
     <fragment
         android:id="@+id/list_fragment"

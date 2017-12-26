@@ -65,7 +65,7 @@
             >
 
 
-            <!-- Add circular progress bar and stuff -->
+            <!-- Add circuProgressFragmentress bar and stuff -->
             <include layout="@layout/show_calo_intake"/>
 
 

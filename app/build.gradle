@@ -40,8 +40,12 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
+
     compile 'de.hdodenhof:circleimageview:2.2.0'
     compile 'com.reginald:editspinner:1.0.0'
+
+    compile project(':CircleProgress')
+
 }
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'org.jetbrains.kotlin.android.extensions'
