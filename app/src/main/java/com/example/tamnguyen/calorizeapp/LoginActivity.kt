@@ -8,16 +8,13 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.RelativeLayout
 import android.widget.TextView
-import com.facebook.CallbackManager
 import java.util.*
 import com.google.firebase.auth.AuthResult
 import android.util.Log
 import android.widget.Toast
+import com.facebook.*
 import com.google.firebase.auth.FacebookAuthProvider
-import com.facebook.AccessToken
-import com.facebook.FacebookException
 import com.facebook.login.LoginResult
-import com.facebook.FacebookCallback
 import com.facebook.login.LoginManager
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -26,7 +23,7 @@ import com.google.firebase.auth.FirebaseAuth
 class LoginActivity : AppCompatActivity() {
 
     private val readPermissions = Arrays.asList(
-            "email", "public_profile")
+            "email", "public_profile","user_birthday")
     val APP_NAME_FONT = "DancingScript-Regular.ttf"
     val LOGIN_BUTTON_FONT = "HelveticaNeue-Light.otf"
     var appNameText: TextView? = null
@@ -78,9 +75,21 @@ class LoginActivity : AppCompatActivity() {
                     task: Task<AuthResult> ->
                     if(task.isSuccessful)
                     {
-                        var intent = Intent(this,MainActivity::class.java)
-                        startActivity(intent)
-                        finish()
+                        //User signs in successfully with Authentication
+                        //Get user data from Facebook
+                        val request = GraphRequest.newMeRequest(token,{
+                            json, response ->
+                            var intent = Intent(this,MainActivity::class.java)
+                            intent.putExtra("name",json["name"] as String)
+                            intent.putExtra("birthday",json["birthday"] as String)
+                            intent.putExtra("picture",json.getJSONObject("picture").getJSONObject("data")["url"] as String)
+                            startActivity(intent)
+                            finish()
+                        })
+                        val params = Bundle()
+                        params.putString("fields","id,name,birthday,email,picture")
+                        request.parameters = params
+                        request.executeAsync()
                     }
                     else{
                         Toast.makeText(this,"Something wrong, Try again later!!!",Toast.LENGTH_LONG)
