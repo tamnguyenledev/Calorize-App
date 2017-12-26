@@ -45,7 +45,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     }
 
-    
+
     public void doSetView(Profile profile){
         if(profile!=null){
             editTextName.setText(profile.getFullName());
