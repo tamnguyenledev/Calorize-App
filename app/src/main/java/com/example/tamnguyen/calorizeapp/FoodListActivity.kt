@@ -17,17 +17,16 @@ class FoodListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_food_list)
         //Set up Food List Fragment Item Click Listener
-        fragment = supportFragmentManager.findFragmentById(R.id.list_fragment) as FoodListFragment
-        fragment.setItemClickListener(object: OnItemClickListener{
-            //When a food item is selected, start add food activity
+        fragment = FoodListFragment.newInstance(object: OnItemClickListener{
             override fun onItemClick(food: Food) {
                 val intent = Intent(this@FoodListActivity,AddFoodActivity::class.java)
                 intent.putExtra("food",food)
                 intent.putExtra("choice",spinner.selectedItem.toString())
                 startActivity(intent)
             }
-
         })
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.add(R.id.list_fragment,fragment)
         //Set up Spinner
         val adapter = ArrayAdapter.createFromResource(this,R.array.meals_array,android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)

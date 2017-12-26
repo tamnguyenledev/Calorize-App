@@ -11,10 +11,9 @@
         layout="@layout/add_food_toolbar"
         />
 
-    <fragment
+    <FrameLayout
         android:id="@+id/list_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.example.tamnguyen.calorizeapp.FoodList.FoodListFragment"
         />
 </LinearLayout>
