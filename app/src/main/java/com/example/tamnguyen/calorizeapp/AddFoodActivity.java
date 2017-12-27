@@ -12,8 +12,6 @@ import com.example.tamnguyen.calorizeapp.FoodList.Food;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import com.example.tamnguyen.calorizeapp.FoodList.Food;
-
 public class AddFoodActivity extends AppCompatActivity
 {
     private Food currentChosenFood;
@@ -33,8 +31,11 @@ public class AddFoodActivity extends AppCompatActivity
     EditText etQuantity;
     @BindView(R.id.measurementTypeSpinner)
     Spinner snMeasurementType;
+    @BindView(R.id.spinner)
+    Spinner snMealType;
 
     ArrayAdapter<CharSequence> measurementTypeAdapter;
+    ArrayAdapter<CharSequence> mealTypeAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -61,12 +62,21 @@ public class AddFoodActivity extends AppCompatActivity
         // TODO: check quantity == 0
         etQuantity.setText("1");
 
-        // spinner
+        // unit spinner
         measurementTypeAdapter = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item);
         measurementTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         measurementTypeAdapter.add(currentChosenFood.getUnit() + "(" + currentChosenFood.getMassPerUnit() + "g)");
         measurementTypeAdapter.add("gram");
         snMeasurementType.setAdapter(measurementTypeAdapter);
+
+        // meal type spinner
+        mealTypeAdapter = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item);
+        mealTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mealTypeAdapter.add("Breakfast");
+        mealTypeAdapter.add("Lunch");
+        mealTypeAdapter.add("Dinner");
+        snMealType.setAdapter(mealTypeAdapter);
+
     }
 
 }
