@@ -18,7 +18,6 @@ import kotlinx.android.synthetic.main.food_list_rv.*
 import kotlinx.android.synthetic.main.fragment_food_list.*
 import java.util.*
 import kotlin.Comparator
-import kotlin.collections.ArrayList
 
 
 /**
@@ -65,7 +64,7 @@ class FoodListFragment : Fragment() {
      */
     private fun loadFoods(){
         //Load foods into RecyclerView
-        FoodDatabase.instance.getFoods(object: FoodDatabase.OnCompleteListener{
+        FoodDatabase.instance.getFoodsFromDatabase(object: FoodDatabase.OnCompleteListener{
             override fun onSuccess(foodList: FoodList) {
                 //Sort food by current time
                 mFoodList  = sortFoodByTime(foodList)

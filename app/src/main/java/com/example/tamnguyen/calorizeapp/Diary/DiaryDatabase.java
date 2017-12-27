@@ -45,7 +45,7 @@ public class DiaryDatabase {
      * @param listener: OnCompleteListener to listen to query operation
      */
     public void getDiary(Calendar calendar, final OnCompleteListener listener){
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         String key = sdf.format(calendar.getTime());
         diaryRef.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -53,8 +53,7 @@ public class DiaryDatabase {
                 Diary diary = new Diary();
                 if(dataSnapshot.exists())
                {
-                   diary.fromMap((Map<String, Object>) dataSnapshot.getValue());
-
+                   diary.fromSnapshot(dataSnapshot);
                }
                listener.onSuccess(diary);
             }

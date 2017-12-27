@@ -23,9 +23,9 @@ class FoodDatabase {
         fun onSuccess(foodList: FoodList)
         fun onFailure(err: DatabaseError)
     }
-
+    private lateinit var foodMap: MutableMap<String,Food>
     val mDatabase = FirebaseDatabase.getInstance().reference
-    fun getFoods(listener: OnCompleteListener) {
+    fun getFoodsFromDatabase(listener: OnCompleteListener) {
         mDatabase.child(path).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(err: DatabaseError) {
                 listener.onFailure(err);
@@ -35,12 +35,17 @@ class FoodDatabase {
                 //Get All Foods in Food Database
                 //Put each food into corresponding meals
                 val foodList = ArrayList<Food>()
+                foodMap = HashMap<String,Food>()
                 for (child in snapshot.children) {
                     val food = child.getValue(Food::class.java)
                     foodList.add(food!!)
+                    foodMap[child.key] = food
                 }
                 listener.onSuccess(FoodList(foodList))
             }
         })
+    }
+    fun getFoodByID(id: String): Food{
+        return foodMap?.get(id)!!
     }
 }
