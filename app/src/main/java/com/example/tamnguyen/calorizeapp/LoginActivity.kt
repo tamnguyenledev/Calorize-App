@@ -115,13 +115,14 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
                     var intent = Intent(this, MainActivity::class.java).apply {
                         putExtra("name", json["name"] as String)
                         putExtra("birthday", json["birthday"] as String)
+                        putExtra("gender", json["gender"] as String)
                         putExtra("picture", json.getJSONObject("picture").getJSONObject("data")["url"] as String)
                     }
                     startActivity(intent)
                     finish()
                 })
                 val params = Bundle()
-                params.putString("fields", "id,name,birthday,email,picture")
+                params.putString("fields", "id,name,birthday,gender,email,picture.type(large)")
                 request.parameters = params
                 request.executeAsync()
             } else {
