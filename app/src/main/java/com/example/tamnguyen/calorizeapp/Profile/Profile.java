@@ -43,7 +43,6 @@ public class Profile implements Parcelable {
         bWeightType = in.readByte() != 0;
         bHeightType = in.readByte() != 0;
     }
-
     public static final Creator<Profile> CREATOR = new Creator<Profile>() {
         @Override
         public Profile createFromParcel(Parcel in) {
