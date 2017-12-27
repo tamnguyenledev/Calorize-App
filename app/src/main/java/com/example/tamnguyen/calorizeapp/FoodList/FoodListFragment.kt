@@ -14,11 +14,10 @@ import android.widget.Toast
 
 import com.example.tamnguyen.calorizeapp.R
 import com.google.firebase.database.DatabaseError
-import kotlinx.android.synthetic.main.food_list.*
 import kotlinx.android.synthetic.main.food_list_rv.*
 import kotlinx.android.synthetic.main.fragment_food_list.*
-import me.xdrop.fuzzywuzzy.FuzzySearch
 import java.util.*
+import kotlin.Comparator
 import kotlin.collections.ArrayList
 
 
@@ -35,7 +34,7 @@ class FoodListFragment : Fragment() {
     }
     lateinit var mAdapter: FoodListAdapter
     lateinit var listener: OnItemClickListener
-
+    var mFoodList: FoodList? = null
     /**
      * Used for 1s (1000ms) delay after users finish inputting
      */
@@ -59,7 +58,6 @@ class FoodListFragment : Fragment() {
         loadFoods()
 
         searchFoodConfig()
-
     }
 
     /**
@@ -68,8 +66,11 @@ class FoodListFragment : Fragment() {
     private fun loadFoods(){
         //Load foods into RecyclerView
         FoodDatabase.instance.getFoods(object: FoodDatabase.OnCompleteListener{
-            override fun onSuccess(meals: List<Meal>) {
-                mAdapter = FoodListAdapter(context!!,meals)
+            override fun onSuccess(foodList: FoodList) {
+                //Sort food by current time
+                mFoodList  = sortFoodByTime(foodList)
+                //Set data to adapter
+                mAdapter = FoodListAdapter(context!!, foodList)
                 mAdapter.listener = listener
                 rvDiaryFoodList.adapter = mAdapter
             }
@@ -85,9 +86,15 @@ class FoodListFragment : Fragment() {
      * Food Searching Configuration
      */
     private fun searchFoodConfig(){
-
         etSearchFood.addTextChangedListener(object: TextWatcher{
             override fun afterTextChanged(s: Editable) {
+                //If Users input nothing, display all data
+                if(s.toString().length == 0 && mFoodList != null)
+                {
+                    mAdapter = FoodListAdapter(context!!, mFoodList!!)
+                    rvDiaryFoodList.adapter = mAdapter
+                    return
+                }
                 //After users finish typing, we should call query operation after delay time
                 runnable = Runnable {
                     searchFoodImp(s.toString())
@@ -110,11 +117,46 @@ class FoodListFragment : Fragment() {
      * Food Searching Implementation
      */
     private fun searchFoodImp(query: String){
-        val newMeals = ArrayList<Meal>()
-        for(meal in mAdapter.mGroups){
-            newMeals.add((meal as Meal).suggestFood(query))
-        }
-        mAdapter = FoodListAdapter(context!!,newMeals)
+        val newFoodList = mFoodList?.suggestFood(query)
+        mAdapter = FoodListAdapter(context!!,newFoodList!!)
+        rvDiaryFoodList.adapter = mAdapter
         mAdapter.notifyDataSetChanged()
+    }
+
+    /**
+     * Food Reordering Based On Current Time
+     */
+    private fun sortFoodByTime(foodList: FoodList): FoodList{
+        val calendar = GregorianCalendar.getInstance()
+        val hour = calendar[Calendar.HOUR_OF_DAY]
+        var meal = ""
+        //Determine which meal users should take
+        if(hour in 5 until 11)
+            meal = "breakfast"
+        else if(hour in 11 until 15)
+            meal = "lunch"
+        else
+            meal = "dinner"
+        return FoodList(foodList.items.sortedWith(object: Comparator<Food>{
+            override fun compare(food1: Food, food2: Food): Int {
+                //If Both food belongs to current Meal, order them by alphabet
+                if(food1.dayType?.containsKey(meal)!! && food2.dayType?.containsKey(meal)!!)
+                {
+                    return food1.foodName!!.compareTo(food2.foodName!!)
+                }
+                else if(food1.dayType?.containsKey(meal)!!)
+                {
+                    return 1
+                }
+                else if(food2.dayType?.containsKey(meal)!!)
+                {
+                    return -1
+                }
+                else
+                    return food1.foodName!!.compareTo(food2.foodName!!)
+            }
+        })
+        )
+
     }
 }// Required empty public constructor
