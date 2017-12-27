@@ -1,6 +1,6 @@
 # Project Title
 
-One Paragraph of project description goes here
+This Android application is created to demonstrate the advantage in retaining your body healthy by using this app
 
 ## Getting Started
 
