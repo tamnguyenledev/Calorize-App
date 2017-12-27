@@ -5,14 +5,11 @@ import android.graphics.Typeface
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.WindowManager
-import android.widget.Button
-import android.widget.RelativeLayout
-import android.widget.TextView
 import java.util.*
 import com.google.firebase.auth.AuthResult
 import android.util.Log
 import android.view.View
-import android.widget.Toast
+import android.widget.*
 import com.facebook.*
 import com.google.firebase.auth.FacebookAuthProvider
 import com.facebook.login.LoginResult
@@ -63,7 +60,7 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
         //Setup UI for login button
         loginBtn?.typeface = Typeface.createFromAsset(assets,LOGIN_BUTTON_FONT)
         var btnParams = loginBtn?.layoutParams
-        (btnParams as RelativeLayout.LayoutParams?)?.bottomMargin = resources.getDimension(R.dimen.login_btn_margin_bottom).toInt() +
+        (btnParams as LinearLayout.LayoutParams?)?.bottomMargin = resources.getDimension(R.dimen.login_btn_margin_bottom).toInt() +
               if (MyApplication.hasSoftNavBar(this)) MyApplication.getNavigationBarHeight(this,resources.configuration.orientation)
               else 0
         loginBtn?.setOnClickListener {
