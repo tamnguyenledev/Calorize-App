@@ -28,16 +28,20 @@ public class Diary {
     FoodList dinnerList = new FoodList(new ArrayList<Food>());
     List<Integer> dinnerVolumeList = new ArrayList<Integer>();
 
+    /**
+     * Utility Method from Constructing Diary Object from DataSnapshot which is retrieved from database
+     * @param snapshot
+     */
     public void fromSnapshot(DataSnapshot snapshot) {
         for(DataSnapshot child : snapshot.getChildren()){
             //For each field in Diary Snapshot, determine what field is that and set corresponding value
             switch (child.getKey()){
                 case "carbs": carbs = (double) child.getValue(); break;
                 case "protein": protein = (double) child.getValue(); break;
-                case "fat": protein = (double) child.getValue(); break;
-                case "calories": protein = (double) child.getValue(); break;
+                case "fat": fat = (double) child.getValue(); break;
+                case "calories": calories = (double) child.getValue(); break;
                 case "food_list":{
-                    //For each food, put it into corresponding meal
+                    //For each food, put it into corresponding meal and save number of units of that food
                     for(DataSnapshot foodSnapshot : child.getChildren()){
                         Map<String,Object> data = (Map<String, Object>) foodSnapshot.getValue();
                         Food food = FoodDatabase.Companion.getInstance().getFoodByID((String) data.get("food_id"));
