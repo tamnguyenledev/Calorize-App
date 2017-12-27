@@ -22,6 +22,7 @@
             />
 
         <TextView
+            android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/create_profile_label"
@@ -39,15 +40,8 @@
         android:layout_marginTop="@dimen/activity_vertical_margin"
         >
 
-        <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/circle"
-            />
-
         <ImageButton
+            android:id="@+id/image_select_avatar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_camera"
@@ -55,6 +49,14 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true" />
 
+        <ImageView
+            android:id="@+id/profile_image"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/circle"
+            />
     </RelativeLayout>
 
     <LinearLayout
@@ -87,6 +89,7 @@
                 android:layout_marginStart="@dimen/activity_small_margin"
                 android:inputType="text"
                 android:id="@+id/nameInput"
+                android:textColor="@color/colorBlack"
                 />
 
         </LinearLayout>
@@ -189,8 +192,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/activity_small_margin"
-                android:inputType="number"
-                android:maxLength="3"
+                android:inputType="numberDecimal"
+                android:maxLength="6"
                 tools:text="70"
                 android:id="@+id/weightInput"
                 />
@@ -224,8 +227,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/activity_small_margin"
-                android:inputType="number"
-                android:maxLength="3"
+                android:inputType="numberDecimal"
+                android:maxLength="6"
                 tools:text="170"
                 android:id="@+id/heightInput"
                 />
@@ -241,6 +244,7 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/btn_save_next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/colorPink"

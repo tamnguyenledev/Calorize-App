@@ -36,28 +36,28 @@ public class ProfileFragment extends Fragment {
     private TextView textViewName,textViewAge,textViewHeight,textViewWeight,textViewGender,textViewBirthDay;
     private FloatingActionButton floatingActionButtonEdit;
     private ImageView imageViewAvatar;
-
+    private int REQUEST_EDIT = 100;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View retView;
+        doGetProfile();
         retView = inflater.inflate(R.layout.fragment_profile,container,false);
+        doInitControl(retView);
+        setView();
         return retView;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        doInitControl(view);
-        doGetProfile();
-        setView();
 
         floatingActionButtonEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(),EditProfileActivity.class);
-                intent.putExtra("profile",profile);
-                startActivityForResult(intent,100);
+                intent.putExtra("profile-edit",profile);
+                startActivityForResult(intent,REQUEST_EDIT);
             }
         });
 
@@ -69,8 +69,8 @@ public class ProfileFragment extends Fragment {
                 getActivity().getIntent().getStringExtra("birthday"),
                 getActivity().getIntent().getStringExtra("picture"),
                 0,
-                0,
-                0,
+                69,
+                175,
                 false,
                 false);
         profile.generateAge();
@@ -84,10 +84,10 @@ public class ProfileFragment extends Fragment {
 
         if(profile.getiWeight()!=0){
             if (!profile.isbWeightType()) {
-                textViewWeight.setText(String.format(Locale.ENGLISH,"%d kg",profile.getiWeight()));
+                textViewWeight.setText(String.format(Locale.ENGLISH,"%.2f kg",profile.getiWeight()));
             }
             else{
-                textViewWeight.setText(String.format(Locale.ENGLISH,"%d pound",profile.getiWeight()));
+                textViewWeight.setText(String.format(Locale.ENGLISH,"%.2f pound",profile.getiWeight()));
             }
         }
         else
@@ -95,10 +95,10 @@ public class ProfileFragment extends Fragment {
 
         if(profile.getiHeight()!=0){
             if (!profile.isbHeightType()) {
-                textViewHeight.setText(String.format(Locale.ENGLISH,"%d cm",profile.getiHeight()));
+                textViewHeight.setText(String.format(Locale.ENGLISH,"%.2f cm",profile.getiHeight()));
             }
             else{
-                textViewHeight.setText(String.format(Locale.ENGLISH,"%d foot",profile.getiHeight()));
+                textViewHeight.setText(String.format(Locale.ENGLISH,"%.2f foot",profile.getiHeight()));
             }
         }
         else
@@ -114,4 +114,24 @@ public class ProfileFragment extends Fragment {
         floatingActionButtonEdit = view.findViewById(R.id.profile_edit);
         imageViewAvatar = view.findViewById(R.id.profile_image);
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_EDIT){
+            if(resultCode==101) // edit
+            {
+                profile = data.getParcelableExtra("profile-edit-result");
+                setView();
+            }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setView();
+
+    }
+
 }
