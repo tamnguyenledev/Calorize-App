@@ -10,14 +10,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tamnguyen.calorizeapp.FoodList.Food;
 import com.example.tamnguyen.calorizeapp.FoodList.FoodListFragment;
 
 import com.example.tamnguyen.calorizeapp.FoodList.OnItemClickListener;
+import com.example.tamnguyen.calorizeapp.Profile.Profile;
 import com.example.tamnguyen.calorizeapp.Profile.ProfileFragment;
 import com.gigamole.navigationtabstrip.NavigationTabStrip;
 
@@ -35,7 +38,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
-
     @BindView(R.id.llFabAddBreakfast)
     public LinearLayout fabAddBreakfast;
     @BindView(R.id.llFabAddLunch)
@@ -63,13 +65,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        // prevent auto open keyboard
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
         fabSubMenu.setVisibility(View.INVISIBLE);
 
         fabAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if (fabExpanded == true) {
+                if (fabExpanded) {
                     closeSubMenuFab();
                 }
                 else {

@@ -19,8 +19,11 @@
     <string name="profile_ui_edit_height">Height: </string>
     <string name="profile_ui_edit_gender">Gender: </string>
     <string name="profile_ui_edit_dateofbirth">Date of birth: </string>
-    <string name="kilogam">kg</string>
+    <string name="kilogram">kg</string>
     <string name="centimeter">cm</string>
+    <string name="pound">pound</string>
+    <string name="foot">foot</string>
+    <string name="edit_name_toolbar">Edit profile</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="create_profile_label">Create profile</string>

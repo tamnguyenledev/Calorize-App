@@ -55,7 +55,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".AddFoodActivity" />
-        <activity android:name=".FoodListActivity"></activity>
+        <activity android:name=".FoodListActivity" />
+        <activity android:name=".Profile.EditProfileActivity"></activity>
     </application>
 
 </manifest>

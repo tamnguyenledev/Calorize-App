@@ -1,87 +1,121 @@
 package com.example.tamnguyen.calorizeapp.Profile;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.time.Year;
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * Created by HUYNHXUANKHANH on 12/25/2017.
  */
 
-public class Profile {
-    private String fullName,gender,dateOfBirth;
+public class Profile implements Parcelable {
+    private String fullName,gender,dateOfBirth,urlAvatar;
     private int iAge,iWeight,iHeight;
     private boolean bWeightType,bHeightType;
+    /*
+    * bWeightType ... false: kg | true: pound
+    * bHeightType ... false: cm | true: foot
+    * */
 
-    public Profile(String fullName, String gender, String dateOfBirth, int iAge, int iWeight, int iHeight, boolean bWeightType, boolean bHeightType) {
-
+    public Profile(String fullName, String gender, String dateOfBirth, String urlAvatar, int iAge, int iWeight, int iHeight, boolean bWeightType, boolean bHeightType) {
         this.fullName = fullName;
         this.gender = gender;
         this.dateOfBirth = dateOfBirth;
+        this.urlAvatar = urlAvatar;
         this.iAge = iAge;
         this.iWeight = iWeight;
         this.iHeight = iHeight;
         this.bWeightType = bWeightType;
         this.bHeightType = bHeightType;
     }
-    public String getFullName() {
-        return fullName;
+
+    protected Profile(Parcel in) {
+        fullName = in.readString();
+        gender = in.readString();
+        dateOfBirth = in.readString();
+        urlAvatar = in.readString();
+        iAge = in.readInt();
+        iWeight = in.readInt();
+        iHeight = in.readInt();
+        bWeightType = in.readByte() != 0;
+        bHeightType = in.readByte() != 0;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public static final Creator<Profile> CREATOR = new Creator<Profile>() {
+        @Override
+        public Profile createFromParcel(Parcel in) {
+            return new Profile(in);
+        }
+
+        @Override
+        public Profile[] newArray(int size) {
+            return new Profile[size];
+        }
+    };
+
+    public int generateAge(){
+        if(!dateOfBirth.isEmpty()){
+            String year = dateOfBirth.substring(dateOfBirth.lastIndexOf("/") + 1);
+            iAge = Calendar.getInstance().get(Calendar.YEAR) - Integer.parseInt(year);
+            return iAge;
+        }
+        return 0;
+    }
+
+    public String getFullName() {
+        return fullName;
     }
 
     public String getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
     public String getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(String dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public String getUrlAvatar() {
+        return urlAvatar;
     }
 
     public int getiAge() {
         return iAge;
     }
 
-    public void setiAge(int iAge) {
-        this.iAge = iAge;
-    }
-
     public int getiWeight() {
         return iWeight;
-    }
-
-    public void setiWeight(int iWeight) {
-        this.iWeight = iWeight;
     }
 
     public int getiHeight() {
         return iHeight;
     }
 
-    public void setiHeight(int iHeight) {
-        this.iHeight = iHeight;
-    }
-
     public boolean isbWeightType() {
         return bWeightType;
-    }
-
-    public void setbWeightType(boolean bWeightType) {
-        this.bWeightType = bWeightType;
     }
 
     public boolean isbHeightType() {
         return bHeightType;
     }
 
-    public void setbHeightType(boolean bHeightType) {
-        this.bHeightType = bHeightType;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(fullName);
+        parcel.writeString(gender);
+        parcel.writeString(dateOfBirth);
+        parcel.writeString(urlAvatar);
+        parcel.writeInt(iAge);
+        parcel.writeInt(iWeight);
+        parcel.writeInt(iHeight);
+        parcel.writeByte((byte) (bWeightType ? 1 : 0));
+        parcel.writeByte((byte) (bHeightType ? 1 : 0));
+    }
 }
