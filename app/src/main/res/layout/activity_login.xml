@@ -25,21 +25,20 @@
         />
 
 
-    <Button
+    <com.facebook.login.widget.LoginButton
         android:id="@+id/login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="75dp"
-        android:background="#FF0000FF"
         android:text="LOGIN WITH FACEBOOK"
         android:textColor="@android:color/white"
         android:textSize="16sp"
         android:textStyle="bold"
         android:padding="15dp"/>
 
-    <Button
+    <com.google.android.gms.common.SignInButton
         android:id="@+id/btnGGLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -47,7 +46,6 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="16dp"
-        android:background="#FFFF0000"
         android:padding="15dp"
         android:text="LOGIN WITH G+"
         android:textColor="@android:color/white"
