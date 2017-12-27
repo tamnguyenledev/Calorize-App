@@ -1,5 +1,6 @@
 package com.example.tamnguyen.calorizeapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -131,7 +132,9 @@ public class MainActivity extends AppCompatActivity {
                         return FoodListFragment.Companion.newInstance(new OnItemClickListener() {
                             @Override
                             public void onItemClick(@NotNull Food food) {
-                                //TODO: Do whatever when the item in Food List Fragment is clicked
+                                Intent intent = new Intent(MainActivity.this,AddFoodActivity.class);
+                                intent.putExtra("food",food);
+                                startActivity(intent);
                             }
                         });
                 }
