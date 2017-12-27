@@ -20,7 +20,7 @@ class FoodDatabase {
     }
 
     interface OnCompleteListener {
-        fun onSuccess(meals: List<Meal>)
+        fun onSuccess(foodList: FoodList)
         fun onFailure(err: DatabaseError)
     }
 
@@ -34,24 +34,12 @@ class FoodDatabase {
             override fun onDataChange(snapshot: DataSnapshot) {
                 //Get All Foods in Food Database
                 //Put each food into corresponding meals
-                val breakfast = ArrayList<Food>()
-                val dinner = ArrayList<Food>()
-                val lunch = ArrayList<Food>()
+                val foodList = ArrayList<Food>()
                 for (child in snapshot.children) {
                     val food = child.getValue(Food::class.java)
-                    if(food!!.dayType!!.containsKey(Food.BREAKFAST))
-                        breakfast.add(food)
-                    if(food!!.dayType!!.containsKey(Food.LUNCH))
-                        lunch.add(food)
-                    if(food!!.dayType!!.containsKey(Food.DINNER))
-                        dinner.add(food)
+                    foodList.add(food!!)
                 }
-                //Call listener after processing data
-                val meals = ArrayList<Meal>()
-                meals.add(Meal("Breakfast", breakfast))
-                meals.add(Meal("Lunch", lunch))
-                meals.add(Meal("Dinner", dinner))
-                listener.onSuccess(meals)
+                listener.onSuccess(FoodList(foodList))
             }
         })
     }

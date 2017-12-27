@@ -42,7 +42,7 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
-
+    compile 'me.xdrop:fuzzywuzzy:1.1.9'
     compile 'de.hdodenhof:circleimageview:2.2.0'
     compile 'com.reginald:editspinner:1.0.0'
     implementation 'com.github.bumptech.glide:glide:4.4.0'
