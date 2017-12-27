@@ -2,6 +2,9 @@ package com.example.tamnguyen.calorizeapp;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.tamnguyen.calorizeapp.FoodList.Food;
@@ -26,7 +29,12 @@ public class AddFoodActivity extends AppCompatActivity
     TextView tvProteinAmount;
     @BindView(R.id.tvFatAmount)
     TextView tvFatAmount;
+    @BindView(R.id.etQuantity)
+    EditText etQuantity;
+    @BindView(R.id.measurementTypeSpinner)
+    Spinner snMeasurementType;
 
+    ArrayAdapter<CharSequence> measurementTypeAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -36,10 +44,29 @@ public class AddFoodActivity extends AppCompatActivity
 
         currentChosenFood = (Food)getIntent().getParcelableExtra("food");
 
+        initViews();
+
+    }
+
+    private void initViews()
+    {
         tvFoodName.setText(currentChosenFood.getFoodName());
         tvFoodType.setText(currentChosenFood.getType());
+        // TODO: add units
         tvCaloriesAmount.setText(String.valueOf(currentChosenFood.getCalorie()));
         tvCarbsAmount.setText(String.valueOf(currentChosenFood.getCarb()));
+        tvProteinAmount.setText(String.valueOf(currentChosenFood.getProtein()));
         tvFatAmount.setText(String.valueOf(currentChosenFood.getFat()));
+
+        // TODO: check quantity == 0
+        etQuantity.setText("1");
+
+        // spinner
+        measurementTypeAdapter = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item);
+        measurementTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        measurementTypeAdapter.add(currentChosenFood.getUnit() + "(" + currentChosenFood.getMassPerUnit() + "g)");
+        measurementTypeAdapter.add("gram");
+        snMeasurementType.setAdapter(measurementTypeAdapter);
     }
+
 }
