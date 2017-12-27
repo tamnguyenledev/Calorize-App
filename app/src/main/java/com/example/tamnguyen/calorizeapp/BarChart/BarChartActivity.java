@@ -1,4 +1,4 @@
-package com.example.tamnguyen.calorizeapp.ComparisonChart;
+package com.example.tamnguyen.calorizeapp.BarChart;
 
 /**
  * Created by nguyenbao on 12/27/17.
