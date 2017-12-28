@@ -304,5 +304,11 @@ public class BarChartActivity extends AppCompatActivity implements SeekBar.OnSee
 
     @Override
     public void onNothingSelected() { }
+
+    @Override
+    protected void onDestroy() {
+        finish();
+        super.onDestroy();
+    }
 }
 

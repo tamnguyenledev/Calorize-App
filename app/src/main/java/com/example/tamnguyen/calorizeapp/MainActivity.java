@@ -7,33 +7,21 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.tamnguyen.calorizeapp.FoodList.Food;
 import com.example.tamnguyen.calorizeapp.FoodList.FoodListFragment;
-
 import com.example.tamnguyen.calorizeapp.FoodList.OnItemClickListener;
-import com.example.tamnguyen.calorizeapp.Profile.Profile;
 import com.example.tamnguyen.calorizeapp.Profile.ProfileFragment;
+import com.example.tamnguyen.calorizeapp.Progress.ProgressFragment;
 import com.gigamole.navigationtabstrip.NavigationTabStrip;
 
-
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-
-
-import com.example.tamnguyen.calorizeapp.Progress.ProgressFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -125,15 +113,7 @@ public class MainActivity extends AppCompatActivity {
             public Fragment getItem(int position) {
                 switch (position){
                     case 2:
-                       // return new ProgressFragment();
-                        return FoodListFragment.Companion.newInstance(new OnItemClickListener() {
-                            @Override
-                            public void onItemClick(@NotNull Food food) {
-                                Intent intent = new Intent(MainActivity.this,AddFoodActivity.class);
-                                intent.putExtra("food",food);
-                                startActivity(intent);
-                            }
-                        });
+                       return new ProgressFragment();
                     case 3:
                         return new ProfileFragment();
                     default:

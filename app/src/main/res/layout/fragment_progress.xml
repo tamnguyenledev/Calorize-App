@@ -36,8 +36,7 @@
           android:layout_height="38dp"
           android:src="@drawable/ic_calendar"
           android:background="@drawable/rectangle"
-          android:layout_toRightOf="@+id/tvFromDate"
-          />
+          android:layout_toRightOf="@+id/tvFromDate" />
 
     </RelativeLayout>
 
@@ -72,11 +71,15 @@
           android:layout_height="38dp"
           android:src="@drawable/ic_calendar"
           android:background="@drawable/rectangle"
-          android:layout_toRightOf="@+id/tvToDate"
-          />
+          android:layout_toRightOf="@+id/tvToDate" />
 
     </RelativeLayout>
 
   </LinearLayout>
 
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
+
+  </LinearLayout>
 </LinearLayout>
