@@ -1,5 +1,7 @@
 package com.example.tamnguyen.calorizeapp.Diary;
 
+import com.example.tamnguyen.calorizeapp.FoodList.Food;
+import com.example.tamnguyen.calorizeapp.FoodList.FoodDatabase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,6 +42,16 @@ public class DiaryDatabase {
     }
 
     /**
+     * Key to access Corresponding Fields of Diary on database
+     */
+    private final static String CARBS = "carbs";
+    private final static String FAT = "fat";
+    private final static String PROTEIN = "protein";
+    private final static String CALORIES = "calories";
+    private final static String FOOD_LIST = "food_list";
+    private final static String FOOD_ID = "food_id";
+    private final static String FOOD_NUM_UNIT = "food_num_unit";
+    /**
      * Helper method for geting Diary Database of current user
      * @param calendar : Specify date to get data
      * @param listener: OnCompleteListener to listen to query operation
@@ -53,7 +65,7 @@ public class DiaryDatabase {
                 Diary diary = new Diary();
                 if(dataSnapshot.exists())
                {
-                   diary.fromSnapshot(dataSnapshot);
+                   diary = createDiaryFromSnapshot(dataSnapshot);
                }
                listener.onSuccess(diary);
             }
@@ -64,5 +76,38 @@ public class DiaryDatabase {
             }
         });
     }
+    public static Diary createDiaryFromSnapshot(DataSnapshot dataSnapshot){
+        Diary diary = new Diary();
+        for(DataSnapshot child : dataSnapshot.getChildren()){
+            //For each field in Diary Snapshot, determine what field is that and set corresponding value
+            switch (child.getKey()){
+                case CARBS: diary.carbs = (double) child.getValue(); break;
+                case PROTEIN: diary.protein = (double) child.getValue(); break;
+                case FAT: diary.fat = (double) child.getValue(); break;
+                case CALORIES: diary.calories = (double) child.getValue(); break;
+                case FOOD_LIST:{
+                    //For each food, put it into corresponding meal and save number of units of that food
+                    for(DataSnapshot foodSnapshot : child.getChildren()){
+                        Map<String,Object> data = (Map<String, Object>) foodSnapshot.getValue();
+                        Food food = FoodDatabase.Companion.getInstance().getFoodByID((String) data.get(FOOD_ID));
+                        if(data.containsKey(Food.Companion.getBREAKFAST()))
+                        {
+                            diary.breakfastList.getItems().add(food);
+                            diary.breakfastVolumeList.add((Integer) data.get(FOOD_NUM_UNIT));
+                        }
+                        else if(data.containsKey(Food.Companion.getLUNCH())){
+                            diary.lunchList.getItems().add(food);
+                            diary.lunchVolumeList.add((Integer) data.get(FOOD_NUM_UNIT));
+                        }
+                        else{
+                            diary.dinnerList.getItems().add(food);
+                            diary.dinnerVolumeList.add((Integer) data.get(FOOD_NUM_UNIT));
+                        }
 
+                    }
+                }
+            }
+        }
+        return diary;
+    }
 }

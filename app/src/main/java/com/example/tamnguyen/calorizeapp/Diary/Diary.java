@@ -33,36 +33,7 @@ public class Diary {
      * @param snapshot
      */
     public void fromSnapshot(DataSnapshot snapshot) {
-        for(DataSnapshot child : snapshot.getChildren()){
-            //For each field in Diary Snapshot, determine what field is that and set corresponding value
-            switch (child.getKey()){
-                case "carbs": carbs = (double) child.getValue(); break;
-                case "protein": protein = (double) child.getValue(); break;
-                case "fat": fat = (double) child.getValue(); break;
-                case "calories": calories = (double) child.getValue(); break;
-                case "food_list":{
-                    //For each food, put it into corresponding meal and save number of units of that food
-                    for(DataSnapshot foodSnapshot : child.getChildren()){
-                        Map<String,Object> data = (Map<String, Object>) foodSnapshot.getValue();
-                        Food food = FoodDatabase.Companion.getInstance().getFoodByID((String) data.get("food_id"));
-                        if(data.containsKey(Food.Companion.getBREAKFAST()))
-                        {
-                            breakfastList.getItems().add(food);
-                            breakfastVolumeList.add((Integer) data.get("food_num_unit"));
-                        }
-                        else if(data.containsKey(Food.Companion.getLUNCH())){
-                            lunchList.getItems().add(food);
-                            lunchVolumeList.add((Integer) data.get("food_num_unit"));
-                        }
-                        else{
-                            dinnerList.getItems().add(food);
-                            dinnerVolumeList.add((Integer) data.get("food_num_unit"));
-                        }
 
-                    }
-                }
-            }
-        }
     }
 
     public Map<String, Object> toMap() {
