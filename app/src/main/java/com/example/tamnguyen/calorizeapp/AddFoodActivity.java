@@ -2,10 +2,13 @@ package com.example.tamnguyen.calorizeapp;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.tamnguyen.calorizeapp.FoodList.Food;
 
@@ -53,13 +56,9 @@ public class AddFoodActivity extends AppCompatActivity
     {
         tvFoodName.setText(currentChosenFood.getFoodName());
         tvFoodType.setText(currentChosenFood.getType());
-        // TODO: add units
-        tvCaloriesAmount.setText(String.valueOf(currentChosenFood.getCalorie()));
-        tvCarbsAmount.setText(String.valueOf(currentChosenFood.getCarb()));
-        tvProteinAmount.setText(String.valueOf(currentChosenFood.getProtein()));
-        tvFatAmount.setText(String.valueOf(currentChosenFood.getFat()));
 
-        // TODO: check quantity == 0
+
+        // TODO: check quantity == 0 and empty
         etQuantity.setText("1");
 
         // unit spinner
@@ -69,6 +68,28 @@ public class AddFoodActivity extends AppCompatActivity
         measurementTypeAdapter.add("gram");
         snMeasurementType.setAdapter(measurementTypeAdapter);
 
+        snMeasurementType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                if (position == 0) // custom food unit
+                    setFoodMetric(1);
+                else
+                    setFoodMetric(currentChosenFood.getMassPerUnit());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+
+            }
+
+        });
+        snMeasurementType.setSelection(0);
+
+        // TODO: set the correct data
         // meal type spinner
         mealTypeAdapter = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item);
         mealTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -79,4 +100,12 @@ public class AddFoodActivity extends AppCompatActivity
 
     }
 
+    private void setFoodMetric(double scaleDownRatio)
+    {
+        // TODO: add units
+        tvCaloriesAmount.setText(String.valueOf(currentChosenFood.getCalorie()/scaleDownRatio));
+        tvCarbsAmount.setText(String.valueOf(currentChosenFood.getCarb()/scaleDownRatio));
+        tvProteinAmount.setText(String.valueOf(currentChosenFood.getProtein()/scaleDownRatio));
+        tvFatAmount.setText(String.valueOf(currentChosenFood.getFat()/scaleDownRatio));
+    }
 }
