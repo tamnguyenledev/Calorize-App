@@ -2,7 +2,6 @@ package com.example.tamnguyen.calorizeapp.Diary;
 
 
 import android.annotation.SuppressLint;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,17 +13,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.example.tamnguyen.calorizeapp.FoodList.FoodDatabase;
 import com.example.tamnguyen.calorizeapp.FoodList.FoodList;
 import com.example.tamnguyen.calorizeapp.R;
-import com.google.firebase.database.DatabaseError;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import uk.co.daentech.circulardemo.widgets.ProgressBar;
+import uk.co.daentech.circulardemo.widgets.ProgressCircle;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -42,36 +39,44 @@ public class DiaryFragment extends Fragment {
     public RecyclerView lunchRv;
     @BindView(R.id.dinnerRv)
     public RecyclerView dinnerRv;
-
+    @BindView(R.id.progressCarb)
+    public ProgressBar progressCarb;
+    @BindView(R.id.progressFat)
+    public ProgressBar progressFat;
+    @BindView(R.id.progressProtein)
+    public ProgressBar progressProtein;
+    @BindView(R.id.progressCalories)
+    public ProgressCircle progressCalories;
     Diary currentDiary;
+
     public DiaryFragment() {
         // Required empty public constructor
     }
-    public static DiaryFragment newInstance(){
+
+    public static DiaryFragment newInstance() {
         DiaryFragment diaryFragment = new DiaryFragment();
         return diaryFragment;
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_diary,container,false);
-        ButterKnife.bind(this,view);
+        View view = inflater.inflate(R.layout.fragment_diary, container, false);
+        ButterKnife.bind(this, view);
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initView();
+        initData();
     }
 
     /**
      * Wrapper method for loading today's diary
      */
     @SuppressLint("StaticFieldLeak")
-    private void initView(){
-
-
+    private void initData() {
         //Because DiaryDatabase depends on FoodDatabase
         //Therefore it is neccesary to check FoodDatabase loading is finished
         //We use a background thread for this checking to avoid blocking UI-thread
@@ -89,10 +94,12 @@ public class DiaryFragment extends Fragment {
             }
         });
     }
-    private void updateUI(Diary diary){
+
+    private void updateUI(Diary diary) {
         setRecyclerViewAndAdapter(diary);
     }
-    private void setRecyclerViewAndAdapter(Diary diary){
+
+    private void setRecyclerViewAndAdapter(Diary diary) {
         final DiaryMealAdapter.OnItemListener itemListener = new DiaryMealAdapter.OnItemListener() {
             @Override
             public void onClick(FoodList foodList, ArrayList<Double> volumes, int position) {
@@ -113,11 +120,19 @@ public class DiaryFragment extends Fragment {
         lunchRv.setLayoutManager(new LinearLayoutManager(getContext()));
         dinnerRv.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        breakfastRv.setAdapter(new DiaryMealAdapter(diary.breakfastList,diary.breakfastVolumeList,itemListener));
-        lunchRv.setAdapter(new DiaryMealAdapter(diary.lunchList,diary.lunchVolumeList,itemListener));
-        dinnerRv.setAdapter(new DiaryMealAdapter(diary.dinnerList,diary.dinnerVolumeList,itemListener));
+        breakfastRv.setAdapter(new DiaryMealAdapter(diary.breakfastList, diary.breakfastVolumeList, itemListener));
+        lunchRv.setAdapter(new DiaryMealAdapter(diary.lunchList, diary.lunchVolumeList, itemListener));
+        dinnerRv.setAdapter(new DiaryMealAdapter(diary.dinnerList, diary.dinnerVolumeList, itemListener));
     }
-    private void setupDateManip(){
+
+    private void setupProgressBar(Diary diary) {
+        progressFat.setProgress((float) diary.neededFat);
+        progressCarb.setProgress((float) diary.neededCarbs);
+        progressProtein.setProgress((float) diary.neededProtein);
+        progressCalories.setProgress((float) diary.neededCalories);
+    }
+
+    private void setupDateManip() {
         prevDayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

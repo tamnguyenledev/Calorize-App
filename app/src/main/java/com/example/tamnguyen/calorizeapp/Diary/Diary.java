@@ -21,6 +21,10 @@ public class Diary {
     public double protein = 0;
     public double fat = 0;
     public double calories = 0;
+    public double neededCarbs = 0;
+    public double neededProtein = 0;
+    public double neededFat = 0;
+    public double neededCalories = 0;
     FoodList breakfastList = new FoodList(new ArrayList<Food>());
     ArrayList<Double> breakfastVolumeList = new ArrayList<>();
     FoodList lunchList = new FoodList(new ArrayList<Food>());
