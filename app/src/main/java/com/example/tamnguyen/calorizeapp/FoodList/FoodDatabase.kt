@@ -69,6 +69,7 @@ class FoodDatabase {
                         val food = child.getValue(Food::class.java)
                         foodList.add(food!!)
                         foodMap[child.key] = food
+                        food.foodID = child.key
                     }
                     this@FoodDatabase.foodList = FoodList(foodList)
                     synchronized(this@FoodDatabase){
@@ -95,4 +96,5 @@ class FoodDatabase {
     fun getFoodByID(id: String): Food{
         return foodMap?.get(id)!!
     }
+
 }

@@ -97,6 +97,7 @@ public class DiaryFragment extends Fragment {
 
     private void updateUI(Diary diary) {
         setRecyclerViewAndAdapter(diary);
+        setupProgressBar(diary);
     }
 
     private void setRecyclerViewAndAdapter(Diary diary) {
@@ -126,12 +127,19 @@ public class DiaryFragment extends Fragment {
     }
 
     private void setupProgressBar(Diary diary) {
-        progressFat.setProgress((float) diary.neededFat);
-        progressCarb.setProgress((float) diary.neededCarbs);
-        progressProtein.setProgress((float) diary.neededProtein);
-        progressCalories.setProgress((float) diary.neededCalories);
+        //Progress Bar for Fat
+        progressFat.setProgress((float) ((float) diary.fat/diary.neededFat));
+        progressFat.startAnimation();
+        //Progress Bar for Carb
+        progressCarb.setProgress((float) ((float) diary.carbs/diary.neededCarbs));
+        progressCarb.startAnimation();
+        //Progress Bar for Protein
+        progressProtein.setProgress((float) ((float) diary.protein/diary.neededProtein));
+        progressProtein.startAnimation();
+        //Progress Bar for Calories
+        progressCalories.setProgress((float) ((float) diary.calories/diary.neededCalories));
+        progressCalories.startAnimation();
     }
-
     private void setupDateManip() {
         prevDayBtn.setOnClickListener(new View.OnClickListener() {
             @Override

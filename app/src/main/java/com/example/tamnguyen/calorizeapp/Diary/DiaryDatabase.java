@@ -42,6 +42,7 @@ public class DiaryDatabase {
      */
     public interface OnCompleteListener {
         void onSuccess(String key, Diary diary);
+
         void onFailure(int code);
     }
 
@@ -61,7 +62,7 @@ public class DiaryDatabase {
         }
 
         @Override
-        protected  Void doInBackground(Void... voids) {
+        protected Void doInBackground(Void... voids) {
             try {
                 FoodDatabase.Companion.getInstance().getFinishTracker().await();
             } catch (InterruptedException e) {
@@ -239,6 +240,10 @@ public class DiaryDatabase {
     private final static String FAT = "fat";
     private final static String PROTEIN = "protein";
     private final static String CALORIES = "calories";
+    private final static String NEEDED_CARBS = "neededCarbs";
+    private final static String NEEDED_FAT = "neededFat";
+    private final static String NEEDED_PROTEIN = "neededProtein";
+    private final static String NEEDED_CALORIES = "neededCalories";
     private final static String FOOD_LIST = "food_list";
     private final static String FOOD_ID = "food_id";
     private final static String FOOD_NUM_UNIT = "food_num_unit";
@@ -294,6 +299,18 @@ public class DiaryDatabase {
                     break;
                 case CALORIES:
                     diary.calories = Double.parseDouble(child.getValue().toString());
+                    break;
+                case NEEDED_CALORIES:
+                    diary.neededCalories = Double.parseDouble(child.getValue().toString());
+                    break;
+                case NEEDED_FAT:
+                    diary.neededFat = Double.parseDouble(child.getValue().toString());
+                    break;
+                case NEEDED_CARBS:
+                    diary.neededCarbs = Double.parseDouble(child.getValue().toString());
+                    break;
+                case NEEDED_PROTEIN:
+                    diary.neededProtein = Double.parseDouble(child.getValue().toString());
                     break;
                 case FOOD_LIST: {
                     //For each food, put it into corresponding meal and save number of units of that food

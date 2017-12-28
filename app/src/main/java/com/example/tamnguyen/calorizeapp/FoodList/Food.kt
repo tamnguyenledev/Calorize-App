@@ -12,26 +12,29 @@ import kotlin.collections.HashMap
 @SuppressLint("ParcelCreator")
 @Parcelize
 data class Food(var amount: Long,
-           var calorie: Double,
-           var carb: Double,
-           var fat: Double,
-           var protein: Double,
+                var calorie: Double,
+                var carb: Double,
+                var fat: Double,
+                var protein: Double,
                 var massPerUnit: Double,
                 var dayType: Map<String, Boolean>,
-           var unit: String,
-           var foodName: String,
-           var type: String,
-                var photoUrl: String
-            ) : Parcelable {
+                var unit: String,
+                var foodName: String,
+                var type: String,
+                var photoUrl: String,
+                var foodID: String
+) : Parcelable {
 
-    constructor(): this(0,0.toDouble(),0.toDouble(),0.toDouble(),0.toDouble(),0.toDouble(),HashMap<String,Boolean>(),"","","","")
+    constructor() : this(0, 0.toDouble(), 0.toDouble(), 0.toDouble(), 0.toDouble(), 0.toDouble(), HashMap<String, Boolean>(),
+            "", "", "", "","")
+
     companion object {
         val BREAKFAST = "breakfast"
         val LUNCH = "lunch"
         val DINNER = "dinner"
-        fun formatMeasurement(food: Food,unit: Double): String{
+        fun formatMeasurement(food: Food, unit: Double): String {
             val strBuffer = StringBuffer()
-            strBuffer.append(unit.toString() + " " + food.unit + "(" + (food.massPerUnit*unit).toString() +"g)")
+            strBuffer.append(unit.toString() + " " + food.unit + "(" + (food.massPerUnit * unit).toString() + "g)")
             return strBuffer.toString()
         }
     }
