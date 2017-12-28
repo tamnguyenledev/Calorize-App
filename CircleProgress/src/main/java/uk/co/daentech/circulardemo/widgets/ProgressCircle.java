@@ -1,10 +1,10 @@
 package uk.co.daentech.circulardemo.widgets;
 
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -38,6 +38,7 @@ public class ProgressCircle extends View {
 
     private float strokeWidth = 30.0f;
 
+    @SuppressLint("ResourceAsColor")
     public ProgressCircle(Context context, AttributeSet attrs) {
         super(context, attrs);
 
