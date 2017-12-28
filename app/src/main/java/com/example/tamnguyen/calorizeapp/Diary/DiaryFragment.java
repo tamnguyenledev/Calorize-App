@@ -43,6 +43,7 @@ public class DiaryFragment extends Fragment {
     @BindView(R.id.dinnerRv)
     public RecyclerView dinnerRv;
 
+    Diary currentDiary;
     public DiaryFragment() {
         // Required empty public constructor
     }
@@ -69,10 +70,52 @@ public class DiaryFragment extends Fragment {
      */
     @SuppressLint("StaticFieldLeak")
     private void initView(){
+
+
+        //Because DiaryDatabase depends on FoodDatabase
+        //Therefore it is neccesary to check FoodDatabase loading is finished
+        //We use a background thread for this checking to avoid blocking UI-thread
+        //Therefore it is also useful to initialize other resources
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected synchronized Void doInBackground(Void... voids) {
+                while(!FoodDatabase.Companion.getInstance().isLoadFinished()){
+                    try {
+                        wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return null;
+            }
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                DiaryDatabase.getInstance().init(new DiaryDatabase.OnCompleteListener() {
+                    @Override
+                    public void onSuccess(String key, Diary diary) {
+                        currentDiary = diary;
+                        updateUI(diary);
+
+                    }
+
+                    @Override
+                    public void onFailure(int code) {
+
+                    }
+                });
+            }
+        }.execute();
+
+    }
+    private void updateUI(Diary diary){
+        setRecyclerViewAndAdapter(diary);
+    }
+    private void setRecyclerViewAndAdapter(Diary diary){
         final DiaryMealAdapter.OnItemListener itemListener = new DiaryMealAdapter.OnItemListener() {
             @Override
             public void onClick(FoodList foodList, ArrayList<Double> volumes, int position) {
-                
+
             }
 
             @Override
@@ -85,39 +128,13 @@ public class DiaryFragment extends Fragment {
 
             }
         };
+        breakfastRv.setLayoutManager(new LinearLayoutManager(getContext()));
+        lunchRv.setLayoutManager(new LinearLayoutManager(getContext()));
+        dinnerRv.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected synchronized Void doInBackground(Void... voids) {
-                while(!FoodDatabase.Companion.getInstance().isLoadFinished()){
-                    try {
-                        wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                DiaryDatabase.getInstance().init(new DiaryDatabase.OnCompleteListener() {
-                    @Override
-                    public void onSuccess(String key, Diary diary) {
-                        breakfastRv.setLayoutManager(new LinearLayoutManager(getContext()));
-                        lunchRv.setLayoutManager(new LinearLayoutManager(getContext()));
-                        dinnerRv.setLayoutManager(new LinearLayoutManager(getContext()));
-
-                        breakfastRv.setAdapter(new DiaryMealAdapter(diary.breakfastList,diary.breakfastVolumeList,itemListener));
-                        lunchRv.setAdapter(new DiaryMealAdapter(diary.lunchList,diary.lunchVolumeList,itemListener));
-                        dinnerRv.setAdapter(new DiaryMealAdapter(diary.dinnerList,diary.dinnerVolumeList,itemListener));
-                    }
-
-                    @Override
-                    public void onFailure(int code) {
-
-                    }
-                });
-                return null;
-            }
-        }.execute();
-
-
+        breakfastRv.setAdapter(new DiaryMealAdapter(diary.breakfastList,diary.breakfastVolumeList,itemListener));
+        lunchRv.setAdapter(new DiaryMealAdapter(diary.lunchList,diary.lunchVolumeList,itemListener));
+        dinnerRv.setAdapter(new DiaryMealAdapter(diary.dinnerList,diary.dinnerVolumeList,itemListener));
     }
     private void setupDateManip(){
         prevDayBtn.setOnClickListener(new View.OnClickListener() {

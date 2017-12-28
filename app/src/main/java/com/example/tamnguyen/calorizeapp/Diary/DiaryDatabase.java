@@ -66,6 +66,8 @@ public class DiaryDatabase {
     private int mCurrentIndex = -1;
     private ArrayList<Pair<String,Diary>> cacheDiary = new ArrayList<>();
 
+    private boolean isInitSuccess = false;
+    private boolean isInitLoading = false;
     public Calendar getCalendar() {
         return mCalendar;
     }
@@ -148,21 +150,30 @@ public class DiaryDatabase {
      * @param listener
      */
     public synchronized void init(final OnCompleteListener listener){
-        getDiary(mCalendar, new OnCompleteListener() {
-            @Override
-            public void onSuccess(String key, Diary diary) {
+        if(!isInitSuccess && !isInitLoading){
+            isInitLoading = true;
+            getDiary(mCalendar, new OnCompleteListener() {
+                @Override
+                public void onSuccess(String key, Diary diary) {
 
-                mCurrentIndex = 0;
-                cacheDiary.clear();
-                cacheDiary.add(new Pair<>(key, diary));
-                listener.onSuccess(key,diary);
-            }
+                    mCurrentIndex = 0;
+                    cacheDiary.clear();
+                    cacheDiary.add(new Pair<>(key, diary));
+                    synchronized (DiaryDatabase.this){
+                        isInitSuccess = true;
+                        isInitLoading = false;
+                    }
+                    listener.onSuccess(key,diary);
 
-            @Override
-            public void onFailure(int code) {
-                listener.onFailure(code);
-            }
-        });
+                }
+
+                @Override
+                public void onFailure(int code) {
+                    listener.onFailure(code);
+                }
+            });
+        }
+
     }
     public synchronized void getTodayDiary(final OnCompleteListener listener){
         listener.onSuccess(cacheDiary.get(mCurrentIndex).first,cacheDiary.get(mCurrentIndex).second);

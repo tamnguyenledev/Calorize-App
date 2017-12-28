@@ -66,8 +66,10 @@ class FoodDatabase {
                         foodMap[child.key] = food
                     }
                     this@FoodDatabase.foodList = FoodList(foodList)
-                    this@FoodDatabase.isLoadFinished = true
-                    this@FoodDatabase.isLoading = false
+                    synchronized(this@FoodDatabase){
+                        this@FoodDatabase.isLoadFinished = true
+                        this@FoodDatabase.isLoading = false
+                    }
                     listener.onSuccess(foodList = this@FoodDatabase.foodList)
                 }
             })
