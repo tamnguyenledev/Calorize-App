@@ -40,22 +40,23 @@ public class DiaryDatabase {
         void onSuccess( String key,Diary diary);
         void onFailure(int code);
     }
-    private DiaryDatabase() {
-        getDiary(mCalendar, new OnCompleteListener() {
-            @Override
-            public void onSuccess(String key, Diary diary) {
-                synchronized (DiaryDatabase.this) {
+    private  DiaryDatabase() {
+        synchronized (DiaryDatabase.this) {
+            getDiary(mCalendar, new OnCompleteListener() {
+                @Override
+                public void onSuccess(String key, Diary diary) {
+
                     mCurrentIndex = 0;
                     cacheDiary.clear();
                     cacheDiary.add(new Pair<>(key, diary));
                 }
-            }
 
-            @Override
-            public void onFailure(int code) {
+                @Override
+                public void onFailure(int code) {
 
-            }
-        });
+                }
+            });
+        }
     }
 
     /**
