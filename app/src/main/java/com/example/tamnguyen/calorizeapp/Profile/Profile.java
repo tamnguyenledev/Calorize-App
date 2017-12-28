@@ -13,14 +13,15 @@ import java.util.Date;
 
 public class Profile implements Parcelable {
     private String fullName,gender,dateOfBirth,urlAvatar;
-    private int iAge,iWeight,iHeight;
+    private int iAge;
+    private float iWeight,iHeight;
     private boolean bWeightType,bHeightType;
     /*
     * bWeightType ... false: kg | true: pound
     * bHeightType ... false: cm | true: foot
     * */
 
-    public Profile(String fullName, String gender, String dateOfBirth, String urlAvatar, int iAge, int iWeight, int iHeight, boolean bWeightType, boolean bHeightType) {
+    public Profile(String fullName, String gender, String dateOfBirth, String urlAvatar, int iAge, float iWeight, float iHeight, boolean bWeightType, boolean bHeightType) {
         this.fullName = fullName;
         this.gender = gender;
         this.dateOfBirth = dateOfBirth;
@@ -38,8 +39,8 @@ public class Profile implements Parcelable {
         dateOfBirth = in.readString();
         urlAvatar = in.readString();
         iAge = in.readInt();
-        iWeight = in.readInt();
-        iHeight = in.readInt();
+        iWeight = in.readFloat();
+        iHeight = in.readFloat();
         bWeightType = in.readByte() != 0;
         bHeightType = in.readByte() != 0;
     }
@@ -63,7 +64,18 @@ public class Profile implements Parcelable {
         }
         return 0;
     }
-
+    public float convertCm2Feet(float cm){
+        return (float) ((float)Math.round(cm * 0.03*100.0)/100.0);
+    }
+    public float convertFeet2Cm(float feet){
+        return (float) ((float)Math.round(feet / 0.03 *100.0)/100.0);
+    }
+    public float convertKilogram2Pound(float kilo){
+        return (float) ((float)Math.round(kilo * 2.2 * 100.0)/100.0);
+    }
+    public float convertPound2Kilogram(float pound){
+        return (float) ((float)Math.round(pound / 2.20 * 100.0)/100.0);
+    }
     public String getFullName() {
         return fullName;
     }
@@ -84,11 +96,11 @@ public class Profile implements Parcelable {
         return iAge;
     }
 
-    public int getiWeight() {
+    public float getiWeight() {
         return iWeight;
     }
 
-    public int getiHeight() {
+    public float getiHeight() {
         return iHeight;
     }
 
@@ -98,6 +110,42 @@ public class Profile implements Parcelable {
 
     public boolean isbHeightType() {
         return bHeightType;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public void setUrlAvatar(String urlAvatar) {
+        this.urlAvatar = urlAvatar;
+    }
+
+    public void setiAge(int iAge) {
+        this.iAge = iAge;
+    }
+
+    public void setiWeight(float iWeight) {
+        this.iWeight = iWeight;
+    }
+
+    public void setiHeight(float iHeight) {
+        this.iHeight = iHeight;
+    }
+
+    public void setbWeightType(boolean bWeightType) {
+        this.bWeightType = bWeightType;
+    }
+
+    public void setbHeightType(boolean bHeightType) {
+        this.bHeightType = bHeightType;
     }
 
     @Override
@@ -112,8 +160,8 @@ public class Profile implements Parcelable {
         parcel.writeString(dateOfBirth);
         parcel.writeString(urlAvatar);
         parcel.writeInt(iAge);
-        parcel.writeInt(iWeight);
-        parcel.writeInt(iHeight);
+        parcel.writeFloat(iWeight);
+        parcel.writeFloat(iHeight);
         parcel.writeByte((byte) (bWeightType ? 1 : 0));
         parcel.writeByte((byte) (bHeightType ? 1 : 0));
     }
