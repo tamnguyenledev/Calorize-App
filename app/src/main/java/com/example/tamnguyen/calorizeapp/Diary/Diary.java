@@ -22,11 +22,11 @@ public class Diary {
     public double fat = 0;
     public double calories = 0;
     FoodList breakfastList = new FoodList(new ArrayList<Food>());
-    List<Integer> breakfastVolumeList = new ArrayList<Integer>();
+    ArrayList<Integer> breakfastVolumeList = new ArrayList<Integer>();
     FoodList lunchList = new FoodList(new ArrayList<Food>());
-    List<Integer> lunchVolumeList = new ArrayList<Integer>();
+    ArrayList<Integer> lunchVolumeList = new ArrayList<Integer>();
     FoodList dinnerList = new FoodList(new ArrayList<Food>());
-    List<Integer> dinnerVolumeList = new ArrayList<Integer>();
+    ArrayList<Integer> dinnerVolumeList = new ArrayList<Integer>();
 
     public Map<String, Object> toMap() {
         return new HashMap<>();

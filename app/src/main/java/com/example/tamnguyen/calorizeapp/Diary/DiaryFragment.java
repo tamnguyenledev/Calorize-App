@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.tamnguyen.calorizeapp.FoodList.FoodDatabase;
+import com.example.tamnguyen.calorizeapp.FoodList.FoodList;
 import com.example.tamnguyen.calorizeapp.R;
 
 import java.util.ArrayList;
@@ -57,17 +58,36 @@ public class DiaryFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        initView();
     }
 
     /**
      * Wrapper method for loading today's diary
      */
     private void initView(){
+        final DiaryMealAdapter.OnItemListener itemListener = new DiaryMealAdapter.OnItemListener() {
+            @Override
+            public void onClick(FoodList foodList, ArrayList<Integer> volumes, int position) {
+                
+            }
+
+            @Override
+            public void onLongClick(FoodList foodList, ArrayList<Integer> volumes, int position) {
+
+            }
+
+            @Override
+            public void onAddClick(FoodList foodList, ArrayList<Integer> volumes) {
+
+            }
+        };
+
         DiaryDatabase.getInstance().getTodayDiary(new DiaryDatabase.OnCompleteListener() {
             @Override
             public void onSuccess(String key, Diary diary) {
-
+                breakfastRv.setAdapter(new DiaryMealAdapter(diary.breakfastList,diary.breakfastVolumeList,itemListener));
+                lunchRv.setAdapter(new DiaryMealAdapter(diary.lunchList,diary.lunchVolumeList,itemListener));
+                dinnerRv.setAdapter(new DiaryMealAdapter(diary.dinnerList,diary.dinnerVolumeList,itemListener));
             }
 
             @Override

@@ -26,13 +26,13 @@ public class DiaryDatabase {
         return ourInstance;
     }
 
-    private static String DiaryPath = "diary";
-    private static String DiaryMetaPath = "diary_meta";
-    private static String FoodSubPath = "food";
+    private static final String DiaryPath = "diary";
+    private static final String DiaryMetaPath = "diary_meta";
+    private static final String FoodSubPath = "food";
     private DatabaseReference diaryRef = FirebaseDatabase.getInstance().getReference().child(DiaryPath)
-            .child(FirebaseAuth.getInstance().getUid());
+            .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
     private DatabaseReference diaryMetaRef = FirebaseDatabase.getInstance().getReference().child(DiaryMetaPath)
-            .child(FirebaseAuth.getInstance().getUid());
+            .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
     /**
      * Callback Interface for Query Completion
      */
@@ -86,6 +86,7 @@ public class DiaryDatabase {
      * Used to retrieve diary based on internal calendar
      * @param listener
      */
+    public static final int NO_DATA = 0;
     public synchronized void getPrevDiary(final OnCompleteListener listener){
         if(mCurrentIndex + 1 <= cacheDiary.size() - 1){
             //If Previous diary already appears in cache
@@ -153,6 +154,10 @@ public class DiaryDatabase {
         }
     }
     public synchronized void getTodayDiary(final OnCompleteListener listener){
+        if(cacheDiary.size()==0){
+            listener.onFailure(NO_DATA);
+            return;
+        }
         listener.onSuccess(cacheDiary.get(mCurrentIndex).first,cacheDiary.get(mCurrentIndex).second);
     }
     /**
