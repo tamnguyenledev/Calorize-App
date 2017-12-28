@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,13 +32,16 @@ public class DiaryFragment extends Fragment {
     public Button prevDayBtn;
     @BindView(R.id.btnNextDay)
     public Button nextDayBtn;
+    @BindView(R.id.breakfastRv)
+    public RecyclerView breakfastRv;
+    @BindView(R.id.lunchRv)
+    public RecyclerView lunchRv;
+    @BindView(R.id.dinnerRv)
+    public RecyclerView dinnerRv;
 
     public DiaryFragment() {
         // Required empty public constructor
     }
-    Diary mCurrentDiary;
-    Calendar mCalendar;
-
     public static DiaryFragment newInstance(){
         DiaryFragment diaryFragment = new DiaryFragment();
         return diaryFragment;
@@ -53,17 +57,24 @@ public class DiaryFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mCalendar = GregorianCalendar.getInstance();
-        //Load Diary First
-        loadTodayDiary();
 
     }
 
     /**
      * Wrapper method for loading today's diary
      */
-    private void loadTodayDiary(){
+    private void initView(){
+        DiaryDatabase.getInstance().getTodayDiary(new DiaryDatabase.OnCompleteListener() {
+            @Override
+            public void onSuccess(String key, Diary diary) {
 
+            }
+
+            @Override
+            public void onFailure(int code) {
+
+            }
+        });
     }
     private void setupDateManip(){
         prevDayBtn.setOnClickListener(new View.OnClickListener() {

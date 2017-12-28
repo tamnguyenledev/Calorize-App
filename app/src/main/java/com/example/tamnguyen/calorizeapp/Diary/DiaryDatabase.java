@@ -73,10 +73,19 @@ public class DiaryDatabase {
             second = r;
         }
     }
-    Calendar mCalendar = GregorianCalendar.getInstance();
-    int maxCacheSize = 20;
-    int mCurrentIndex = -1;
-    ArrayList<Pair<String,Diary>> cacheDiary = new ArrayList<>();
+    private Calendar mCalendar = GregorianCalendar.getInstance();
+    private int maxCacheSize = 20;
+    private int mCurrentIndex = -1;
+    private ArrayList<Pair<String,Diary>> cacheDiary = new ArrayList<>();
+
+    public Calendar getCalendar() {
+        return mCalendar;
+    }
+    /**
+     * Main API of this class
+     * Used to retrieve diary based on internal calendar
+     * @param listener
+     */
     public synchronized void getPrevDiary(final OnCompleteListener listener){
         if(mCurrentIndex + 1 <= cacheDiary.size() - 1){
             //If Previous diary already appears in cache
