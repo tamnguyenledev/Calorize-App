@@ -93,7 +93,7 @@ class FoodListFragment : Fragment() {
                     rvDiaryFoodList.adapter = mAdapter
                     return
                 }
-                //After users finish typing, we should call query operation after delay time
+                //After users finish typing, we should call query operate after delay time
                 runnable = Runnable {
                     searchFoodImp(s.toString())
                 }
@@ -104,7 +104,7 @@ class FoodListFragment : Fragment() {
             }
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                //When users keep typing, we should not call query operation
+                //When users keep typing, we should not call query operate
                 handler.removeCallbacks(runnable)
             }
         })

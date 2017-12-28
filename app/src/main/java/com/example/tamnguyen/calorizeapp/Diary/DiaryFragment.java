@@ -76,12 +76,11 @@ public class DiaryFragment extends Fragment {
         //Therefore it is neccesary to check FoodDatabase loading is finished
         //We use a background thread for this checking to avoid blocking UI-thread
         //Therefore it is also useful to initialize other resources
-        DiaryDatabase.getInstance().init(new DiaryDatabase.OnCompleteListener() {
+        DiaryDatabase.getInstance().getCurrentDiary(new DiaryDatabase.OnCompleteListener() {
             @Override
             public void onSuccess(String key, Diary diary) {
                 currentDiary = diary;
                 updateUI(diary);
-
             }
 
             @Override
@@ -89,8 +88,6 @@ public class DiaryFragment extends Fragment {
 
             }
         });
-
-
     }
     private void updateUI(Diary diary){
         setRecyclerViewAndAdapter(diary);

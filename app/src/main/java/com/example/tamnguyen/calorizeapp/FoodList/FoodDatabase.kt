@@ -76,7 +76,6 @@ class FoodDatabase {
         }
         else if(!isLoadFinished && isLoading)
         {
-            listener.onFailure(DATA_LOADING_NOT_FINISHED)
         }
         else if(isLoadFinished){
             listener.onSuccess(foodList)

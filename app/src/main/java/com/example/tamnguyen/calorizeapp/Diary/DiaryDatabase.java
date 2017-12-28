@@ -1,6 +1,5 @@
 package com.example.tamnguyen.calorizeapp.Diary;
 
-import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 
 import com.example.tamnguyen.calorizeapp.FoodList.Food;
@@ -16,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -43,8 +43,30 @@ public class DiaryDatabase {
         void onSuccess( String key,Diary diary);
         void onFailure(int code);
     }
-    public interface OnInitSuccessListener {
-        void onSuccess();
+    private static class CheckingTask extends AsyncTask<Void,Void,Void>{
+        DatabaseOperation databaseOperation;
+        OnCompleteListener listener;
+        public CheckingTask(DatabaseOperation operation,OnCompleteListener listener){
+            databaseOperation = operation;
+            this.listener = listener;
+        }
+        @Override
+        protected synchronized Void doInBackground(Void... voids) {
+            while(!FoodDatabase.Companion.getInstance().isLoadFinished()){
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            databaseOperation.operate(listener);
+        }
     }
     private  DiaryDatabase() {
 
@@ -68,9 +90,8 @@ public class DiaryDatabase {
     private int maxCacheSize = 20;
     private int mCurrentIndex = -1;
     private ArrayList<Pair<String,Diary>> cacheDiary = new ArrayList<>();
-
-    private boolean isInitSuccess = false;
-    private boolean isInitLoading = false;
+    private Map<String,Diary> cacheLookup = new HashMap<>();
+    private boolean isFirstTimeLoading = true;
     public Calendar getCalendar() {
         return mCalendar;
     }
@@ -80,7 +101,21 @@ public class DiaryDatabase {
      * @param listener
      */
     public static final int NO_DATA = 0;
-    public synchronized void getPrevDiary(final OnCompleteListener listener){
+
+    @FunctionalInterface
+    private interface DatabaseOperation {
+        void operate(OnCompleteListener listener);
+    }
+    public void getPrevDiary(OnCompleteListener listener){
+        new CheckingTask(this::getPrevDiaryImp,listener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+    public void getNextDiary(OnCompleteListener listener){
+        new CheckingTask(this::getNextDiaryImp,listener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+    public void getCurrentDiary(OnCompleteListener listener){
+        new CheckingTask(this::getCurrentDiaryImp,listener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+    private synchronized void getPrevDiaryImp(final OnCompleteListener listener){
         if(mCurrentIndex + 1 <= cacheDiary.size() - 1){
             //If Previous diary already appears in cache
             mCalendar.add(Calendar.DATE,-1);
@@ -97,6 +132,7 @@ public class DiaryDatabase {
             else{
                 //If Cache is full
                 //Remove the first Diary in cache
+                cacheLookup.remove(cacheDiary.get(0).first);
                 cacheDiary.remove(0);
             }
             //In both cases above, we need to get Diary from Database and put it into cache
@@ -104,7 +140,10 @@ public class DiaryDatabase {
             getDiary(mCalendar, new OnCompleteListener() {
                 @Override
                 public void onSuccess(String key, Diary diary) {
-                    cacheDiary.add(new Pair<>(key,diary));
+                    synchronized (DiaryDatabase.this){
+                        cacheDiary.add(new Pair<>(key,diary));
+                        cacheLookup.put(key,diary);
+                    }
                     listener.onSuccess(key,diary);
                 }
 
@@ -115,7 +154,7 @@ public class DiaryDatabase {
             });
         }
     }
-    public synchronized void getNextDiary(final OnCompleteListener listener){
+    private synchronized void getNextDiaryImp(final OnCompleteListener listener){
         if(mCurrentIndex - 1 >= 0){
             //If Previous diary already appears in cache
             --mCurrentIndex;
@@ -128,6 +167,7 @@ public class DiaryDatabase {
             if(cacheDiary.size() >= maxCacheSize){
                 //If Cache is full
                 //Remove the last Diary in cache
+                cacheLookup.remove(cacheDiary.get(cacheDiary.size()-1));
                 cacheDiary.remove(cacheDiary.size()-1);
             }
             //In both cases above, we need to get Diary from Database and put it into cache
@@ -136,6 +176,7 @@ public class DiaryDatabase {
                 @Override
                 public void onSuccess(String key, Diary diary) {
                     cacheDiary.add(0,new Pair<>(key,diary));
+                    cacheLookup.put(key,diary);
                     listener.onSuccess(key,diary);
                 }
 
@@ -146,82 +187,33 @@ public class DiaryDatabase {
             });
         }
     }
-
-    /**
-     * This function is used to init Food Diary
-     * This function should always be called in first place
-     * @param listener
-     */
-    @SuppressLint("StaticFieldLeak")
-    public synchronized void init(final OnCompleteListener listener){
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected synchronized Void doInBackground(Void... voids) {
-                while(!FoodDatabase.Companion.getInstance().isLoadFinished()){
-                    try {
-                        wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+    private synchronized void getCurrentDiaryImp(final OnCompleteListener listener){
+        if(isFirstTimeLoading){
+            //If diary database hasn't been loaded before
+            //Load Today Diary and put it into cache
+            isFirstTimeLoading = false;
+            Calendar calendar = GregorianCalendar.getInstance();
+            getDiary(calendar, new OnCompleteListener() {
+                @Override
+                public void onSuccess(String key, Diary diary) {
+                    synchronized (DiaryDatabase.this){
+                        mCurrentIndex = 0;
+                        cacheDiary.add(new Pair<String, Diary>(key,diary));
+                        cacheLookup.put(key,diary);
                     }
+                    listener.onSuccess(key,diary);
                 }
-                return null;
-            }
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                if(!isInitSuccess && !isInitLoading){
-                    isInitLoading = true;
-                    getDiary(mCalendar, new OnCompleteListener() {
-                        @Override
-                        public void onSuccess(String key, Diary diary) {
 
-                            mCurrentIndex = 0;
-                            cacheDiary.clear();
-                            cacheDiary.add(new Pair<>(key, diary));
-                            synchronized (DiaryDatabase.this){
-                                isInitSuccess = true;
-                                isInitLoading = false;
-                            }
-                            listener.onSuccess(key,diary);
-
-                        }
-
-                        @Override
-                        public void onFailure(int code) {
-                            listener.onFailure(code);
-                        }
-                    });
+                @Override
+                public void onFailure(int code) {
+                    listener.onFailure(code);
                 }
-            }
-        }.execute();
+            });
+        }
+        else{
+            listener.onSuccess(cacheDiary.get(mCurrentIndex).first,cacheDiary.get(mCurrentIndex).second);
+        }
 
-
-    }
-    @SuppressLint("StaticFieldLeak")
-    public synchronized void getTodayDiary(final OnCompleteListener listener){
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected synchronized Void doInBackground(Void... voids) {
-                while (isInitLoading){
-                    try {
-                        wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                if(mCurrentIndex == -1){
-                    listener.onFailure(0);
-                }
-                else
-                    listener.onSuccess(cacheDiary.get(mCurrentIndex).first,cacheDiary.get(mCurrentIndex).second);
-            }
-        };
     }
     /**
      * Key to access Corresponding Fields of Diary on database
@@ -236,27 +228,38 @@ public class DiaryDatabase {
     /**
      * Helper method for geting Diary Database of current user
      * @param calendar : Specify date to get data
-     * @param listener: OnCompleteListener to listen to query operation
+     * @param listener: OnCompleteListener to listen to query operate
      */
     public void getDiary(Calendar calendar, final OnCompleteListener listener){
+        //Get Diary's key
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         String key = sdf.format(calendar.getTime());
-        diaryRef.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Diary diary = new Diary();
-                if(dataSnapshot.exists())
-               {
-                   diary = createDiaryFromSnapshot(dataSnapshot);
-               }
-               listener.onSuccess(dataSnapshot.getKey(),diary);
-            }
+        if(cacheLookup.containsKey(key)){
+            //Check if Today Diary is already in cache
+            listener.onSuccess(key,cacheLookup.get(key));
+        }
+        else
+        {
+            //Load Today Diary from database
+            //Because of getPrev,getNext,getCurrent operations, today diary is not put into cache for synchronization
+            diaryRef.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Diary diary = new Diary();
+                    if(dataSnapshot.exists())
+                    {
+                        diary = createDiaryFromSnapshot(dataSnapshot);
+                    }
+                    listener.onSuccess(dataSnapshot.getKey(),diary);
+                }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                listener.onFailure(databaseError.getCode());
-            }
-        });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    listener.onFailure(databaseError.getCode());
+                }
+            });
+        }
+
     }
     public static Diary createDiaryFromSnapshot(DataSnapshot dataSnapshot){
         Diary diary = new Diary();
