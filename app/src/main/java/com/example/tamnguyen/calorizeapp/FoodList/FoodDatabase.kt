@@ -20,11 +20,12 @@ class FoodDatabase {
     companion object {
         val instance: FoodDatabase by lazy { Holder.INSTANCE }
         val path = "foodCourt"
+        val DATA_LOADING_NOT_FINISHED = 10
     }
 
     interface OnCompleteListener {
         fun onSuccess(foodList: FoodList)
-        fun onFailure(err: DatabaseError)
+        fun onFailure(code: Int)
     }
     interface OnInitSuccessListener{
         fun onSuccess()
@@ -37,7 +38,8 @@ class FoodDatabase {
      * @see getFoodList
      */
     private lateinit var foodMap: MutableMap<String,Food>
-    public var isLoadFinished = false
+    var isLoadFinished = false
+    var isLoading = false
     //Database Reference
     val mDatabase = FirebaseDatabase.getInstance().reference
     var foodList: FoodList = FoodList(ArrayList<Food>())
@@ -47,10 +49,13 @@ class FoodDatabase {
      */
     @Synchronized
     fun getFoodList(listener: OnCompleteListener) {
-        if(foodList.items.size == 0){
+        if(!isLoadFinished && !isLoading){
+            //If Food List is not already loaded, and nothing is loading
+            //Load the list from database
+            isLoading = true
             mDatabase.child(path).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(err: DatabaseError) {
-                    listener.onFailure(err)
+                    listener.onFailure(err.code)
                 }
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val foodList = ArrayList<Food>()
@@ -62,12 +67,17 @@ class FoodDatabase {
                     }
                     this@FoodDatabase.foodList = FoodList(foodList)
                     this@FoodDatabase.isLoadFinished = true
+                    this@FoodDatabase.isLoading = false
                     listener.onSuccess(foodList = this@FoodDatabase.foodList)
                 }
             })
         }
-        else{
-            listener.onSuccess(this@FoodDatabase.foodList)
+        else if(!isLoadFinished && isLoading)
+        {
+            listener.onFailure(DATA_LOADING_NOT_FINISHED)
+        }
+        else if(isLoadFinished){
+            listener.onSuccess(foodList)
         }
 
     }

@@ -1,10 +1,13 @@
 package com.example.tamnguyen.calorizeapp.Diary;
 
 
+import android.annotation.SuppressLint;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,6 +67,7 @@ public class DiaryFragment extends Fragment {
     /**
      * Wrapper method for loading today's diary
      */
+    @SuppressLint("StaticFieldLeak")
     private void initView(){
         final DiaryMealAdapter.OnItemListener itemListener = new DiaryMealAdapter.OnItemListener() {
             @Override
@@ -82,12 +86,23 @@ public class DiaryFragment extends Fragment {
             }
         };
 
-        FoodDatabase.Companion.getInstance().getFoodList(new FoodDatabase.OnCompleteListener() {
+        new AsyncTask<Void, Void, Void>() {
             @Override
-            public void onSuccess(@NotNull FoodList foodList) {
+            protected synchronized Void doInBackground(Void... voids) {
+                while(!FoodDatabase.Companion.getInstance().isLoadFinished()){
+                    try {
+                        wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
                 DiaryDatabase.getInstance().init(new DiaryDatabase.OnCompleteListener() {
                     @Override
                     public void onSuccess(String key, Diary diary) {
+                        breakfastRv.setLayoutManager(new LinearLayoutManager(getContext()));
+                        lunchRv.setLayoutManager(new LinearLayoutManager(getContext()));
+                        dinnerRv.setLayoutManager(new LinearLayoutManager(getContext()));
+
                         breakfastRv.setAdapter(new DiaryMealAdapter(diary.breakfastList,diary.breakfastVolumeList,itemListener));
                         lunchRv.setAdapter(new DiaryMealAdapter(diary.lunchList,diary.lunchVolumeList,itemListener));
                         dinnerRv.setAdapter(new DiaryMealAdapter(diary.dinnerList,diary.dinnerVolumeList,itemListener));
@@ -98,13 +113,10 @@ public class DiaryFragment extends Fragment {
 
                     }
                 });
+                return null;
             }
+        }.execute();
 
-            @Override
-            public void onFailure(@NotNull DatabaseError err) {
-
-            }
-        });
 
     }
     private void setupDateManip(){

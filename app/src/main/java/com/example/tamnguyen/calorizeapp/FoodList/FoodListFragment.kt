@@ -73,8 +73,8 @@ class FoodListFragment : Fragment() {
                 mAdapter.listener = listener
                 rvDiaryFoodList.adapter = mAdapter
             }
-            override fun onFailure(err: DatabaseError) {
-                Toast.makeText(context!!,err.message,Toast.LENGTH_LONG).show()
+            override fun onFailure(err: Int) {
+                Toast.makeText(context!!,"Error happened",Toast.LENGTH_LONG).show()
             }
 
         })
