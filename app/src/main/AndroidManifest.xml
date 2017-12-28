@@ -56,8 +56,9 @@
         </activity>
         <activity android:name=".AddFoodActivity" />
         <activity android:name=".FoodListActivity" />
-        <activity android:name=".Profile.EditProfileActivity"></activity>
+        <activity android:name=".Profile.EditProfileActivity" />
         <activity android:name=".BarChart.BarChartActivity" />
+        <activity android:name=".Profile.CreateProfileActivity"></activity>
     </application>
 
 </manifest>

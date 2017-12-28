@@ -1,6 +1,5 @@
 package com.example.tamnguyen.calorizeapp
 
-import android.app.Activity
 import android.content.Intent
 import android.graphics.Typeface
 import android.support.v7.app.AppCompatActivity
@@ -11,6 +10,8 @@ import com.google.firebase.auth.AuthResult
 import android.util.Log
 import android.view.View
 import android.widget.*
+import com.example.tamnguyen.calorizeapp.Profile.CreateProfileActivity
+import com.example.tamnguyen.calorizeapp.Profile.EditProfileActivity
 import com.facebook.*
 import com.google.firebase.auth.FacebookAuthProvider
 import com.facebook.login.LoginResult
@@ -22,7 +23,6 @@ import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.Scopes
 import com.google.android.gms.common.api.*
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.android.synthetic.main.activity_login.*
@@ -125,13 +125,16 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
             if (task.isSuccessful) {
                 //User signs in successfully with Authentication
                 //Get user data from Facebook
+                // coi nhu là mới đăng nhập lần đầu để test màn hình create profile
                 val request = GraphRequest.newMeRequest(token, { json, response ->
-                    var intent = Intent(this, MainActivity::class.java).apply {
+                    var intent = Intent(this, CreateProfileActivity::class.java).apply {
+                        putExtra("id",json["id"] as String);
                         putExtra("name", json["name"] as String)
                         putExtra("birthday", json["birthday"] as String)
                         putExtra("gender", json["gender"] as String)
                         putExtra("picture", json.getJSONObject("picture").getJSONObject("data")["url"] as String)
                     }
+
                     startActivity(intent)
                     finish()
                 })

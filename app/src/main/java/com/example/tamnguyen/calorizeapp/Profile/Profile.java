@@ -21,6 +21,13 @@ public class Profile implements Parcelable {
     * bHeightType ... false: cm | true: foot
     * */
 
+    public Profile() {
+        this.fullName = this.gender = this. dateOfBirth= this.urlAvatar = "";
+        this.iAge = 0;
+        this.iWeight = this.iHeight = (float)0.0;
+        this.bWeightType = this.bHeightType = false;
+    }
+
     public Profile(String fullName, String gender, String dateOfBirth, String urlAvatar, int iAge, float iWeight, float iHeight, boolean bWeightType, boolean bHeightType) {
         this.fullName = fullName;
         this.gender = gender;
