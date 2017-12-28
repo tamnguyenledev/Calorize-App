@@ -257,12 +257,13 @@ public class EditProfileActivity extends AppCompatActivity {
 
             editTextName.setText(profile.getFullName());
 
-            if(profile.getGender().equals("male"))
+            if(profile.getGender()!=null && !profile.getGender().isEmpty() &&profile.getGender().equals("male"))
                 spinnerGender.setSelection(0);
             else
                 spinnerGender.setSelection(1);
 
-            textViewBirthDay.setText(profile.getDateOfBirth());
+            if(profile.getDateOfBirth()!=null && !profile.getDateOfBirth().isEmpty())
+                textViewBirthDay.setText(profile.getDateOfBirth());
 
 
             if(profile.isbWeightType()) {

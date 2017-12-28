@@ -125,7 +125,15 @@ public class MainActivity extends AppCompatActivity {
             public Fragment getItem(int position) {
                 switch (position){
                     case 2:
-                        return new ProgressFragment();
+                       // return new ProgressFragment();
+                        return FoodListFragment.Companion.newInstance(new OnItemClickListener() {
+                            @Override
+                            public void onItemClick(@NotNull Food food) {
+                                Intent intent = new Intent(MainActivity.this,AddFoodActivity.class);
+                                intent.putExtra("food",food);
+                                startActivity(intent);
+                            }
+                        });
                     case 3:
                         return new ProfileFragment();
                     default:

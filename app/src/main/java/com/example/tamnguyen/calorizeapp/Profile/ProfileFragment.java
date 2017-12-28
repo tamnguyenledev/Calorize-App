@@ -78,6 +78,7 @@ public class ProfileFragment extends Fragment {
     public void setView(){
         textViewName.setText(profile.getFullName());
         textViewAge.setText(String.format(Locale.ENGLISH,"%d years old",profile.getiAge()));
+        if(profile.getGender()!=null && !profile.getGender().isEmpty())
         textViewGender.setText(profile.getGender().substring(0, 1).toUpperCase() + profile.getGender().substring(1));
         textViewBirthDay.setText(profile.getDateOfBirth());
         Glide.with(getActivity()).load(profile.getUrlAvatar()).apply(RequestOptions.circleCropTransform()).into(imageViewAvatar);
