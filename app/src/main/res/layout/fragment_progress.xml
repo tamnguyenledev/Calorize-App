@@ -26,6 +26,8 @@
           tools:text="12/03/2017"
           android:textColor="@color/colorBlack"
           android:id="@+id/tvFromDate"
+          android:clickable="true"
+          android:editable="false"
           android:padding="@dimen/activity_small_margin"
           android:gravity="center"
           />
@@ -61,6 +63,8 @@
           tools:text="12/03/2017"
           android:textColor="@color/colorBlack"
           android:id="@+id/tvToDate"
+          android:clickable="true"
+          android:editable="false"
           android:padding="@dimen/activity_small_margin"
           android:gravity="center"
           />
