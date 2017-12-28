@@ -62,9 +62,60 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:weightSum="6"
             >
+            <uk.co.daentech.circulardemo.widgets.ProgressCircle
+                android:id="@+id/progress_circle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="30dp"
+                android:textSize="80sp"
+                android:textColor="#BBD452"
+                app:progressColor="#BBD452"
+                app:incompleteProgressColor="#D4D4D4"
+                app:strokeWidth="35dp"/>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <android.support.v4.widget.Space
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent" />
+                <uk.co.daentech.circulardemo.widgets.ProgressBar
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"/>
+                <android.support.v4.widget.Space
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent" />
+                <uk.co.daentech.circulardemo.widgets.ProgressBar
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"/>
+                <android.support.v4.widget.Space
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent" />
+                <uk.co.daentech.circulardemo.widgets.ProgressBar
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"/>
+                <android.support.v4.widget.Space
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent" />
+                <uk.co.daentech.circulardemo.widgets.ProgressBar
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"/>
+                <android.support.v4.widget.Space
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent" />
 
-
+            </LinearLayout>
             <!-- Add circuProgressFragmentress bar and stuff -->
             <include layout="@layout/show_calo_intake"/>
 
