@@ -76,36 +76,20 @@ public class DiaryFragment extends Fragment {
         //Therefore it is neccesary to check FoodDatabase loading is finished
         //We use a background thread for this checking to avoid blocking UI-thread
         //Therefore it is also useful to initialize other resources
-        new AsyncTask<Void, Void, Void>() {
+        DiaryDatabase.getInstance().init(new DiaryDatabase.OnCompleteListener() {
             @Override
-            protected synchronized Void doInBackground(Void... voids) {
-                while(!FoodDatabase.Companion.getInstance().isLoadFinished()){
-                    try {
-                        wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                return null;
+            public void onSuccess(String key, Diary diary) {
+                currentDiary = diary;
+                updateUI(diary);
+
             }
+
             @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                DiaryDatabase.getInstance().init(new DiaryDatabase.OnCompleteListener() {
-                    @Override
-                    public void onSuccess(String key, Diary diary) {
-                        currentDiary = diary;
-                        updateUI(diary);
+            public void onFailure(int code) {
 
-                    }
-
-                    @Override
-                    public void onFailure(int code) {
-
-                    }
-                });
             }
-        }.execute();
+        });
+
 
     }
     private void updateUI(Diary diary){

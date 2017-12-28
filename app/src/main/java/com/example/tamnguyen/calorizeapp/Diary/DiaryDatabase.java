@@ -1,5 +1,8 @@
 package com.example.tamnguyen.calorizeapp.Diary;
 
+import android.annotation.SuppressLint;
+import android.os.AsyncTask;
+
 import com.example.tamnguyen.calorizeapp.FoodList.Food;
 import com.example.tamnguyen.calorizeapp.FoodList.FoodDatabase;
 import com.google.firebase.auth.FirebaseAuth;
@@ -149,30 +152,49 @@ public class DiaryDatabase {
      * This function should always be called in first place
      * @param listener
      */
+    @SuppressLint("StaticFieldLeak")
     public synchronized void init(final OnCompleteListener listener){
-        if(!isInitSuccess && !isInitLoading){
-            isInitLoading = true;
-            getDiary(mCalendar, new OnCompleteListener() {
-                @Override
-                public void onSuccess(String key, Diary diary) {
-
-                    mCurrentIndex = 0;
-                    cacheDiary.clear();
-                    cacheDiary.add(new Pair<>(key, diary));
-                    synchronized (DiaryDatabase.this){
-                        isInitSuccess = true;
-                        isInitLoading = false;
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected synchronized Void doInBackground(Void... voids) {
+                while(!FoodDatabase.Companion.getInstance().isLoadFinished()){
+                    try {
+                        wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                    listener.onSuccess(key,diary);
-
                 }
+                return null;
+            }
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                if(!isInitSuccess && !isInitLoading){
+                    isInitLoading = true;
+                    getDiary(mCalendar, new OnCompleteListener() {
+                        @Override
+                        public void onSuccess(String key, Diary diary) {
 
-                @Override
-                public void onFailure(int code) {
-                    listener.onFailure(code);
+                            mCurrentIndex = 0;
+                            cacheDiary.clear();
+                            cacheDiary.add(new Pair<>(key, diary));
+                            synchronized (DiaryDatabase.this){
+                                isInitSuccess = true;
+                                isInitLoading = false;
+                            }
+                            listener.onSuccess(key,diary);
+
+                        }
+
+                        @Override
+                        public void onFailure(int code) {
+                            listener.onFailure(code);
+                        }
+                    });
                 }
-            });
-        }
+            }
+        }.execute();
+
 
     }
     public synchronized void getTodayDiary(final OnCompleteListener listener){
