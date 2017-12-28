@@ -57,7 +57,7 @@ public class Profile implements Parcelable {
     };
 
     public int generateAge(){
-        if(!dateOfBirth.isEmpty()){
+        if(dateOfBirth!=null &&!dateOfBirth.isEmpty()){
             String year = dateOfBirth.substring(dateOfBirth.lastIndexOf("/") + 1);
             iAge = Calendar.getInstance().get(Calendar.YEAR) - Integer.parseInt(year);
             return iAge;

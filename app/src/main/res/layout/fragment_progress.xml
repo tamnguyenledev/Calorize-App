@@ -6,18 +6,77 @@
     android:orientation="vertical"
     tools:context="com.example.tamnguyen.calorizeapp.Progress.ProgressFragment">
 
-  <uk.co.daentech.circulardemo.widgets.ProgressCircle
-        android:id="@+id/progress_circle"
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:layout_margin="@dimen/large_vertical_margin"
+      android:gravity="center_horizontal"
+      >
+
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="30dp"
-        android:textSize="80sp"
-        android:textColor="#BBD452"
-        app:progressColor="#BBD452"
-        app:incompleteProgressColor="#D4D4D4"
-        app:strokeWidth="35dp"/>
-  <uk.co.daentech.circulardemo.widgets.ProgressBar
-      android:id="@+id/progress_bar_protein"
-      android:layout_width="50dp"
-      android:layout_height="wrap_content"/>
+        android:background="@drawable/rectangle"
+        >
+
+      <TextView
+          android:layout_width="90dp"
+          android:layout_height="38dp"
+          tools:text="12/03/2017"
+          android:textColor="@color/colorBlack"
+          android:id="@+id/tvFromDate"
+          android:padding="@dimen/activity_small_margin"
+          android:gravity="center"
+          />
+
+      <ImageButton
+          android:id="@+id/fromDatePicker"
+          android:layout_width="35dp"
+          android:layout_height="38dp"
+          android:src="@drawable/ic_calendar"
+          android:background="@drawable/rectangle"
+          android:layout_toRightOf="@+id/tvFromDate"
+          />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_compare_arrows_black"
+        android:gravity="center_vertical"
+        android:layout_marginRight="@dimen/activity_vertical_margin"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rectangle"
+        >
+
+      <TextView
+          android:layout_width="90dp"
+          android:layout_height="38dp"
+          tools:text="12/03/2017"
+          android:textColor="@color/colorBlack"
+          android:id="@+id/tvToDate"
+          android:padding="@dimen/activity_small_margin"
+          android:gravity="center"
+          />
+
+      <ImageButton
+          android:id="@+id/toDatePicker"
+          android:layout_width="35dp"
+          android:layout_height="38dp"
+          android:src="@drawable/ic_calendar"
+          android:background="@drawable/rectangle"
+          android:layout_toRightOf="@+id/tvToDate"
+          />
+
+    </RelativeLayout>
+
+  </LinearLayout>
+
 </LinearLayout>

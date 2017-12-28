@@ -6,14 +6,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.example.tamnguyen.calorizeapp.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import uk.co.daentech.circulardemo.widgets.ProgressBar;
 import uk.co.daentech.circulardemo.widgets.ProgressCircle;
 
 /**
@@ -23,8 +20,8 @@ public class ProgressFragment extends Fragment
 {
     @BindView(R.id.progress_circle)
     ProgressCircle progressCircle;
-    @BindView(R.id.progress_bar_protein)
-    ProgressBar progressBarProtein;
+    //@BindView(R.id.progress_bar_protein)
+    //ProgressBar progressBarProtein;
 
     public ProgressFragment()
     {
@@ -38,8 +35,8 @@ public class ProgressFragment extends Fragment
         progressCircle.setProgress(0.7f);
         progressCircle.startAnimation();
 
-        progressBarProtein.setProgress(0.4f);
-        progressBarProtein.startAnimation();
+        //progressBarProtein.setProgress(0.4f);
+        //progressBarProtein.startAnimation();
     }
 
     @Override
