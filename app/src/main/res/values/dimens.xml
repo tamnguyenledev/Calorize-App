@@ -15,4 +15,5 @@
 
     <dimen name="login_btn_margin_bottom">100dp</dimen>
     <dimen name="app_name_text_margin_top">100dp</dimen>
+    <dimen name="large_vertical_margin">32dp</dimen>
 </resources>

@@ -60,7 +60,7 @@
         />
 
     <include
-        layout="@layout/fab_submenu"/>
+        layout="@layout/fab_submenu_diary_tab"/>
 
 </RelativeLayout>
 
