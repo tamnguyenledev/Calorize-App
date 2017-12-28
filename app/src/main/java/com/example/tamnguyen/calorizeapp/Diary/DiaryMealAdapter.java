@@ -21,18 +21,18 @@ import butterknife.ButterKnife;
 
 public class DiaryMealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
-    public DiaryMealAdapter(FoodList foodList, ArrayList<Integer> volume, OnItemListener listener){
+    public DiaryMealAdapter(FoodList foodList, ArrayList<Double> volume, OnItemListener listener){
         mFoodList = foodList;
         mVolumes = volume;
         this.listener = listener;
     }
     public interface OnItemListener{
-        void onClick(FoodList foodList,ArrayList<Integer> volumes,int position);
-        void onLongClick(FoodList foodList,ArrayList<Integer> volumes,int position);
-        void onAddClick(FoodList foodList,ArrayList<Integer> volumes);
+        void onClick(FoodList foodList,ArrayList<Double> volumes,int position);
+        void onLongClick(FoodList foodList,ArrayList<Double> volumes,int position);
+        void onAddClick(FoodList foodList,ArrayList<Double> volumes);
     }
     private FoodList mFoodList;
-    private ArrayList<Integer> mVolumes;
+    private ArrayList<Double> mVolumes;
     private OnItemListener listener;
     private final static int CHILD_FOOD = 1;
     private final static int CHILD_ADD = 2;
@@ -102,11 +102,11 @@ public class DiaryMealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         this.mFoodList = mFoodList;
     }
 
-    public ArrayList<Integer> getmVolumes() {
+    public ArrayList<Double> getmVolumes() {
         return mVolumes;
     }
 
-    public void setmVolumes(ArrayList<Integer> mVolumes) {
+    public void setmVolumes(ArrayList<Double> mVolumes) {
         this.mVolumes = mVolumes;
     }
 

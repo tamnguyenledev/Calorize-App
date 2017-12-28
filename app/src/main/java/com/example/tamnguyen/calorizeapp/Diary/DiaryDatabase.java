@@ -41,22 +41,7 @@ public class DiaryDatabase {
         void onFailure(int code);
     }
     private  DiaryDatabase() {
-        synchronized (DiaryDatabase.this) {
-            getDiary(mCalendar, new OnCompleteListener() {
-                @Override
-                public void onSuccess(String key, Diary diary) {
 
-                    mCurrentIndex = 0;
-                    cacheDiary.clear();
-                    cacheDiary.add(new Pair<>(key, diary));
-                }
-
-                @Override
-                public void onFailure(int code) {
-
-                }
-            });
-        }
     }
 
     /**
@@ -153,11 +138,29 @@ public class DiaryDatabase {
             });
         }
     }
+
+    /**
+     * This function is used to init Food Diary
+     * This function should always be called in first place
+     * @param listener
+     */
+    public synchronized void init(final OnCompleteListener listener){
+        getDiary(mCalendar, new OnCompleteListener() {
+            @Override
+            public void onSuccess(String key, Diary diary) {
+
+                mCurrentIndex = 0;
+                cacheDiary.clear();
+                cacheDiary.add(new Pair<>(key, diary));
+            }
+
+            @Override
+            public void onFailure(int code) {
+
+            }
+        });
+    }
     public synchronized void getTodayDiary(final OnCompleteListener listener){
-        if(cacheDiary.size()==0){
-            listener.onFailure(NO_DATA);
-            return;
-        }
         listener.onSuccess(cacheDiary.get(mCurrentIndex).first,cacheDiary.get(mCurrentIndex).second);
     }
     /**
@@ -212,15 +215,15 @@ public class DiaryDatabase {
                         if(data.containsKey(Food.Companion.getBREAKFAST()))
                         {
                             diary.breakfastList.getItems().add(food);
-                            diary.breakfastVolumeList.add((Integer) data.get(FOOD_NUM_UNIT));
+                            diary.breakfastVolumeList.add((Double) data.get(FOOD_NUM_UNIT));
                         }
                         else if(data.containsKey(Food.Companion.getLUNCH())){
                             diary.lunchList.getItems().add(food);
-                            diary.lunchVolumeList.add((Integer) data.get(FOOD_NUM_UNIT));
+                            diary.lunchVolumeList.add((Double) data.get(FOOD_NUM_UNIT));
                         }
                         else{
                             diary.dinnerList.getItems().add(food);
-                            diary.dinnerVolumeList.add((Integer) data.get(FOOD_NUM_UNIT));
+                            diary.dinnerVolumeList.add((Double) data.get(FOOD_NUM_UNIT));
                         }
 
                     }
