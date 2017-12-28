@@ -107,8 +107,8 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     />
 
-                <include
-                    layout="@layout/food_list"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/breakfastRv"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     android:layout_below="@id/tvRecommendCaloBreakfast"
@@ -154,8 +154,8 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     />
 
-                <include
-                    layout="@layout/food_list"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/lunchRv"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     android:layout_below="@id/tvRecommendCaloLunch"
@@ -201,8 +201,8 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     />
 
-                <include
-                    layout="@layout/food_list"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/dinnerRv"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     android:layout_below="@id/tvRecommendCaloDinner"

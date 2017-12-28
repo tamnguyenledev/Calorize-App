@@ -3,6 +3,7 @@ package com.example.tamnguyen.calorizeapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -17,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tamnguyen.calorizeapp.Diary.DiaryFragment;
 import com.example.tamnguyen.calorizeapp.FoodList.Food;
 import com.example.tamnguyen.calorizeapp.FoodList.FoodListFragment;
 
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
     FoodListFragment foodListFragment;
     ProfileFragment profileFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,8 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (fabExpanded) {
                     closeSubMenuFab();
-                }
-                else {
+                } else {
                     openSubMenuFab();
                 }
             }
@@ -114,29 +116,34 @@ public class MainActivity extends AppCompatActivity {
         fabExpanded = false;
     }
 
-    private void setupTab(){
+    private void setupTab() {
         setupPager();
-        tabStrip.setTitles("Diary","Food","Progress","Profile");
+        tabStrip.setTitles("Diary", "Food", "Progress", "Profile");
         tabStrip.setViewPager(pager);
     }
-    private void setupPager(){
+
+    private void setupPager() {
         pager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
-                switch (position){
+                switch (position) {
                     case 2:
-                        return new ProgressFragment();
+                        return new Fragment();
                     case 3:
                         return new ProfileFragment();
-                    default:
+                    case 1:
                         return FoodListFragment.Companion.newInstance(new OnItemClickListener() {
                             @Override
                             public void onItemClick(@NotNull Food food) {
-                                Intent intent = new Intent(MainActivity.this,AddFoodActivity.class);
-                                intent.putExtra("food",food);
+                                Intent intent = new Intent(MainActivity.this, AddFoodActivity.class);
+                                intent.putExtra("food", food);
                                 startActivity(intent);
                             }
                         });
+                    case 0:
+                        return DiaryFragment.newInstance();
+                    default:
+                        return new Fragment();
                 }
             }
 
@@ -146,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

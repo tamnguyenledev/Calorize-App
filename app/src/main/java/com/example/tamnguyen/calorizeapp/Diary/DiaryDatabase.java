@@ -10,7 +10,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Map;
 
 /**
@@ -35,12 +37,114 @@ public class DiaryDatabase {
      * Callback Interface for Query Completion
      */
     public interface OnCompleteListener{
-        void onSuccess(Diary diary);
+        void onSuccess( String key,Diary diary);
         void onFailure(int code);
     }
     private DiaryDatabase() {
+        getDiary(mCalendar, new OnCompleteListener() {
+            @Override
+            public void onSuccess(String key, Diary diary) {
+                synchronized (DiaryDatabase.this) {
+                    mCurrentIndex = 0;
+                    cacheDiary.clear();
+                    cacheDiary.add(new Pair<>(key, diary));
+                }
+            }
+
+            @Override
+            public void onFailure(int code) {
+
+            }
+        });
     }
 
+    /**
+     * Diary Cache Implement
+     */
+    class Pair<L,R>{
+        L first;
+        R second;
+        Pair(){
+
+        }
+        Pair(L l, R r){
+            first = l;
+            second = r;
+        }
+    }
+    Calendar mCalendar = GregorianCalendar.getInstance();
+    int maxCacheSize = 20;
+    int mCurrentIndex = -1;
+    ArrayList<Pair<String,Diary>> cacheDiary = new ArrayList<>();
+    public synchronized void getPrevDiary(final OnCompleteListener listener){
+        if(mCurrentIndex + 1 <= cacheDiary.size() - 1){
+            //If Previous diary already appears in cache
+            mCalendar.add(Calendar.DATE,-1);
+            ++mCurrentIndex;
+            listener.onSuccess(cacheDiary.get(mCurrentIndex).first,cacheDiary.get(mCurrentIndex).second);
+        }
+        else
+        {
+            //If Previous diary not exist in cache
+            if(cacheDiary.size() < maxCacheSize){
+                //If Cache still have rooms
+                ++mCurrentIndex;
+            }
+            else{
+                //If Cache is full
+                //Remove the first Diary in cache
+                cacheDiary.remove(0);
+            }
+            //In both cases above, we need to get Diary from Database and put it into cache
+            mCalendar.add(Calendar.DATE,-1);
+            getDiary(mCalendar, new OnCompleteListener() {
+                @Override
+                public void onSuccess(String key, Diary diary) {
+                    cacheDiary.add(new Pair<>(key,diary));
+                    listener.onSuccess(key,diary);
+                }
+
+                @Override
+                public void onFailure(int code) {
+                    listener.onFailure(code);
+                }
+            });
+        }
+    }
+    public synchronized void getNextDiary(final OnCompleteListener listener){
+        if(mCurrentIndex - 1 >= 0){
+            //If Previous diary already appears in cache
+            --mCurrentIndex;
+            mCalendar.add(Calendar.DATE,1);
+            listener.onSuccess(cacheDiary.get(mCurrentIndex).first,cacheDiary.get(mCurrentIndex).second);
+        }
+        else
+        {
+            //If Previous diary not exist in cache
+            if(cacheDiary.size() >= maxCacheSize){
+                //If Cache is full
+                //Remove the last Diary in cache
+                cacheDiary.remove(cacheDiary.size()-1);
+            }
+            //In both cases above, we need to get Diary from Database and put it into cache
+            mCalendar.add(Calendar.DATE,+1);
+            getDiary(mCalendar, new OnCompleteListener() {
+                @Override
+                public void onSuccess(String key, Diary diary) {
+                    cacheDiary.add(0,new Pair<>(key,diary));
+                    listener.onSuccess(key,diary);
+                }
+
+                @Override
+                public void onFailure(int code) {
+                    listener.onFailure(code);
+                }
+            });
+        }
+    }
+    public synchronized void getTodayDiary(final OnCompleteListener listener){
+        listener.onSuccess(cacheDiary.get(mCurrentIndex).first,cacheDiary.get(mCurrentIndex).second);
+    }
     /**
      * Key to access Corresponding Fields of Diary on database
      */
@@ -67,7 +171,7 @@ public class DiaryDatabase {
                {
                    diary = createDiaryFromSnapshot(dataSnapshot);
                }
-               listener.onSuccess(diary);
+               listener.onSuccess(dataSnapshot.getKey(),diary);
             }
 
             @Override

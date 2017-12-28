@@ -28,14 +28,6 @@ public class Diary {
     FoodList dinnerList = new FoodList(new ArrayList<Food>());
     List<Integer> dinnerVolumeList = new ArrayList<Integer>();
 
-    /**
-     * Utility Method from Constructing Diary Object from DataSnapshot which is retrieved from database
-     * @param snapshot
-     */
-    public void fromSnapshot(DataSnapshot snapshot) {
-
-    }
-
     public Map<String, Object> toMap() {
         return new HashMap<>();
     }
