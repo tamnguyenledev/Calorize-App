@@ -18,8 +18,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tamnguyen.calorizeapp.Diary.Diary;
+import com.example.tamnguyen.calorizeapp.Diary.DiaryDatabase;
 import com.example.tamnguyen.calorizeapp.Diary.DiaryFragment;
 import com.example.tamnguyen.calorizeapp.FoodList.Food;
+import com.example.tamnguyen.calorizeapp.FoodList.FoodDatabase;
+import com.example.tamnguyen.calorizeapp.FoodList.FoodList;
 import com.example.tamnguyen.calorizeapp.FoodList.FoodListFragment;
 
 import com.example.tamnguyen.calorizeapp.FoodList.OnItemClickListener;
@@ -36,6 +40,7 @@ import java.net.URL;
 
 
 import com.example.tamnguyen.calorizeapp.Progress.ProgressFragment;
+import com.google.firebase.database.DatabaseError;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,10 +71,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
 
         // prevent auto open keyboard
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(MainActivity.this);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         fabSubMenu.setVisibility(View.INVISIBLE);

@@ -11,8 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.example.tamnguyen.calorizeapp.FoodList.FoodDatabase;
 import com.example.tamnguyen.calorizeapp.FoodList.FoodList;
 import com.example.tamnguyen.calorizeapp.R;
+import com.google.firebase.database.DatabaseError;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -78,19 +82,30 @@ public class DiaryFragment extends Fragment {
             }
         };
 
-        DiaryDatabase.getInstance().init(new DiaryDatabase.OnCompleteListener() {
+        FoodDatabase.Companion.getInstance().getFoodList(new FoodDatabase.OnCompleteListener() {
             @Override
-            public void onSuccess(String key, Diary diary) {
-                breakfastRv.setAdapter(new DiaryMealAdapter(diary.breakfastList,diary.breakfastVolumeList,itemListener));
-                lunchRv.setAdapter(new DiaryMealAdapter(diary.lunchList,diary.lunchVolumeList,itemListener));
-                dinnerRv.setAdapter(new DiaryMealAdapter(diary.dinnerList,diary.dinnerVolumeList,itemListener));
+            public void onSuccess(@NotNull FoodList foodList) {
+                DiaryDatabase.getInstance().init(new DiaryDatabase.OnCompleteListener() {
+                    @Override
+                    public void onSuccess(String key, Diary diary) {
+                        breakfastRv.setAdapter(new DiaryMealAdapter(diary.breakfastList,diary.breakfastVolumeList,itemListener));
+                        lunchRv.setAdapter(new DiaryMealAdapter(diary.lunchList,diary.lunchVolumeList,itemListener));
+                        dinnerRv.setAdapter(new DiaryMealAdapter(diary.dinnerList,diary.dinnerVolumeList,itemListener));
+                    }
+
+                    @Override
+                    public void onFailure(int code) {
+
+                    }
+                });
             }
 
             @Override
-            public void onFailure(int code) {
+            public void onFailure(@NotNull DatabaseError err) {
 
             }
         });
+
     }
     private void setupDateManip(){
         prevDayBtn.setOnClickListener(new View.OnClickListener() {

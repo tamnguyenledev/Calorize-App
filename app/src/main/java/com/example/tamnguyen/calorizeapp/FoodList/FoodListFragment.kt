@@ -64,7 +64,7 @@ class FoodListFragment : Fragment() {
      */
     private fun loadFoods(){
         //Load foods into RecyclerView
-        FoodDatabase.instance.getFoodsFromDatabase(object: FoodDatabase.OnCompleteListener{
+        FoodDatabase.instance.getFoodList(object: FoodDatabase.OnCompleteListener{
             override fun onSuccess(foodList: FoodList) {
                 //Sort food by current time
                 mFoodList  = sortFoodByTime(foodList)
@@ -73,7 +73,6 @@ class FoodListFragment : Fragment() {
                 mAdapter.listener = listener
                 rvDiaryFoodList.adapter = mAdapter
             }
-
             override fun onFailure(err: DatabaseError) {
                 Toast.makeText(context!!,err.message,Toast.LENGTH_LONG).show()
             }

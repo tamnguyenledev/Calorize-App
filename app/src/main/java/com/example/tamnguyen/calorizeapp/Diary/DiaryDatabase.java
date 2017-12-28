@@ -40,6 +40,9 @@ public class DiaryDatabase {
         void onSuccess( String key,Diary diary);
         void onFailure(int code);
     }
+    public interface OnInitSuccessListener {
+        void onSuccess();
+    }
     private  DiaryDatabase() {
 
     }
@@ -152,11 +155,12 @@ public class DiaryDatabase {
                 mCurrentIndex = 0;
                 cacheDiary.clear();
                 cacheDiary.add(new Pair<>(key, diary));
+                listener.onSuccess(key,diary);
             }
 
             @Override
             public void onFailure(int code) {
-
+                listener.onFailure(code);
             }
         });
     }
@@ -203,10 +207,10 @@ public class DiaryDatabase {
         for(DataSnapshot child : dataSnapshot.getChildren()){
             //For each field in Diary Snapshot, determine what field is that and set corresponding value
             switch (child.getKey()){
-                case CARBS: diary.carbs = (double) child.getValue(); break;
-                case PROTEIN: diary.protein = (double) child.getValue(); break;
-                case FAT: diary.fat = (double) child.getValue(); break;
-                case CALORIES: diary.calories = (double) child.getValue(); break;
+                case CARBS: diary.carbs = Double.parseDouble(child.getValue().toString()) ; break;
+                case PROTEIN: diary.protein = Double.parseDouble(child.getValue().toString()); break;
+                case FAT: diary.fat = Double.parseDouble(child.getValue().toString()); break;
+                case CALORIES: diary.calories = Double.parseDouble(child.getValue().toString()); break;
                 case FOOD_LIST:{
                     //For each food, put it into corresponding meal and save number of units of that food
                     for(DataSnapshot foodSnapshot : child.getChildren()){
@@ -215,15 +219,15 @@ public class DiaryDatabase {
                         if(data.containsKey(Food.Companion.getBREAKFAST()))
                         {
                             diary.breakfastList.getItems().add(food);
-                            diary.breakfastVolumeList.add((Double) data.get(FOOD_NUM_UNIT));
+                            diary.breakfastVolumeList.add(Double.parseDouble(data.get(FOOD_NUM_UNIT).toString()));
                         }
                         else if(data.containsKey(Food.Companion.getLUNCH())){
                             diary.lunchList.getItems().add(food);
-                            diary.lunchVolumeList.add((Double) data.get(FOOD_NUM_UNIT));
+                            diary.lunchVolumeList.add(Double.parseDouble(data.get(FOOD_NUM_UNIT).toString()));
                         }
                         else{
                             diary.dinnerList.getItems().add(food);
-                            diary.dinnerVolumeList.add((Double) data.get(FOOD_NUM_UNIT));
+                            diary.dinnerVolumeList.add(Double.parseDouble(data.get(FOOD_NUM_UNIT).toString()));
                         }
 
                     }
