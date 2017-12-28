@@ -61,13 +61,11 @@ public class DiaryDatabase {
         }
 
         @Override
-        protected synchronized Void doInBackground(Void... voids) {
-            while (!FoodDatabase.Companion.getInstance().isLoadFinished()) {
-                try {
-                    wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+        protected  Void doInBackground(Void... voids) {
+            try {
+                FoodDatabase.Companion.getInstance().getFinishTracker().await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
             return null;
         }

@@ -47,7 +47,7 @@ public class FoodListAdapter(val mContext: Context, val mFoodList: FoodList) : R
         fun setInfo(food: Food){
             foodName.text = food.foodName
             foodCalo.text = food.calorie.toString()
-            foodUnit.text = food.unit
+            foodUnit.text = Food.formatMeasurement(food,1.toDouble());
 
         }
     }

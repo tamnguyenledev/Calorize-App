@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.tamnguyen.calorizeapp.FoodList.Food;
 import com.example.tamnguyen.calorizeapp.FoodList.FoodList;
@@ -13,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -112,12 +114,21 @@ public class DiaryMealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     class FoodViewHolder extends RecyclerView.ViewHolder{
 
+        @BindView(R.id.tvFoodName)
+        public TextView tvFoodName;
+        @BindView(R.id.tvMeasurement)
+        public TextView tvMeasurement;
+        @BindView(R.id.tvCaloriesAmount)
+        public TextView tvCalorieAmount;
         public FoodViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
         }
         public void setInfo(int position){
-
+            Food food = mFoodList.getItems().get(position);
+            tvFoodName.setText(food.getFoodName());
+            tvMeasurement.setText(Food.Companion.formatMeasurement(food,mVolumes.get(position)));
+            tvCalorieAmount.setText(String.valueOf(food.getCalorie()*mVolumes.get(position)));
         }
     }
     class FoodAddViewHolder extends RecyclerView.ViewHolder{

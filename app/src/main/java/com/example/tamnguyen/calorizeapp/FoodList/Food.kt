@@ -29,6 +29,11 @@ data class Food(var amount: Long,
         val BREAKFAST = "breakfast"
         val LUNCH = "lunch"
         val DINNER = "dinner"
+        fun formatMeasurement(food: Food,unit: Double): String{
+            val strBuffer = StringBuffer()
+            strBuffer.append(unit.toString() + " " + food.unit + "(" + (food.massPerUnit*unit).toString() +"g)")
+            return strBuffer.toString()
+        }
     }
 
 }

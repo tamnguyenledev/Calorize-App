@@ -4,6 +4,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.util.concurrent.CountDownLatch
 
 /**
  * Created by hoangdung on 12/26/17.
@@ -43,6 +44,10 @@ class FoodDatabase {
     //Database Reference
     val mDatabase = FirebaseDatabase.getInstance().reference
     var foodList: FoodList = FoodList(ArrayList<Food>())
+
+    //This Latch is used to let other services that depends on FoodDatabase to wait until Food List is successfully loaded
+    //Currently only DiaryDatabase's is dependent
+    var finishTracker = CountDownLatch(1)
     /**
      * Get all food in database and put them into FoodList
      * @see FoodList
@@ -70,6 +75,7 @@ class FoodDatabase {
                         this@FoodDatabase.isLoadFinished = true
                         this@FoodDatabase.isLoading = false
                     }
+                    finishTracker.countDown()
                     listener.onSuccess(foodList = this@FoodDatabase.foodList)
                 }
             })
