@@ -197,8 +197,31 @@ public class DiaryDatabase {
 
 
     }
+    @SuppressLint("StaticFieldLeak")
     public synchronized void getTodayDiary(final OnCompleteListener listener){
-        listener.onSuccess(cacheDiary.get(mCurrentIndex).first,cacheDiary.get(mCurrentIndex).second);
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected synchronized Void doInBackground(Void... voids) {
+                while (isInitLoading){
+                    try {
+                        wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                if(mCurrentIndex == -1){
+                    listener.onFailure(0);
+                }
+                else
+                    listener.onSuccess(cacheDiary.get(mCurrentIndex).first,cacheDiary.get(mCurrentIndex).second);
+            }
+        };
     }
     /**
      * Key to access Corresponding Fields of Diary on database
