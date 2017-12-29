@@ -124,23 +124,41 @@ public class DiaryFragment extends Fragment {
             progressFat.setProgress((float) ((float) diary.fat / diary.neededFat));
             progressFat.startAnimation();
         }
+        else
+        {
+            progressFat.setProgress(0);
+            progressFat.startAnimation();
+        }
+        //Progress Bar for Carb
         if (diary.neededCarbs != 0 && diary.neededCarbs != 0) {
-            //Progress Bar for Carb
             progressCarb.setProgress((float) ((float) diary.carbs / diary.neededCarbs));
             progressCarb.startAnimation();
         }
+        else
+        {
+            progressCarb.setProgress(0);
+            progressCarb.startAnimation();
+        }
+        //Progress Bar for Protein
         if (diary.neededProtein != 0 && diary.neededProtein != 0) {
-            //Progress Bar for Protein
             progressProtein.setProgress((float) ((float) diary.protein / diary.neededProtein));
             progressProtein.startAnimation();
         }
+        else{
+            progressProtein.setProgress(0);
+            progressProtein.startAnimation();
+        }
+        //Progress Bar for Calories
         if (diary.neededCalories != 0 && diary.neededCalories != 0) {
-            //Progress Bar for Calories
             progressCalories.setProgress((float) ((float) diary.calories / diary.neededCalories));
             progressCalories.startAnimation();
         }
+        else
+        {
+            progressCalories.setProgress(0);
+            progressCalories.startAnimation();
+        }
     }
-
     private void setupDateManip() {
         prevDayBtn.setOnClickListener(new View.OnClickListener() {
             @Override

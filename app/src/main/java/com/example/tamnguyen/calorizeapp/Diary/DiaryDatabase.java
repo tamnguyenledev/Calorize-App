@@ -1,6 +1,7 @@
 package com.example.tamnguyen.calorizeapp.Diary;
 
 import android.os.AsyncTask;
+import android.support.constraint.solver.widgets.Snapshot;
 import android.util.Log;
 
 import com.example.tamnguyen.calorizeapp.FoodList.Food;
@@ -40,6 +41,11 @@ public class DiaryDatabase {
     /**
      * Callback Interface for Query Completion
      */
+    public interface OnCaloTimeComplete{
+        void onSuccess(ArrayList<Double> result);
+        void onFailure(int code);
+    }
+
     public interface OnCompleteListener {
         void onSuccess(Diary diary);
 
@@ -119,6 +125,28 @@ public class DiaryDatabase {
 
     public void getCurrentDiary(OnCompleteListener listener) {
         new CheckingTask(this::getCurrentDiaryImp, listener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    public void getCaloByDate(Calendar calendar1,Calendar calendar2,OnCaloTimeComplete listener){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yy");
+        String date1 = simpleDateFormat.format(calendar1.getTime());
+        String date2 = simpleDateFormat.format(calendar2.getTime());
+        diaryRef.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<Double> result = new ArrayList<>();
+                for(DataSnapshot child : dataSnapshot.getChildren()){
+                    Map<String,Object> data = (Map<String, Object>) child.getValue();
+                    result.add(Double.parseDouble(data.get(CALORIES).toString()));
+                }
+                listener.onSuccess(result);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onFailure(0);
+            }
+        });
     }
 
     private synchronized void getNextDiaryImp(final OnCompleteListener listener) {
