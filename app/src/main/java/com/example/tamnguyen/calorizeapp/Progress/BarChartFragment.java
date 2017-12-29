@@ -54,12 +54,13 @@ public class BarChartFragment extends Fragment {
     public void setChildDate(Calendar c1, Calendar c2) {
         childFromDate = (Calendar) c1.clone();
         childToDate = (Calendar) c2.clone();
-        difDate = childToDate.compareTo(childFromDate);
+        difDate = (int) ((childToDate.getTimeInMillis()-childFromDate.getTimeInMillis())/(1000*60*60*24));
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         DiaryDatabase.getInstance().getDiaryByInterval(childFromDate, childToDate, new DiaryDatabase.OnBatchCompleteListener() {
                     @Override
                     public void onSuccess(ArrayList<Diary> result) {
