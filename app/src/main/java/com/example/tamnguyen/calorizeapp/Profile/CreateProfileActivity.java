@@ -282,9 +282,11 @@ public class CreateProfileActivity extends AppCompatActivity {
                 tempNewHeight =
                         profile.convertCm2Feet(tempOldHeight); // prepare for changing
             }
-
-            editTextWeight.setText(String.format(Locale.ENGLISH,"%.2f",profile.getiWeight()));
-            editTextHeight.setText(String.format(Locale.ENGLISH,"%.2f",profile.getiHeight()));
+            if(profile.getiWeight()!=0) {
+                editTextWeight.setText(String.format(Locale.ENGLISH, "%.2f", profile.getiWeight()));
+            }
+            if(profile.getiHeight()!=0)
+                editTextHeight.setText(String.format(Locale.ENGLISH,"%.2f",profile.getiHeight()));
 
             tempTypeWeight = profile.isbWeightType();
             tempTypeHeight = profile.isbHeightType();

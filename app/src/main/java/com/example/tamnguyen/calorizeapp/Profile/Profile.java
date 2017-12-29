@@ -62,23 +62,78 @@ public class Profile implements Parcelable {
             return new Profile[size];
         }
     };
+    public float generateFat(){
+        int gramFatPerCal = 9;
+        float percentFat = (float) 0.25;
+        return (float) ((float)Math.round(((generateBmr() * percentFat)/gramFatPerCal) *100.0)/100.0);
+    }
+    public float generateCarb(){
+        int gramCarbPerCal = 4;
+        return (float) ((float)Math.round(((float)(generateBmr()-(generateFat()+generatePro()))/gramCarbPerCal) *100.0)/100.0);
+    }
+    public float generatePro(){
+        float RR = (float) 0.825;
+        if(!bWeightType){
+            return (float) ((float)Math.round(iWeight * 2.2 * RR *100.0)/100.0); // gram/1ngay
+        }
+        else{
+            return (float) ((float)Math.round(iWeight * RR *100.0)/100.0); // gram / 1ngay
+        }
+    }
+    public float generateBmr(){
+        float KMale,KFemale;
+        KMale = (float) 66.47;
+        KFemale = (float) 655.1;
 
-    public float generateBmi(){
-        if(!bHeightType && !bWeightType){
-            return (float)(iWeight /(iHeight*iHeight * 0.01));
+        if(!bHeightType && !bWeightType){ // kg - cm
+            if(gender.equals("Male"))
+                 return (float)((float)Math.round((KMale + (13.7*iWeight)+(5.0 * iHeight) -(iAge*6.8))*100)/100.0);
+                 else
+                    return (float)((float)Math.round((KFemale + (9.6*iWeight)+(1.8 * iHeight) -(iAge*4.7))*100)/100.0);
         }
         else if(bHeightType && !bWeightType){
             float tempConvert = convertFeet2Cm(iHeight);
-            return (float)(iWeight/(tempConvert * tempConvert * 0.01));
+            if(gender.equals("Male"))
+                return (float)((float)Math.round((KMale + (13.7*iWeight)+(5.0 * tempConvert) -(iAge*6.8))*100)/100.0);
+            else
+                return (float)((float)Math.round((KFemale + (9.6*iWeight)+(1.8 * tempConvert) -(iAge*4.7))*100)/100.0);
+
         }
         else if(!bHeightType && bWeightType){
             float tempConvert = convertPound2Kilogram(iWeight);
-            return (float)(tempConvert/(iHeight*iHeight*0.01));
+            if(gender.equals("Male"))
+                return (float)((float)Math.round((KMale + (13.7*tempConvert)+(5.0 * iHeight) -(iAge*6.8))*100)/100.0);
+            else
+                return (float)((float)Math.round((KFemale + (9.6*tempConvert)+(1.8 * iHeight) -(iAge*4.7))*100)/100.0);
         }
         else{
             float tempConvertHeight = convertFeet2Cm(iHeight);
             float tempConvertWeight = convertPound2Kilogram(iWeight);
-            return(float)(tempConvertWeight/(tempConvertHeight*tempConvertHeight*0.01));
+            if(gender.equals("Male"))
+                return (float)((float)Math.round((KMale + (13.7*tempConvertWeight)+(5.0 * tempConvertHeight) -(iAge*6.8))*100)/100.0);
+            else
+                return (float)((float)Math.round((KFemale + (9.6*tempConvertWeight)+(1.8 * tempConvertHeight) -(iAge*4.7))*100)/100.0);
+
+        }
+
+    }
+
+    public float generateBmi(){
+        if(!bHeightType && !bWeightType){
+            return (float) ((float)Math.round((iWeight /(iHeight*iHeight * 0.01))*100.0)/100.0);
+        }
+        else if(bHeightType && !bWeightType){
+            float tempConvert = convertFeet2Cm(iHeight);
+            return (float) ((float)Math.round((iWeight /(tempConvert*tempConvert * 0.01))*100.0)/100.0);
+        }
+        else if(!bHeightType && bWeightType){
+            float tempConvert = convertPound2Kilogram(iWeight);
+            return (float) ((float)Math.round((tempConvert /(iHeight*iHeight * 0.01))*100.0)/100.0);
+        }
+        else{
+            float tempConvertHeight = convertFeet2Cm(iHeight);
+            float tempConvertWeight = convertPound2Kilogram(iWeight);
+            return (float) ((float)Math.round((tempConvertWeight /(tempConvertHeight*tempConvertHeight * 0.01))*100.0)/100.0);
         }
     }
     public int generateAge(){
