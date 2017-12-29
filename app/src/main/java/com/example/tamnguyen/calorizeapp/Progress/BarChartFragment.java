@@ -165,7 +165,7 @@ public class BarChartFragment extends Fragment {
         for (int i = (int) start; i < start + difDate + 1; i++) {
             float mult = ((float)range + 1);
             float val = (float) (Math.random() * mult);
-
+            //double val =  caloResult.get(i-(int)start);
             if (Math.random() * 100 < 25) {
                 yVals1.add(new BarEntry(i, val, getResources().getDrawable(R.drawable.star)));
             } else {
