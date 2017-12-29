@@ -15,15 +15,15 @@ public class DayAxisValueFormatter implements IAxisValueFormatter
     };
 
     private BarLineChartBase<?> chart;
-
-    public DayAxisValueFormatter(BarLineChartBase<?> chart) {
+    private int valueBase;
+    public DayAxisValueFormatter(BarLineChartBase<?> chart, int day) {
         this.chart = chart;
+        valueBase = day;
     }
 
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
-
-        int days = (int) value;
+        int days = valueBase+(int)value-1;
 
         int year = determineYear(days);
 
@@ -36,7 +36,7 @@ public class DayAxisValueFormatter implements IAxisValueFormatter
             return monthName + " " + yearName;
         } else {
 
-            int dayOfMonth = determineDayOfMonth(days, month + 12 * (year - 2016));
+            int dayOfMonth = determineDayOfMonth(days, month + 12 * (year - 2017));
 
             String appendix = "th";
 
@@ -125,15 +125,15 @@ public class DayAxisValueFormatter implements IAxisValueFormatter
     private int determineYear(int days) {
 
         if (days <= 366)
-            return 2016;
-        else if (days <= 730)
             return 2017;
-        else if (days <= 1094)
+        else if (days <= 730)
             return 2018;
-        else if (days <= 1458)
+        else if (days <= 1094)
             return 2019;
-        else
+        else if (days <= 1458)
             return 2020;
+        else
+            return 2021;
 
     }
 }

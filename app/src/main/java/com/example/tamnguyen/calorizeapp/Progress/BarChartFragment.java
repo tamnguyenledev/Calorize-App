@@ -73,7 +73,8 @@ public class BarChartFragment extends Fragment {
 
                     }
                 });
-                mChart = view.findViewById(R.id.chart1);
+
+        mChart = view.findViewById(R.id.chart1);
         mChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
@@ -108,8 +109,7 @@ public class BarChartFragment extends Fragment {
         mChart.setPinchZoom(false);
 
         mChart.setDrawGridBackground(false);
-        IAxisValueFormatter xAxisFormatter = new DayAxisValueFormatter(mChart);
-
+        IAxisValueFormatter xAxisFormatter = new DayAxisValueFormatter(mChart, childFromDate.get(Calendar.DAY_OF_YEAR));
         XAxis xAxis = mChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
