@@ -23,18 +23,12 @@ import butterknife.ButterKnife;
 
 public class DiaryMealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
-    public DiaryMealAdapter(FoodList foodList, ArrayList<Double> volume, OnItemListener listener){
-        mFoodList = foodList;
-        mVolumes = volume;
+
+    public DiaryMealAdapter(DiaryFoodList diaryFoodList,OnItemListener listener){
+        this.diaryFoodList = diaryFoodList;
         this.listener = listener;
     }
-    public interface OnItemListener{
-        void onClick(FoodList foodList,ArrayList<Double> volumes,int position);
-        void onLongClick(FoodList foodList,ArrayList<Double> volumes,int position);
-        void onAddClick(FoodList foodList,ArrayList<Double> volumes);
-    }
-    private FoodList mFoodList;
-    private ArrayList<Double> mVolumes;
+    private DiaryFoodList diaryFoodList;
     private OnItemListener listener;
     private final static int CHILD_FOOD = 1;
     private final static int CHILD_ADD = 2;
@@ -62,13 +56,13 @@ public class DiaryMealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onClick(mFoodList,mVolumes,position);
+                    listener.onClick(diaryFoodList,position);
                 }
             });
             viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    listener.onLongClick(mFoodList,mVolumes,position);
+                    listener.onLongClick(diaryFoodList,position);
                     return  true;
                 }
             });
@@ -78,7 +72,7 @@ public class DiaryMealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onAddClick(mFoodList,mVolumes);
+                    listener.onAddClick(diaryFoodList);
                 }
             });
         }
@@ -86,31 +80,16 @@ public class DiaryMealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public int getItemViewType(int position) {
-        if(position != mFoodList.getItems().size())
+        if(position != diaryFoodList.items.size())
             return CHILD_FOOD;
         return CHILD_ADD;
     }
 
     @Override
     public int getItemCount() {
-        return mFoodList.getItems().size()  + 1;
+        return diaryFoodList.items.size()  + 1;
     }
 
-    public FoodList getmFoodList() {
-        return mFoodList;
-    }
-
-    public void setmFoodList(FoodList mFoodList) {
-        this.mFoodList = mFoodList;
-    }
-
-    public ArrayList<Double> getmVolumes() {
-        return mVolumes;
-    }
-
-    public void setmVolumes(ArrayList<Double> mVolumes) {
-        this.mVolumes = mVolumes;
-    }
 
     class FoodViewHolder extends RecyclerView.ViewHolder{
 
@@ -125,10 +104,11 @@ public class DiaryMealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             ButterKnife.bind(this,itemView);
         }
         public void setInfo(int position){
-            Food food = mFoodList.getItems().get(position);
+            Food food = diaryFoodList.items.get(position).food;
+            Double num_units = diaryFoodList.items.get(position).num_of_units;
             tvFoodName.setText(food.getFoodName());
-            tvMeasurement.setText(Food.Companion.formatMeasurement(food,mVolumes.get(position)));
-            tvCalorieAmount.setText(String.valueOf(food.getCalorie()*mVolumes.get(position)));
+            tvMeasurement.setText(Food.Companion.formatMeasurement(food,num_units));
+            tvCalorieAmount.setText(String.valueOf(food.getCalorie()*num_units));
         }
     }
     class FoodAddViewHolder extends RecyclerView.ViewHolder{

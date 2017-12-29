@@ -20,7 +20,9 @@ import android.widget.Toast;
 
 import com.example.tamnguyen.calorizeapp.Diary.Diary;
 import com.example.tamnguyen.calorizeapp.Diary.DiaryDatabase;
+import com.example.tamnguyen.calorizeapp.Diary.DiaryFoodList;
 import com.example.tamnguyen.calorizeapp.Diary.DiaryFragment;
+import com.example.tamnguyen.calorizeapp.Diary.OnItemListener;
 import com.example.tamnguyen.calorizeapp.FoodList.Food;
 import com.example.tamnguyen.calorizeapp.FoodList.FoodDatabase;
 import com.example.tamnguyen.calorizeapp.FoodList.FoodList;
@@ -146,7 +148,22 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                     case 0:
-                        return DiaryFragment.newInstance();
+                        return DiaryFragment.newInstance(new OnItemListener() {
+                            @Override
+                            public void onClick(DiaryFoodList diaryFoodList, int position) {
+
+                            }
+
+                            @Override
+                            public void onLongClick(DiaryFoodList diaryFoodList, int position) {
+
+                            }
+
+                            @Override
+                            public void onAddClick(DiaryFoodList diaryFoodList) {
+
+                            }
+                        });
                     default:
                         return new Fragment();
                 }

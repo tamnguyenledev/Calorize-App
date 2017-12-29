@@ -1,6 +1,7 @@
 package com.example.tamnguyen.calorizeapp.Diary;
 
 import android.os.AsyncTask;
+import android.provider.ContactsContract;
 
 import com.example.tamnguyen.calorizeapp.FoodList.Food;
 import com.example.tamnguyen.calorizeapp.FoodList.FoodDatabase;
@@ -41,7 +42,7 @@ public class DiaryDatabase {
      * Callback Interface for Query Completion
      */
     public interface OnCompleteListener {
-        void onSuccess(String key, Diary diary);
+        void onSuccess(Diary diary);
 
         void onFailure(int code);
     }
@@ -102,8 +103,7 @@ public class DiaryDatabase {
     private Calendar mCalendar = GregorianCalendar.getInstance();
     private int maxCacheSize = 20;
     private int mCurrentIndex = -1;
-    private ArrayList<Pair<String, Diary>> cacheDiary = new ArrayList<>();
-    private Map<String, Diary> cacheLookup = new HashMap<>();
+    private ArrayList<Diary> cacheDiary = new ArrayList<>();
     private boolean isFirstTimeLoading = true;
 
     public Calendar getCalendar() {
@@ -141,7 +141,7 @@ public class DiaryDatabase {
             //If Previous diary already appears in cache
             mCalendar.add(Calendar.DATE, -1);
             ++mCurrentIndex;
-            listener.onSuccess(cacheDiary.get(mCurrentIndex).first, cacheDiary.get(mCurrentIndex).second);
+            listener.onSuccess(cacheDiary.get(mCurrentIndex));
         } else {
             //If Previous diary not exist in cache
             if (cacheDiary.size() < maxCacheSize) {
@@ -150,19 +150,17 @@ public class DiaryDatabase {
             } else {
                 //If Cache is full
                 //Remove the first Diary in cache
-                cacheLookup.remove(cacheDiary.get(0).first);
                 cacheDiary.remove(0);
             }
             //In both cases above, we need to get Diary from Database and put it into cache
             mCalendar.add(Calendar.DATE, -1);
             getDiary(mCalendar, new OnCompleteListener() {
                 @Override
-                public void onSuccess(String key, Diary diary) {
+                public void onSuccess(Diary diary) {
                     synchronized (DiaryDatabase.this) {
-                        cacheDiary.add(new Pair<>(key, diary));
-                        cacheLookup.put(key, diary);
+                        cacheDiary.add(diary);
                     }
-                    listener.onSuccess(key, diary);
+                    listener.onSuccess(diary);
                 }
 
                 @Override
@@ -178,23 +176,21 @@ public class DiaryDatabase {
             //If Previous diary already appears in cache
             --mCurrentIndex;
             mCalendar.add(Calendar.DATE, 1);
-            listener.onSuccess(cacheDiary.get(mCurrentIndex).first, cacheDiary.get(mCurrentIndex).second);
+            listener.onSuccess(cacheDiary.get(mCurrentIndex));
         } else {
             //If Previous diary not exist in cache
             if (cacheDiary.size() >= maxCacheSize) {
                 //If Cache is full
                 //Remove the last Diary in cache
-                cacheLookup.remove(cacheDiary.get(cacheDiary.size() - 1));
                 cacheDiary.remove(cacheDiary.size() - 1);
             }
             //In both cases above, we need to get Diary from Database and put it into cache
             mCalendar.add(Calendar.DATE, +1);
             getDiary(mCalendar, new OnCompleteListener() {
                 @Override
-                public void onSuccess(String key, Diary diary) {
-                    cacheDiary.add(0, new Pair<>(key, diary));
-                    cacheLookup.put(key, diary);
-                    listener.onSuccess(key, diary);
+                public void onSuccess(Diary diary) {
+                    cacheDiary.add(diary);
+                    listener.onSuccess(diary);
                 }
 
                 @Override
@@ -213,13 +209,12 @@ public class DiaryDatabase {
             Calendar calendar = GregorianCalendar.getInstance();
             getDiary(calendar, new OnCompleteListener() {
                 @Override
-                public void onSuccess(String key, Diary diary) {
+                public void onSuccess(Diary diary) {
                     synchronized (DiaryDatabase.this) {
                         mCurrentIndex = 0;
-                        cacheDiary.add(new Pair<String, Diary>(key, diary));
-                        cacheLookup.put(key, diary);
+                        cacheDiary.add(diary);
                     }
-                    listener.onSuccess(key, diary);
+                    listener.onSuccess(diary);
                 }
 
                 @Override
@@ -228,7 +223,7 @@ public class DiaryDatabase {
                 }
             });
         } else {
-            listener.onSuccess(cacheDiary.get(mCurrentIndex).first, cacheDiary.get(mCurrentIndex).second);
+            listener.onSuccess(cacheDiary.get(mCurrentIndex));
         }
 
     }
@@ -236,17 +231,19 @@ public class DiaryDatabase {
     /**
      * Key to access Corresponding Fields of Diary on database
      */
-    private final static String CARBS = "carbs";
-    private final static String FAT = "fat";
-    private final static String PROTEIN = "protein";
-    private final static String CALORIES = "calories";
-    private final static String NEEDED_CARBS = "neededCarbs";
-    private final static String NEEDED_FAT = "neededFat";
-    private final static String NEEDED_PROTEIN = "neededProtein";
-    private final static String NEEDED_CALORIES = "neededCalories";
-    private final static String FOOD_LIST = "food_list";
-    private final static String FOOD_ID = "food_id";
-    private final static String FOOD_NUM_UNIT = "food_num_unit";
+    final static String CARBS = "carbs";
+    final static String FAT = "fat";
+    final static String PROTEIN = "protein";
+    final static String CALORIES = "calories";
+    final static String NEEDED_CARBS = "neededCarbs";
+    final static String NEEDED_FAT = "neededFat";
+    final static String NEEDED_PROTEIN = "neededProtein";
+    final static String NEEDED_CALORIES = "neededCalories";
+    final static String FOOD_LIST = "food_list";
+    final static String FOOD_ID = "food_id";
+    final static String FOOD_NUM_UNIT = "food_num_unit";
+    final static String HEIGHT = "height";
+    final static String WEIGHT = "weight";
 
     /**
      * Helper method for geting Diary Database of current user
@@ -258,28 +255,35 @@ public class DiaryDatabase {
         //Get Diary's key
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         String key = sdf.format(calendar.getTime());
-        if (cacheLookup.containsKey(key)) {
-            //Check if Today Diary is already in cache
-            listener.onSuccess(key, cacheLookup.get(key));
-        } else {
-            //Load Today Diary from database
-            //Because of getPrev,getNext,getCurrent operations, today diary is not put into cache for synchronization
-            diaryRef.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Diary diary = new Diary();
-                    if (dataSnapshot.exists()) {
-                        diary = createDiaryFromSnapshot(dataSnapshot);
-                    }
-                    listener.onSuccess(dataSnapshot.getKey(), diary);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    listener.onFailure(databaseError.getCode());
-                }
-            });
+        //Loop through cache to see whether that diary already exists in cache
+        for (int i = 0; i < cacheDiary.size(); ++i) {
+            if (cacheDiary.get(i).ID.equals(key)) {
+                //If that diary exists,return it through callback
+                mCurrentIndex = i;
+                listener.onSuccess(cacheDiary.get(i));
+                return;
+            }
         }
+        //If diary not exists in cache
+        diaryRef.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Diary diary = new Diary();
+                diary.ID = dataSnapshot.getKey();
+                if (dataSnapshot.exists()) {
+                    diary = createDiaryFromSnapshot(dataSnapshot);
+                }
+                cacheDiary.clear();
+                cacheDiary.add(diary);
+                mCurrentIndex = 0;
+                listener.onSuccess(diary);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onFailure(databaseError.getCode());
+            }
+        });
 
     }
 
@@ -312,20 +316,25 @@ public class DiaryDatabase {
                 case NEEDED_PROTEIN:
                     diary.neededProtein = Double.parseDouble(child.getValue().toString());
                     break;
+                case HEIGHT:
+                    diary.height = Double.parseDouble(child.getValue().toString());
+                    break;
+                case WEIGHT:
+                    diary.weight = Double.parseDouble(child.getValue().toString());
+                    break;
                 case FOOD_LIST: {
                     //For each food, put it into corresponding meal and save number of units of that food
                     for (DataSnapshot foodSnapshot : child.getChildren()) {
-                        Map<String, Object> data = (Map<String, Object>) foodSnapshot.getValue();
-                        Food food = FoodDatabase.Companion.getInstance().getFoodByID((String) data.get(FOOD_ID));
+                        DiaryFood diaryFood = createDiaryFoodFromSnapshot(foodSnapshot);
+                        Map<String,Object> data = (Map<String, Object>) foodSnapshot.getValue();
                         if (data.containsKey(Food.Companion.getBREAKFAST())) {
-                            diary.breakfastList.getItems().add(food);
-                            diary.breakfastVolumeList.add(Double.parseDouble(data.get(FOOD_NUM_UNIT).toString()));
+                            diary.breakfastList.items.add(diaryFood);
+
                         } else if (data.containsKey(Food.Companion.getLUNCH())) {
-                            diary.lunchList.getItems().add(food);
-                            diary.lunchVolumeList.add(Double.parseDouble(data.get(FOOD_NUM_UNIT).toString()));
+                            diary.lunchList.items.add(diaryFood);
+
                         } else {
-                            diary.dinnerList.getItems().add(food);
-                            diary.dinnerVolumeList.add(Double.parseDouble(data.get(FOOD_NUM_UNIT).toString()));
+                            diary.dinnerList.items.add(diaryFood);
                         }
 
                     }
@@ -333,5 +342,14 @@ public class DiaryDatabase {
             }
         }
         return diary;
+    }
+    public static DiaryFood createDiaryFoodFromSnapshot(DataSnapshot dataSnapshot){
+        DiaryFood diaryFood = new DiaryFood();
+        Map<String, Object> data = (Map<String, Object>) dataSnapshot.getValue();
+        Food food = FoodDatabase.Companion.getInstance().getFoodByID((String) data.get(DiaryDatabase.FOOD_ID));
+        diaryFood.food= food;
+        diaryFood.ID = dataSnapshot.getKey();
+        diaryFood.num_of_units = Double.parseDouble(data.get(FOOD_NUM_UNIT).toString());
+        return diaryFood;
     }
 }

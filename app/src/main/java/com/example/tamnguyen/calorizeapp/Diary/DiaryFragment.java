@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,13 +49,14 @@ public class DiaryFragment extends Fragment {
     @BindView(R.id.progressCalories)
     public ProgressCircle progressCalories;
     Diary currentDiary;
-
+    private OnItemListener listener;
     public DiaryFragment() {
         // Required empty public constructor
     }
 
-    public static DiaryFragment newInstance() {
+    public static DiaryFragment newInstance(OnItemListener listener) {
         DiaryFragment diaryFragment = new DiaryFragment();
+        diaryFragment.listener = listener;
         return diaryFragment;
     }
 
@@ -63,6 +65,9 @@ public class DiaryFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_diary, container, false);
         ButterKnife.bind(this, view);
+        breakfastRv.setLayoutManager(new LinearLayoutManager(getContext()));
+        lunchRv.setLayoutManager(new LinearLayoutManager(getContext()));
+        dinnerRv.setLayoutManager(new LinearLayoutManager(getContext()));
         return view;
     }
 
@@ -83,9 +88,10 @@ public class DiaryFragment extends Fragment {
         //Therefore it is also useful to initialize other resources
         DiaryDatabase.getInstance().getCurrentDiary(new DiaryDatabase.OnCompleteListener() {
             @Override
-            public void onSuccess(String key, Diary diary) {
+            public void onSuccess(Diary diary) {
                 currentDiary = diary;
                 updateUI(diary);
+                setupDateManip();
             }
 
             @Override
@@ -101,29 +107,10 @@ public class DiaryFragment extends Fragment {
     }
 
     private void setRecyclerViewAndAdapter(Diary diary) {
-        final DiaryMealAdapter.OnItemListener itemListener = new DiaryMealAdapter.OnItemListener() {
-            @Override
-            public void onClick(FoodList foodList, ArrayList<Double> volumes, int position) {
 
-            }
-
-            @Override
-            public void onLongClick(FoodList foodList, ArrayList<Double> volumes, int position) {
-
-            }
-
-            @Override
-            public void onAddClick(FoodList foodList, ArrayList<Double> volumes) {
-
-            }
-        };
-        breakfastRv.setLayoutManager(new LinearLayoutManager(getContext()));
-        lunchRv.setLayoutManager(new LinearLayoutManager(getContext()));
-        dinnerRv.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        breakfastRv.setAdapter(new DiaryMealAdapter(diary.breakfastList, diary.breakfastVolumeList, itemListener));
-        lunchRv.setAdapter(new DiaryMealAdapter(diary.lunchList, diary.lunchVolumeList, itemListener));
-        dinnerRv.setAdapter(new DiaryMealAdapter(diary.dinnerList, diary.dinnerVolumeList, itemListener));
+        breakfastRv.setAdapter(new DiaryMealAdapter(diary.breakfastList,listener));
+        lunchRv.setAdapter(new DiaryMealAdapter(diary.lunchList,listener));
+        dinnerRv.setAdapter(new DiaryMealAdapter(diary.dinnerList,listener));
     }
 
     private void setupProgressBar(Diary diary) {
@@ -153,7 +140,18 @@ public class DiaryFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //TODO: check validity for previous date
+                DiaryDatabase.getInstance().getPrevDiary(new DiaryDatabase.OnCompleteListener() {
+                    @Override
+                    public void onSuccess(Diary diary) {
+                        Log.d("Dung","Prev Clicked");
+                        currentDiary = diary;
+                        updateUI(diary);
+                    }
+                    @Override
+                    public void onFailure(int code) {
 
+                    }
+                });
             }
         });
 
@@ -161,6 +159,18 @@ public class DiaryFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //TODO: check validity for next date
+                DiaryDatabase.getInstance().getNextDiary(new DiaryDatabase.OnCompleteListener() {
+                    @Override
+                    public void onSuccess(Diary diary) {
+                        Log.d("Dung","Next Clicked");
+                        currentDiary = diary;
+                        updateUI(diary);
+                    }
+
+                    @Override
+                    public void onFailure(int code) {
+                    }
+                });
             }
         });
     }

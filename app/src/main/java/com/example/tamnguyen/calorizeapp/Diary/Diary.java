@@ -17,6 +17,7 @@ import java.util.Map;
  */
 
 public class Diary {
+    public String ID="";
     public double carbs = 0;
     public double protein = 0;
     public double fat = 0;
@@ -25,13 +26,11 @@ public class Diary {
     public double neededProtein = 0;
     public double neededFat = 0;
     public double neededCalories = 0;
-    FoodList breakfastList = new FoodList(new ArrayList<Food>());
-    ArrayList<Double> breakfastVolumeList = new ArrayList<>();
-    FoodList lunchList = new FoodList(new ArrayList<Food>());
-    ArrayList<Double> lunchVolumeList = new ArrayList<>();
-    FoodList dinnerList = new FoodList(new ArrayList<Food>());
-    ArrayList<Double> dinnerVolumeList = new ArrayList<>();
-
+    public double height = 0;
+    public double weight = 0;
+    DiaryFoodList breakfastList = new DiaryFoodList();
+    DiaryFoodList lunchList = new DiaryFoodList();
+    DiaryFoodList dinnerList = new DiaryFoodList();
     public Map<String, Object> toMap() {
         return new HashMap<>();
     }
