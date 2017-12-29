@@ -28,9 +28,9 @@ public class Diary {
     public double neededCalories = 0;
     public double height = 0;
     public double weight = 0;
-    DiaryFoodList breakfastList = new DiaryFoodList();
-    DiaryFoodList lunchList = new DiaryFoodList();
-    DiaryFoodList dinnerList = new DiaryFoodList();
+    DiaryFoodList breakfastList = new DiaryFoodList("Breakfast");
+    DiaryFoodList lunchList = new DiaryFoodList("Lunch");
+    DiaryFoodList dinnerList = new DiaryFoodList("Dinner");
     public Map<String, Object> toMap() {
         return new HashMap<>();
     }

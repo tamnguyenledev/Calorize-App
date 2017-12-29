@@ -21,7 +21,7 @@ class FoodListActivity : AppCompatActivity() {
             override fun onItemClick(food: Food) {
                 val intent = Intent(this@FoodListActivity,AddFoodActivity::class.java)
                 intent.putExtra("food",food)
-                intent.putExtra("choice",spinner.selectedItem.toString())
+                intent.putExtra("choice",spinner.selectedItemId.toInt())
                 startActivity(intent)
             }
         })
@@ -31,5 +31,6 @@ class FoodListActivity : AppCompatActivity() {
         val adapter = ArrayAdapter.createFromResource(this,R.array.meals_array,android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
+        spinner.setSelection(intent.extras["choice"] as Int)
     }
 }

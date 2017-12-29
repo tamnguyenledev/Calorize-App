@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import com.example.tamnguyen.calorizeapp.Diary.DiaryFoodList;
 import com.example.tamnguyen.calorizeapp.Diary.DiaryFragment;
@@ -30,20 +29,32 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
-    @BindView(R.id.llFabAddBreakfast)
-    public LinearLayout fabAddBreakfast;
-    @BindView(R.id.llFabAddLunch)
-    public LinearLayout fabAddLunch;
-    @BindView(R.id.llFabAddDinner)
-    public LinearLayout fabAddDinner;
-    @BindView(R.id.llFabAddExercise)
-    public LinearLayout fabAddExercise;
     @BindView(R.id.fabFrame)
     public FrameLayout fabSubMenu;
     @BindView(R.id.tab)
     public NavigationTabStrip tabStrip;
     @BindView(R.id.pager)
     public ViewPager pager;
+    @BindView(R.id.fabAddBreakfast)
+    FloatingActionButton fabAddBreakfast;
+    @BindView(R.id.fabAddLunch)
+    FloatingActionButton fabAddLunch;
+    @BindView(R.id.fabAddDinner)
+    FloatingActionButton fabAddDinner;
+    @BindView(R.id.fabAddExercise)
+    FloatingActionButton fabAddExercise;
+    @BindView(R.id.fabShareFB)
+    FloatingActionButton fabShareFB;
+    @BindView(R.id.fabCaptureImage)
+    FloatingActionButton fabCaptureImage;
+    @BindView(R.id.fabShowProgress)
+    FloatingActionButton fabShowProgress;
+    @BindView(R.id.fabCompare)
+    FloatingActionButton fabCompare;
+    @BindView(R.id.fabShareFBProgress)
+    FloatingActionButton fabShareFBProgress;
+    @BindView(R.id.fabFrameProgress)
+    FrameLayout fabProgressSubMenu;
     private boolean fabExpanded = false;
 
     @BindView(R.id.fab)
@@ -62,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         fabSubMenu.setVisibility(View.INVISIBLE);
+        fabProgressSubMenu.setVisibility(View.INVISIBLE);
 
         fabAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +81,8 @@ public class MainActivity extends AppCompatActivity {
 
                 if (fabExpanded) {
                     closeSubMenuFab();
-                } else {
+                }
+                else {
                     openSubMenuFab();
                 }
             }
@@ -81,27 +94,20 @@ public class MainActivity extends AppCompatActivity {
 
     private void openSubMenuFab() {
 
-        /*
-        fabAddBreakfast.setVisibility(View.VISIBLE);
-        fabAddLunch.setVisibility(View.VISIBLE);
-        fabAddDinner.setVisibility(View.VISIBLE);
-        fabAddExercise.setVisibility(View.VISIBLE);
-        */
-        fabSubMenu.setVisibility(View.VISIBLE);
+        if (pager.getCurrentItem() != 2)
+            fabSubMenu.setVisibility(View.VISIBLE);
+        else
+            fabProgressSubMenu.setVisibility(View.VISIBLE);
+
         fabAddItem.setImageResource(R.drawable.ic_close);
         fabExpanded = true;
     }
 
     private void closeSubMenuFab() {
 
-        /*
-        fabAddBreakfast.setVisibility(View.INVISIBLE);
-        fabAddLunch.setVisibility(View.INVISIBLE);
-        fabAddDinner.setVisibility(View.INVISIBLE);
-        fabAddExercise.setVisibility(View.INVISIBLE);
-        */
         fabSubMenu.setVisibility(View.INVISIBLE);
-        fabAddItem.setImageResource(R.drawable.ic_add);
+        fabProgressSubMenu.setVisibility(View.INVISIBLE);
+        fabAddItem.setImageResource(R.drawable.ic_menu);
         fabExpanded = false;
     }
 
@@ -143,7 +149,20 @@ public class MainActivity extends AppCompatActivity {
 
                             @Override
                             public void onAddClick(DiaryFoodList diaryFoodList) {
-
+                                //TODO: Process when users want to add more items into their's diary
+                                int mealChoice = -1;
+                                if (diaryFoodList.getTitle().equals("Breakfast")) {
+                                    mealChoice = 0;
+                                }
+                                else if (diaryFoodList.getTitle().equals("Lunch")) {
+                                    mealChoice = 1;
+                                }
+                                else {
+                                    mealChoice = 2;
+                                }
+                                Intent intent = new Intent(MainActivity.this, FoodListActivity.class);
+                                intent.putExtra("choice", mealChoice);
+                                startActivity(intent);
                             }
                         });
                     default:

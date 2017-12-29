@@ -41,14 +41,13 @@ public class DiaryDatabase {
     /**
      * Callback Interface for Query Completion
      */
-    public interface OnCaloTimeComplete{
-        void onSuccess(ArrayList<Double> result);
+    public interface OnBatchCompleteListener{
+        void onSuccess(ArrayList<Diary> result);
         void onFailure(int code);
     }
 
     public interface OnCompleteListener {
         void onSuccess(Diary diary);
-
         void onFailure(int code);
     }
 
@@ -127,17 +126,17 @@ public class DiaryDatabase {
         new CheckingTask(this::getCurrentDiaryImp, listener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    public void getCaloByDate(Calendar calendar1,Calendar calendar2,OnCaloTimeComplete listener){
+    public void getDiaryByInterval(Calendar calendar1, Calendar calendar2, OnBatchCompleteListener listener){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yy");
         String date1 = simpleDateFormat.format(calendar1.getTime());
         String date2 = simpleDateFormat.format(calendar2.getTime());
         diaryRef.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                ArrayList<Double> result = new ArrayList<>();
+                ArrayList<Diary> result = new ArrayList<>();
                 for(DataSnapshot child : dataSnapshot.getChildren()){
-                    Map<String,Object> data = (Map<String, Object>) child.getValue();
-                    result.add(Double.parseDouble(data.get(CALORIES).toString()));
+                    Diary diary = createDiaryFromSnapshot(child);
+                    result.add(diary);
                 }
                 listener.onSuccess(result);
             }
@@ -311,7 +310,7 @@ public class DiaryDatabase {
         });
 
     }
-    private void getDiaryFromDatabase(Calendar calendar, final OnCompleteListener listener) {
+    public void getDiaryFromDatabase(Calendar calendar, final OnCompleteListener listener) {
         //Get Diary's key
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         String key = sdf.format(calendar.getTime());

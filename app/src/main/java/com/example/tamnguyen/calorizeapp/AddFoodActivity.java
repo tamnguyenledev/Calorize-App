@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 public class AddFoodActivity extends AppCompatActivity
 {
     private Food currentChosenFood;
+    private int mealChoice;
     @BindView(R.id.tvFoodName)
     TextView tvFoodName;
     @BindView(R.id.tvFoodType)
@@ -46,8 +47,8 @@ public class AddFoodActivity extends AppCompatActivity
         setContentView(R.layout.activity_add_food);
         ButterKnife.bind(this);
 
-        currentChosenFood = (Food)getIntent().getParcelableExtra("food");
-
+        currentChosenFood = getIntent().getParcelableExtra("food");
+        mealChoice = getIntent().getIntExtra("choice",0);
         initViews();
 
     }
@@ -103,9 +104,9 @@ public class AddFoodActivity extends AppCompatActivity
     private void setFoodMetric(double scaleDownRatio)
     {
         // TODO: add units
-        tvCaloriesAmount.setText(String.valueOf(currentChosenFood.getCalorie()/scaleDownRatio));
-        tvCarbsAmount.setText(String.valueOf(currentChosenFood.getCarb()/scaleDownRatio));
-        tvProteinAmount.setText(String.valueOf(currentChosenFood.getProtein()/scaleDownRatio));
-        tvFatAmount.setText(String.valueOf(currentChosenFood.getFat()/scaleDownRatio));
+        tvCaloriesAmount.setText(String.valueOf(Math.round(currentChosenFood.getCalorie()/scaleDownRatio*1000.0)/1000.0));
+        tvCarbsAmount.setText(String.valueOf(Math.round(currentChosenFood.getCarb()/scaleDownRatio*1000.0)/1000.0));
+        tvProteinAmount.setText(String.valueOf(Math.round(currentChosenFood.getProtein()/scaleDownRatio*1000.0)/1000.0));
+        tvFatAmount.setText(String.valueOf(Math.round(currentChosenFood.getFat()/scaleDownRatio*1000.0)/1000.0));
     }
 }

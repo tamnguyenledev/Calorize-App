@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -26,7 +27,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.tamnguyen.calorizeapp.FoodList.FoodDatabase;
 import com.example.tamnguyen.calorizeapp.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -91,11 +95,15 @@ public class EditProfileActivity extends AppCompatActivity {
                     if (selectedImageUri != null && !selectedImageUri.isEmpty())
                         profile.setUrlAvatar(selectedImageUri);
 
-                    Intent retIntent = new Intent();
-                    retIntent.putExtra("profile-edit-result", profile);
-                    setResult(RESULT_CODE_EDIT, retIntent);
-
-                    finish();
+                    UserDatabase.getInstance().addUser(profile, new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Intent retIntent = new Intent();
+                            retIntent.putExtra("profile-edit-result", profile);
+                            setResult(RESULT_CODE_EDIT, retIntent);
+                            finish();
+                        }
+                    });
                 }
             }
         });

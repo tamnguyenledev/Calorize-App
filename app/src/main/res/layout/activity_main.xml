@@ -62,6 +62,9 @@
     <include
         layout="@layout/fab_submenu_diary_tab"/>
 
+    <include
+        layout="@layout/fab_submenu_progress_tab"/>
+
 </RelativeLayout>
 
 

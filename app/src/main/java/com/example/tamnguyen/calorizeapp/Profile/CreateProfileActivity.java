@@ -3,6 +3,7 @@ package com.example.tamnguyen.calorizeapp.Profile;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -23,6 +24,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.tamnguyen.calorizeapp.MainActivity;
 import com.example.tamnguyen.calorizeapp.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -80,13 +83,16 @@ public class CreateProfileActivity extends AppCompatActivity {
                     if (selectedImageUri != null && !selectedImageUri.isEmpty())
                         profile.setUrlAvatar(selectedImageUri);
 
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    intent.putExtra("profile-create-result", profile);
-                    startActivity(intent);
-
                     // push 1 node child to users
-
-                    finish();
+                    UserDatabase.getInstance().addUser(profile, new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            intent.putExtra("profile-create-result", profile);
+                            startActivity(intent);
+                            finish();
+                        }
+                    });
                 }
             }
         });
