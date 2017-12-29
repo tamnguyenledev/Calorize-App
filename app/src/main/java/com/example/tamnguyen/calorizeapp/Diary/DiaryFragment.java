@@ -128,17 +128,25 @@ public class DiaryFragment extends Fragment {
 
     private void setupProgressBar(Diary diary) {
         //Progress Bar for Fat
-        progressFat.setProgress((float) ((float) diary.fat/diary.neededFat));
-        progressFat.startAnimation();
-        //Progress Bar for Carb
-        progressCarb.setProgress((float) ((float) diary.carbs/diary.neededCarbs));
-        progressCarb.startAnimation();
-        //Progress Bar for Protein
-        progressProtein.setProgress((float) ((float) diary.protein/diary.neededProtein));
-        progressProtein.startAnimation();
-        //Progress Bar for Calories
-        progressCalories.setProgress((float) ((float) diary.calories/diary.neededCalories));
-        progressCalories.startAnimation();
+        if(diary.neededFat != 0 && diary.neededFat!=0){
+            progressFat.setProgress((float) ((float) diary.fat/diary.neededFat));
+            progressFat.startAnimation();
+        }
+       if(diary.neededCarbs != 0&& diary.neededCarbs!=0){
+           //Progress Bar for Carb
+           progressCarb.setProgress((float) ((float) diary.carbs/diary.neededCarbs));
+           progressCarb.startAnimation();
+       }
+        if(diary.neededProtein!=0&& diary.neededProtein!=0){
+            //Progress Bar for Protein
+            progressProtein.setProgress((float) ((float) diary.protein/diary.neededProtein));
+            progressProtein.startAnimation();
+        }
+        if(diary.neededCalories != 0&& diary.neededCalories!=0){
+            //Progress Bar for Calories
+            progressCalories.setProgress((float) ((float) diary.calories/diary.neededCalories));
+            progressCalories.startAnimation();
+        }
     }
     private void setupDateManip() {
         prevDayBtn.setOnClickListener(new View.OnClickListener() {

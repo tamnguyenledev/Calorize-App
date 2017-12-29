@@ -75,8 +75,8 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
               if (MyApplication.hasSoftNavBar(this)) MyApplication.getNavigationBarHeight(this,resources.configuration.orientation)
               else 0
         loginBtn?.setOnClickListener {
-            v ->
-            LoginManager.getInstance().logInWithReadPermissions(this,readPermissions);
+            /*v ->
+            LoginManager.getInstance().logInWithReadPermissions(this,readPermissions);*/
         }
         ///////////////////////////////////////////
         //Login with Facebook
@@ -126,7 +126,7 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
                 //User signs in successfully with Authentication
                 //Get user data from Facebook
                 val request = GraphRequest.newMeRequest(token, { json, response ->
-                    var intent = Intent(this, MainActivity::class.java).apply {
+                    var intent = Intent(this@LoginActivity, MainActivity::class.java).apply {
                         putExtra("name", json["name"] as String)
                         putExtra("birthday", json["birthday"] as String)
                         putExtra("gender", json["gender"] as String)
