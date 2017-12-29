@@ -310,7 +310,7 @@ public class DiaryDatabase {
         });
 
     }
-    private void getDiaryFromDatabase(Calendar calendar, final OnCompleteListener listener) {
+    public void getDiaryFromDatabase(Calendar calendar, final OnCompleteListener listener) {
         //Get Diary's key
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         String key = sdf.format(calendar.getTime());
