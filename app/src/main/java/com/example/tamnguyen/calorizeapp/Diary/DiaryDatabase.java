@@ -1,7 +1,7 @@
 package com.example.tamnguyen.calorizeapp.Diary;
 
 import android.os.AsyncTask;
-import android.provider.ContactsContract;
+import android.util.Log;
 
 import com.example.tamnguyen.calorizeapp.FoodList.Food;
 import com.example.tamnguyen.calorizeapp.FoodList.FoodDatabase;
@@ -16,7 +16,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -86,20 +85,6 @@ public class DiaryDatabase {
     /**
      * Diary Cache Implement
      */
-    class Pair<L, R> {
-        L first;
-        R second;
-
-        Pair() {
-
-        }
-
-        Pair(L l, R r) {
-            first = l;
-            second = r;
-        }
-    }
-
     private Calendar mCalendar = GregorianCalendar.getInstance();
     private int maxCacheSize = 20;
     private int mCurrentIndex = -1;
@@ -136,28 +121,34 @@ public class DiaryDatabase {
         new CheckingTask(this::getCurrentDiaryImp, listener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private synchronized void getPrevDiaryImp(final OnCompleteListener listener) {
-        if (mCurrentIndex + 1 <= cacheDiary.size() - 1) {
+    private synchronized void getNextDiaryImp(final OnCompleteListener listener) {
+        if (mCurrentIndex  + 1 <= cacheDiary.size() - 1) {
             //If Previous diary already appears in cache
-            mCalendar.add(Calendar.DATE, -1);
+            mCalendar.add(Calendar.DATE, +1);
             ++mCurrentIndex;
             listener.onSuccess(cacheDiary.get(mCurrentIndex));
         } else {
+            boolean cacheHaveRooms = false;
             //If Previous diary not exist in cache
             if (cacheDiary.size() < maxCacheSize) {
                 //If Cache still have rooms
-                ++mCurrentIndex;
+                cacheHaveRooms = true;
             } else {
                 //If Cache is full
-                //Remove the first Diary in cache
-                cacheDiary.remove(0);
+                //Remove the first Diary in  cache
+                cacheHaveRooms = false;
             }
             //In both cases above, we need to get Diary from Database and put it into cache
-            mCalendar.add(Calendar.DATE, -1);
-            getDiary(mCalendar, new OnCompleteListener() {
+            mCalendar.add(Calendar.DATE, +1);
+            boolean finalCacheHaveRooms = cacheHaveRooms;
+            getDiaryFromDatabase(mCalendar, new OnCompleteListener() {
                 @Override
                 public void onSuccess(Diary diary) {
                     synchronized (DiaryDatabase.this) {
+                        if(finalCacheHaveRooms)
+                            ++mCurrentIndex;
+                        else
+                            cacheDiary.remove(0);
                         cacheDiary.add(diary);
                     }
                     listener.onSuccess(diary);
@@ -171,25 +162,32 @@ public class DiaryDatabase {
         }
     }
 
-    private synchronized void getNextDiaryImp(final OnCompleteListener listener) {
+    private synchronized void getPrevDiaryImp(final OnCompleteListener listener) {
         if (mCurrentIndex - 1 >= 0) {
             //If Previous diary already appears in cache
             --mCurrentIndex;
-            mCalendar.add(Calendar.DATE, 1);
+            mCalendar.add(Calendar.DATE, -1);
             listener.onSuccess(cacheDiary.get(mCurrentIndex));
         } else {
+            boolean cacheHaveRooms = false;
             //If Previous diary not exist in cache
             if (cacheDiary.size() >= maxCacheSize) {
                 //If Cache is full
                 //Remove the last Diary in cache
-                cacheDiary.remove(cacheDiary.size() - 1);
+                cacheHaveRooms = false;
             }
+            else
+                cacheHaveRooms = true;
             //In both cases above, we need to get Diary from Database and put it into cache
-            mCalendar.add(Calendar.DATE, +1);
-            getDiary(mCalendar, new OnCompleteListener() {
+            mCalendar.add(Calendar.DATE, -1);
+            boolean finalCacheHaveRooms = cacheHaveRooms;
+            getDiaryFromDatabase(mCalendar, new OnCompleteListener() {
                 @Override
                 public void onSuccess(Diary diary) {
-                    cacheDiary.add(diary);
+                    if (!finalCacheHaveRooms)
+                        cacheDiary.remove(cacheDiary.size() - 1);
+                    mCurrentIndex = 0;
+                    cacheDiary.add(0,diary);
                     listener.onSuccess(diary);
                 }
 
@@ -207,7 +205,7 @@ public class DiaryDatabase {
             //Load Today Diary and put it into cache
             isFirstTimeLoading = false;
             Calendar calendar = GregorianCalendar.getInstance();
-            getDiary(calendar, new OnCompleteListener() {
+            getDiaryFromDatabase(calendar, new OnCompleteListener() {
                 @Override
                 public void onSuccess(Diary diary) {
                     synchronized (DiaryDatabase.this) {
@@ -251,10 +249,11 @@ public class DiaryDatabase {
      * @param calendar  : Specify date to get data
      * @param listener: OnCompleteListener to listen to query operate
      */
-    public void getDiary(Calendar calendar, final OnCompleteListener listener) {
+    public void getDiary(Calendar calendar,final  OnCompleteListener listener){
         //Get Diary's key
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         String key = sdf.format(calendar.getTime());
+        Log.d("Dung",key);
         //Loop through cache to see whether that diary already exists in cache
         for (int i = 0; i < cacheDiary.size(); ++i) {
             if (cacheDiary.get(i).ID.equals(key)) {
@@ -264,7 +263,32 @@ public class DiaryDatabase {
                 return;
             }
         }
-        //If diary not exists in cache
+        //If Diary not exists in cache
+        //Query Diary from Database
+        getDiary(calendar, new OnCompleteListener() {
+            @Override
+            public void onSuccess(Diary diary) {
+                synchronized (DiaryDatabase.this){
+                    cacheDiary.clear();
+                    mCurrentIndex = 0;
+                    cacheDiary.add(diary);
+                }
+                listener.onSuccess(diary);
+            }
+
+            @Override
+            public void onFailure(int code) {
+                listener.onFailure(code);
+            }
+        });
+
+    }
+    private void getDiaryFromDatabase(Calendar calendar, final OnCompleteListener listener) {
+        //Get Diary's key
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        String key = sdf.format(calendar.getTime());
+        Log.d("Dung",key);
+        //Query Diary from Database
         diaryRef.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -273,9 +297,6 @@ public class DiaryDatabase {
                 if (dataSnapshot.exists()) {
                     diary = createDiaryFromSnapshot(dataSnapshot);
                 }
-                cacheDiary.clear();
-                cacheDiary.add(diary);
-                mCurrentIndex = 0;
                 listener.onSuccess(diary);
             }
 
@@ -289,6 +310,7 @@ public class DiaryDatabase {
 
     public static Diary createDiaryFromSnapshot(DataSnapshot dataSnapshot) {
         Diary diary = new Diary();
+        diary.ID = dataSnapshot.getKey();
         for (DataSnapshot child : dataSnapshot.getChildren()) {
             //For each field in Diary Snapshot, determine what field is that and set corresponding value
             switch (child.getKey()) {

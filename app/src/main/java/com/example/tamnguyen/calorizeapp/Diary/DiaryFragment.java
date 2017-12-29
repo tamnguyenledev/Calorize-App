@@ -17,7 +17,9 @@ import android.widget.Button;
 import com.example.tamnguyen.calorizeapp.FoodList.FoodList;
 import com.example.tamnguyen.calorizeapp.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,8 +50,11 @@ public class DiaryFragment extends Fragment {
     public ProgressBar progressProtein;
     @BindView(R.id.progressCalories)
     public ProgressCircle progressCalories;
+    @BindView(R.id.btnToday)
+    public Button todayBtn;
     Diary currentDiary;
     private OnItemListener listener;
+
     public DiaryFragment() {
         // Required empty public constructor
     }
@@ -108,33 +113,34 @@ public class DiaryFragment extends Fragment {
 
     private void setRecyclerViewAndAdapter(Diary diary) {
 
-        breakfastRv.setAdapter(new DiaryMealAdapter(diary.breakfastList,listener));
-        lunchRv.setAdapter(new DiaryMealAdapter(diary.lunchList,listener));
-        dinnerRv.setAdapter(new DiaryMealAdapter(diary.dinnerList,listener));
+        breakfastRv.setAdapter(new DiaryMealAdapter(diary.breakfastList, listener));
+        lunchRv.setAdapter(new DiaryMealAdapter(diary.lunchList, listener));
+        dinnerRv.setAdapter(new DiaryMealAdapter(diary.dinnerList, listener));
     }
 
     private void setupProgressBar(Diary diary) {
         //Progress Bar for Fat
-        if(diary.neededFat != 0 && diary.neededFat!=0){
-            progressFat.setProgress((float) ((float) diary.fat/diary.neededFat));
+        if (diary.neededFat != 0 && diary.neededFat != 0) {
+            progressFat.setProgress((float) ((float) diary.fat / diary.neededFat));
             progressFat.startAnimation();
         }
-       if(diary.neededCarbs != 0&& diary.neededCarbs!=0){
-           //Progress Bar for Carb
-           progressCarb.setProgress((float) ((float) diary.carbs/diary.neededCarbs));
-           progressCarb.startAnimation();
-       }
-        if(diary.neededProtein!=0&& diary.neededProtein!=0){
+        if (diary.neededCarbs != 0 && diary.neededCarbs != 0) {
+            //Progress Bar for Carb
+            progressCarb.setProgress((float) ((float) diary.carbs / diary.neededCarbs));
+            progressCarb.startAnimation();
+        }
+        if (diary.neededProtein != 0 && diary.neededProtein != 0) {
             //Progress Bar for Protein
-            progressProtein.setProgress((float) ((float) diary.protein/diary.neededProtein));
+            progressProtein.setProgress((float) ((float) diary.protein / diary.neededProtein));
             progressProtein.startAnimation();
         }
-        if(diary.neededCalories != 0&& diary.neededCalories!=0){
+        if (diary.neededCalories != 0 && diary.neededCalories != 0) {
             //Progress Bar for Calories
-            progressCalories.setProgress((float) ((float) diary.calories/diary.neededCalories));
+            progressCalories.setProgress((float) ((float) diary.calories / diary.neededCalories));
             progressCalories.startAnimation();
         }
     }
+
     private void setupDateManip() {
         prevDayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,10 +149,17 @@ public class DiaryFragment extends Fragment {
                 DiaryDatabase.getInstance().getPrevDiary(new DiaryDatabase.OnCompleteListener() {
                     @Override
                     public void onSuccess(Diary diary) {
-                        Log.d("Dung","Prev Clicked");
+                        Log.d("Dung", "Prev Clicked");
                         currentDiary = diary;
+                        String date;
+                        if(diary.ID.equals(getCurrentDate()))
+                            date = "Today";
+                        else
+                            date = diary.ID;
+                        todayBtn.setText(date);
                         updateUI(diary);
                     }
+
                     @Override
                     public void onFailure(int code) {
 
@@ -162,8 +175,14 @@ public class DiaryFragment extends Fragment {
                 DiaryDatabase.getInstance().getNextDiary(new DiaryDatabase.OnCompleteListener() {
                     @Override
                     public void onSuccess(Diary diary) {
-                        Log.d("Dung","Next Clicked");
+                        Log.d("Dung", "Next Clicked");
                         currentDiary = diary;
+                        String date;
+                        if(diary.ID.equals(getCurrentDate()))
+                            date = "Today";
+                        else
+                            date = diary.ID;
+                        todayBtn.setText(date);
                         updateUI(diary);
                     }
 
@@ -173,5 +192,8 @@ public class DiaryFragment extends Fragment {
                 });
             }
         });
+    }
+    String getCurrentDate(){
+        return new SimpleDateFormat("dd-MM-yyyy").format(GregorianCalendar.getInstance().getTime());
     }
 }
