@@ -20,6 +20,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.tamnguyen.calorizeapp.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -44,7 +47,6 @@ public class ProfileFragment extends Fragment {
         retView = inflater.inflate(R.layout.fragment_profile,container,false);
         doInitControl(retView);
         doGetProfile();
-        setView();
         return retView;
     }
 
@@ -68,6 +70,18 @@ public class ProfileFragment extends Fragment {
              profile.generateAge();
         else{
             // load từ firebase thông qua id
+            UserDatabase.getInstance().getUser(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    profile = dataSnapshot.getValue(Profile.class);
+                    setView();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
     }
     public void setView(){
