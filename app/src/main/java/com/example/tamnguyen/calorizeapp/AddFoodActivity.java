@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 public class AddFoodActivity extends AppCompatActivity
 {
     private Food currentChosenFood;
+    private int mealChoice;
     @BindView(R.id.tvFoodName)
     TextView tvFoodName;
     @BindView(R.id.tvFoodType)
@@ -46,8 +47,8 @@ public class AddFoodActivity extends AppCompatActivity
         setContentView(R.layout.activity_add_food);
         ButterKnife.bind(this);
 
-        currentChosenFood = (Food)getIntent().getParcelableExtra("food");
-
+        currentChosenFood = getIntent().getParcelableExtra("food");
+        mealChoice = getIntent().getIntExtra("choice",0);
         initViews();
 
     }

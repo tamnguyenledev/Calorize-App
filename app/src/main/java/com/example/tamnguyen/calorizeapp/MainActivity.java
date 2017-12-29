@@ -150,7 +150,18 @@ public class MainActivity extends AppCompatActivity {
 
                             @Override
                             public void onAddClick(DiaryFoodList diaryFoodList) {
-
+                                //TODO: Process when users want to add more items into their's diary
+                                int mealChoice = -1;
+                                if(diaryFoodList.getTitle().equals("Breakfast")){
+                                    mealChoice = 0;
+                                }else if(diaryFoodList.getTitle().equals("Lunch")){
+                                    mealChoice = 1;
+                                }else{
+                                    mealChoice = 2;
+                                }
+                                Intent intent = new Intent(MainActivity.this,FoodListActivity.class);
+                                intent.putExtra("choice",mealChoice);
+                                startActivity(intent);
                             }
                         });
                     default:
