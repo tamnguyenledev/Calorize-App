@@ -131,9 +131,9 @@ public class ProgressFragment extends Fragment implements View.OnClickListener {
     private void validDate() {
         if (fromDate != null && toDate != null) {
             if (fromDate.compareTo(toDate) > 0) {
-                Calendar tmp = fromDate;
+                Calendar tmp = (Calendar)fromDate.clone();
                 tmp.add(Calendar.DATE, 1);
-                toDate = tmp;
+                toDate = (Calendar)tmp.clone();
             }
         }
     }
