@@ -127,16 +127,31 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
                 //Get user data from Facebook
                 // coi nhu là mới đăng nhập lần đầu để test màn hình create profile
                 val request = GraphRequest.newMeRequest(token, { json, response ->
-                    var intent = Intent(this, CreateProfileActivity::class.java).apply {
-                        putExtra("id",json["id"] as String);
-                        putExtra("name", json["name"] as String)
-                        putExtra("birthday", json["birthday"] as String)
-                        putExtra("gender", json["gender"] as String)
-                        putExtra("picture", json.getJSONObject("picture").getJSONObject("data")["url"] as String)
+                    if(task.result.additionalUserInfo.isNewUser)
+                    {
+                        //If user is new, go to create profile activity
+                        var intent = Intent(this@LoginActivity, CreateProfileActivity::class.java).apply {
+                            putExtra("id",json["id"] as String);
+                            putExtra("name", json["name"] as String)
+                            putExtra("birthday", json["birthday"] as String)
+                            putExtra("gender", json["gender"] as String)
+                            putExtra("picture", json.getJSONObject("picture").getJSONObject("data")["url"] as String)
+                        }
+                        startActivity(intent)
+                        finish()
                     }
-
-                    startActivity(intent)
-                    finish()
+                    else{
+                        //If user is not new, go to main activity
+                        var intent = Intent(this@LoginActivity, MainActivity::class.java).apply {
+                            putExtra("id",json["id"] as String);
+                            putExtra("name", json["name"] as String)
+                            putExtra("birthday", json["birthday"] as String)
+                            putExtra("gender", json["gender"] as String)
+                            putExtra("picture", json.getJSONObject("picture").getJSONObject("data")["url"] as String)
+                        }
+                        startActivity(intent)
+                        finish()
+                    }
                 })
                 val params = Bundle()
                 params.putString("fields", "id,name,birthday,gender,email,picture.type(large)")
@@ -156,11 +171,22 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
                     task ->
                     if(task.isSuccessful){
                         //Sign-in success
-                        val intent = Intent(this@LoginActivity,MainActivity::class.java)
-                        intent.putExtra("name",acct.givenName + acct.familyName)
-                        intent.putExtra("picture",acct.photoUrl)
-                        startActivity(intent)
-                        finish()
+                        if(task.result.additionalUserInfo.isNewUser)
+                        {
+                            val intent = Intent(this@LoginActivity,CreateProfileActivity::class.java)
+                            intent.putExtra("name",acct.givenName + acct.familyName)
+                            intent.putExtra("picture",acct.photoUrl)
+                            startActivity(intent)
+                            finish()
+                        }
+                        else{
+                            val intent = Intent(this@LoginActivity,MainActivity::class.java)
+                            intent.putExtra("name",acct.givenName + acct.familyName)
+                            intent.putExtra("picture",acct.photoUrl)
+                            startActivity(intent)
+                            finish()
+                        }
+
                     }
                     else
                     {
