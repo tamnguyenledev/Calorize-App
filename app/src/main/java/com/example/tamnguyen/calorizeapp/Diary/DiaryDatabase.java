@@ -1,18 +1,26 @@
 package com.example.tamnguyen.calorizeapp.Diary;
 
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.constraint.solver.widgets.Snapshot;
 import android.util.Log;
 
 import com.example.tamnguyen.calorizeapp.FoodList.Food;
 import com.example.tamnguyen.calorizeapp.FoodList.FoodDatabase;
+import com.example.tamnguyen.calorizeapp.FoodList.FoodList;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
+import java.net.SocketImpl;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -84,7 +92,6 @@ public class DiaryDatabase {
     }
 
     private DiaryDatabase() {
-
     }
 
     /**
@@ -126,11 +133,11 @@ public class DiaryDatabase {
         new CheckingTask(this::getCurrentDiaryImp, listener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+
     public void getDiaryByInterval(Calendar calendar1, Calendar calendar2, OnBatchCompleteListener listener){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yy");
-        String date1 = simpleDateFormat.format(calendar1.getTime());
-        String date2 = simpleDateFormat.format(calendar2.getTime());
-        diaryRef.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+        String date1 = formatDate(calendar1);
+        String date2 = formatDate(calendar2);
+        diaryRef.orderByKey().startAt(date1).endAt(date2).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ArrayList<Diary> result = new ArrayList<>();
@@ -253,6 +260,44 @@ public class DiaryDatabase {
 
     }
 
+    public void addFoodIntoDiary(String date, DiaryFood diaryFood, OnCompleteListener listener){
+        this.diaryRef.child(date).runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                //Update calories,carbs,... of Diary
+                Diary diary = mutableData.getValue(Diary.class);
+                diary.carbs += diaryFood.getFood().getCarb()*diaryFood.num_of_units;
+                diary.protein+= diaryFood.getFood().getProtein()*diaryFood.num_of_units;
+                diary.fat += diaryFood.getFood().getFat()*diaryFood.num_of_units;
+                diary.calories+=diaryFood.getFood().getCalorie()*diaryFood.num_of_units;
+                //Add Food to Database
+                Map<String,Object> data = diaryFood.toDatabase();
+                String key = DiaryDatabase.this.diaryRef.child(date).child(FOOD_LIST).push().getKey();
+                DiaryDatabase.this.diaryRef.child(date).child(FOOD_LIST).child(key).setValue(data);
+                mutableData.child("carbs").setValue(diary.carbs);
+                mutableData.child("fat").setValue(diary.fat);
+                mutableData.child("protein").setValue(diary.protein);
+                mutableData.child("calories").setValue(diary.calories);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+                listener.onSuccess(createDiaryFromSnapshot(dataSnapshot));
+            }
+        });
+    }
+    private ValueEventListener valueEventListener;
+    public void listenToChangesOfCurrentDiary(ValueEventListener childEventListener){
+        //Save new childEventListener
+        this.valueEventListener = childEventListener;
+        //Remove old childEventListener
+        diaryRef.child(formatDate(mCalendar))
+                .removeEventListener(this.valueEventListener);
+        //Add new listener to dbRef
+        diaryRef.child(formatDate(mCalendar))
+                .addValueEventListener(this.valueEventListener);
+    }
     /**
      * Key to access Corresponding Fields of Diary on database
      */
@@ -276,7 +321,7 @@ public class DiaryDatabase {
      * @param calendar  : Specify date to get data
      * @param listener: OnCompleteListener to listen to query operate
      */
-    public void getDiary(Calendar calendar,final  OnCompleteListener listener){
+    public synchronized void getDiary(Calendar calendar,final  OnCompleteListener listener){
         //Get Diary's key
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         String key = sdf.format(calendar.getTime());
@@ -399,6 +444,19 @@ public class DiaryDatabase {
         diaryFood.food= food;
         diaryFood.ID = dataSnapshot.getKey();
         diaryFood.num_of_units = Double.parseDouble(data.get(FOOD_NUM_UNIT).toString());
+        if (data.containsKey(Food.Companion.getBREAKFAST())) {
+            diaryFood.mealType = "breakfast";
+
+        } else if (data.containsKey(Food.Companion.getLUNCH())) {
+            diaryFood.mealType = "lunch";
+
+        } else {
+            diaryFood.mealType = "dinner";
+        }
         return diaryFood;
+    }
+    private String formatDate(Calendar calendar){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        return simpleDateFormat.format(calendar.getTime());
     }
 }

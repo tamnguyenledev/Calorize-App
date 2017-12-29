@@ -14,11 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.example.tamnguyen.calorizeapp.FoodList.FoodList;
 import com.example.tamnguyen.calorizeapp.R;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 import butterknife.BindView;
@@ -82,11 +84,23 @@ public class DiaryFragment extends Fragment {
         initData();
     }
 
-    /**
-     * Wrapper method for loading today's diary
-     */
+
+    ValueEventListener valueEventListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            Diary diary = DiaryDatabase.createDiaryFromSnapshot(dataSnapshot);
+            updateUI(diary);
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
+
     @SuppressLint("StaticFieldLeak")
     private void initData() {
+
         //Because DiaryDatabase depends on FoodDatabase
         //Therefore it is neccesary to check FoodDatabase loading is finished
         //We use a background thread for this checking to avoid blocking UI-thread
@@ -97,6 +111,7 @@ public class DiaryFragment extends Fragment {
                 currentDiary = diary;
                 updateUI(diary);
                 setupDateManip();
+                DiaryDatabase.getInstance().listenToChangesOfCurrentDiary(valueEventListener);
             }
 
             @Override
@@ -121,44 +136,50 @@ public class DiaryFragment extends Fragment {
     private void setupProgressBar(Diary diary) {
         //Progress Bar for Fat
         if (diary.neededFat != 0 && diary.neededFat != 0) {
-            progressFat.setProgress((float) ((float) diary.fat / diary.neededFat));
+            if (diary.fat >= diary.neededFat)
+                progressFat.setProgress(1);
+            else
+                progressFat.setProgress((float) ((float) diary.fat / diary.neededFat));
             progressFat.startAnimation();
-        }
-        else
-        {
+        } else {
             progressFat.setProgress(0);
             progressFat.startAnimation();
         }
         //Progress Bar for Carb
         if (diary.neededCarbs != 0 && diary.neededCarbs != 0) {
-            progressCarb.setProgress((float) ((float) diary.carbs / diary.neededCarbs));
+            if (diary.carbs >= diary.neededCarbs)
+                progressFat.setProgress(1);
+            else
+                progressCarb.setProgress((float) ((float) diary.carbs / diary.neededCarbs));
             progressCarb.startAnimation();
-        }
-        else
-        {
+        } else {
             progressCarb.setProgress(0);
             progressCarb.startAnimation();
         }
         //Progress Bar for Protein
         if (diary.neededProtein != 0 && diary.neededProtein != 0) {
-            progressProtein.setProgress((float) ((float) diary.protein / diary.neededProtein));
+            if (diary.protein >= diary.neededProtein)
+                progressFat.setProgress(1);
+            else
+                progressProtein.setProgress((float) ((float) diary.protein / diary.neededProtein));
             progressProtein.startAnimation();
-        }
-        else{
+        } else {
             progressProtein.setProgress(0);
             progressProtein.startAnimation();
         }
         //Progress Bar for Calories
         if (diary.neededCalories != 0 && diary.neededCalories != 0) {
-            progressCalories.setProgress((float) ((float) diary.calories / diary.neededCalories));
+            if (diary.calories >= diary.neededCalories)
+                progressFat.setProgress(1);
+            else
+                progressCalories.setProgress((float) ((float) diary.calories / diary.neededCalories));
             progressCalories.startAnimation();
-        }
-        else
-        {
+        } else {
             progressCalories.setProgress(0);
             progressCalories.startAnimation();
         }
     }
+
     private void setupDateManip() {
         prevDayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,12 +191,13 @@ public class DiaryFragment extends Fragment {
                         Log.d("Dung", "Prev Clicked");
                         currentDiary = diary;
                         String date;
-                        if(diary.ID.equals(getCurrentDate()))
+                        if (diary.ID.equals(getCurrentDate()))
                             date = "Today";
                         else
                             date = diary.ID;
                         todayBtn.setText(date);
                         updateUI(diary);
+                        DiaryDatabase.getInstance().listenToChangesOfCurrentDiary(valueEventListener);
                     }
 
                     @Override
@@ -196,12 +218,13 @@ public class DiaryFragment extends Fragment {
                         Log.d("Dung", "Next Clicked");
                         currentDiary = diary;
                         String date;
-                        if(diary.ID.equals(getCurrentDate()))
+                        if (diary.ID.equals(getCurrentDate()))
                             date = "Today";
                         else
                             date = diary.ID;
                         todayBtn.setText(date);
                         updateUI(diary);
+                        DiaryDatabase.getInstance().listenToChangesOfCurrentDiary(valueEventListener);
                     }
 
                     @Override
@@ -211,7 +234,8 @@ public class DiaryFragment extends Fragment {
             }
         });
     }
-    String getCurrentDate(){
+
+    String getCurrentDate() {
         return new SimpleDateFormat("dd-MM-yyyy").format(GregorianCalendar.getInstance().getTime());
     }
 }

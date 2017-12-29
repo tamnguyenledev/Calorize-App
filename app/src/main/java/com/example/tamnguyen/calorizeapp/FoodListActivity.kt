@@ -27,6 +27,7 @@ class FoodListActivity : AppCompatActivity() {
         })
         val transaction = supportFragmentManager.beginTransaction()
         transaction.add(R.id.list_fragment,fragment)
+        transaction.commit()
         //Set up Spinner
         val adapter = ArrayAdapter.createFromResource(this,R.array.meals_array,android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
