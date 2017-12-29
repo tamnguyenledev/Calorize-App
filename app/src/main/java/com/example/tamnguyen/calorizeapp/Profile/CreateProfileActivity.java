@@ -90,9 +90,9 @@ public class CreateProfileActivity extends AppCompatActivity {
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             intent.putExtra("profile-create-result", profile);
                             startActivity(intent);
+                            finish();
                         }
                     });
-                    finish();
                 }
             }
         });
