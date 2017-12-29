@@ -30,7 +30,6 @@ import com.example.tamnguyen.calorizeapp.Progress.ProgressFragment;
 import com.gigamole.navigationtabstrip.NavigationTabStrip;
 
 import org.jetbrains.annotations.NotNull;
-<<<<<<< HEAD
 import org.json.JSONObject;
 
 import java.net.MalformedURLException;
@@ -38,9 +37,6 @@ import java.net.URL;
 
 
 import com.example.tamnguyen.calorizeapp.Progress.ProgressFragment;
-import com.google.firebase.database.DatabaseError;
-=======
->>>>>>> master
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
