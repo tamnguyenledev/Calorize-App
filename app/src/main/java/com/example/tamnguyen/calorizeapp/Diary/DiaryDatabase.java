@@ -135,10 +135,9 @@ public class DiaryDatabase {
 
 
     public void getDiaryByInterval(Calendar calendar1, Calendar calendar2, OnBatchCompleteListener listener){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yy");
-        String date1 = simpleDateFormat.format(calendar1.getTime());
-        String date2 = simpleDateFormat.format(calendar2.getTime());
-        diaryRef.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+        String date1 = formatDate(calendar1);
+        String date2 = formatDate(calendar2);
+        diaryRef.orderByKey().startAt(date1).endAt(date2).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ArrayList<Diary> result = new ArrayList<>();
