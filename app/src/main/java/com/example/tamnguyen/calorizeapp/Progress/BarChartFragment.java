@@ -71,7 +71,7 @@ public class BarChartFragment extends Fragment {
                     public void onFailure(int code) {
 
                     }
-                }
+                });
                 mChart = view.findViewById(R.id.chart1);
         mChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
@@ -154,7 +154,11 @@ public class BarChartFragment extends Fragment {
     private void setData() {
 
         float start = 1f;
-        double range = Collections.max(caloResult);
+        double range;
+        if (caloResult != null)
+            range = Collections.max(caloResult);
+        else
+            range = 50;
         ArrayList<BarEntry> yVals1 = new ArrayList<>();
 
         for (int i = (int) start; i < start + difDate + 1; i++) {
