@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.example.tamnguyen.calorizeapp.ChartHandle.DayAxisValueFormatter;
 import com.example.tamnguyen.calorizeapp.ChartHandle.MyAxisValueFormatter;
 import com.example.tamnguyen.calorizeapp.ChartHandle.XYMarkerView;
+import com.example.tamnguyen.calorizeapp.Diary.Diary;
 import com.example.tamnguyen.calorizeapp.Diary.DiaryDatabase;
 import com.example.tamnguyen.calorizeapp.R;
 import com.github.mikephil.charting.charts.BarChart;
@@ -49,31 +50,29 @@ public class BarChartFragment extends Fragment {
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_barchart, container, false);
     }
-    public interface OnSendingDate {
-        void onSuccess();
-        void onFailure(int code);
-    }
+
     public void setChildDate(Calendar c1, Calendar c2) {
         childFromDate = (Calendar) c1.clone();
         childToDate = (Calendar) c2.clone();
+        difDate = childToDate.compareTo(childFromDate);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        DiaryDatabase.getInstance().getCaloByDate(childFromDate, childToDate, new DiaryDatabase.OnCaloTimeComplete() {
-            @Override
-            public void onSuccess(ArrayList<Double> result) {
-                caloResult = (ArrayList<Double>)result.clone();
-                difDate = childToDate.compareTo(childFromDate);
-            }
+        DiaryDatabase.getInstance().getDiaryByInterval(childFromDate, childToDate, new DiaryDatabase.OnBatchCompleteListener() {
+                    @Override
+                    public void onSuccess(ArrayList<Diary> result) {
+                        caloResult = (ArrayList<Double>)result.clone();
 
-            @Override
-            public void onFailure(int code) {
+                    }
 
-            }
-        });
-        mChart = view.findViewById(R.id.chart1);
+                    @Override
+                    public void onFailure(int code) {
+
+                    }
+                }
+                mChart = view.findViewById(R.id.chart1);
         mChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
