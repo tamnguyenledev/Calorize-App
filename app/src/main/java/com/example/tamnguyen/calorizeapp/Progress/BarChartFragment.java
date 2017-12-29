@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.example.tamnguyen.calorizeapp.ChartHandle.DayAxisValueFormatter;
 import com.example.tamnguyen.calorizeapp.ChartHandle.MyAxisValueFormatter;
 import com.example.tamnguyen.calorizeapp.ChartHandle.XYMarkerView;
+import com.example.tamnguyen.calorizeapp.Diary.DiaryDatabase;
 import com.example.tamnguyen.calorizeapp.R;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Legend;
@@ -30,6 +31,8 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 
 /**
  * Created by nguyenbao on 12/29/17.
@@ -37,17 +40,39 @@ import java.util.ArrayList;
 
 public class BarChartFragment extends Fragment {
     //private OnFragmentInteractionListener mListener;
-
+    private ArrayList<Double> caloResult;
+    private Calendar childFromDate, childToDate;
     protected BarChart mChart;
+    private int difDate;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_barchart, container, false);
     }
+    public interface OnSendingDate {
+        void onSuccess();
+        void onFailure(int code);
+    }
+    public void setChildDate(Calendar c1, Calendar c2) {
+        childFromDate = (Calendar) c1.clone();
+        childToDate = (Calendar) c2.clone();
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        DiaryDatabase.getInstance().getCaloByDate(childFromDate, childToDate, new DiaryDatabase.OnCaloTimeComplete() {
+            @Override
+            public void onSuccess(ArrayList<Double> result) {
+                caloResult = (ArrayList<Double>)result.clone();
+                difDate = childToDate.compareTo(childFromDate);
+            }
+
+            @Override
+            public void onFailure(int code) {
+
+            }
+        });
         mChart = view.findViewById(R.id.chart1);
         mChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
@@ -124,17 +149,17 @@ public class BarChartFragment extends Fragment {
         XYMarkerView mv = new XYMarkerView(getContext(), xAxisFormatter);
         mv.setChartView(mChart); // For bounds control
         mChart.setMarker(mv); // Set the marker to the chart
-        setData(12, 50);
+        setData();
 
     }
-    private void setData(int count, float range) {
+    private void setData() {
 
         float start = 1f;
+        double range = Collections.max(caloResult);
+        ArrayList<BarEntry> yVals1 = new ArrayList<>();
 
-        ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
-
-        for (int i = (int) start; i < start + count + 1; i++) {
-            float mult = (range + 1);
+        for (int i = (int) start; i < start + difDate + 1; i++) {
+            float mult = ((float)range + 1);
             float val = (float) (Math.random() * mult);
 
             if (Math.random() * 100 < 25) {
@@ -172,9 +197,6 @@ public class BarChartFragment extends Fragment {
     }
 
     protected RectF mOnValueSelectedRectF = new RectF();
-
-
-
 
     /*
     @Override

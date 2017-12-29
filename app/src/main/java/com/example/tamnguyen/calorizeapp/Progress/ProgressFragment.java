@@ -33,9 +33,11 @@ public class ProgressFragment extends Fragment implements View.OnClickListener {
     ImageButton toDatePicker;
     TextView tvToDate, tvFromDate;
     Calendar myCalendar = Calendar.getInstance();
-    Calendar fromDate, toDate;
+    Calendar fromDate = null, toDate = null;
     int curButton;
     boolean flagSetFrom =false, flagSetTo = false;
+    private final int COMPARE_FRAG = 1;
+    private final int BAR_FRAG = 2;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -53,17 +55,8 @@ public class ProgressFragment extends Fragment implements View.OnClickListener {
 
         fromDatePicker.setOnClickListener(this);
         toDatePicker.setOnClickListener(this);
-        /**
-         * CHILD FRAGMENT BEGAN HERE
-         */
-        /*
-        Fragment childFragment = new CompareFragment();
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.replace(R.id.child_Fragment, childFragment).commit();
-        */
-        Fragment childFragment = new BarChartFragment();
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.replace(R.id.child_Fragment, childFragment).commit();
+
+
     }
 
     @Override
@@ -74,22 +67,12 @@ public class ProgressFragment extends Fragment implements View.OnClickListener {
                 flagSetFrom = true;
                 curButton = 1;
                 setDateTimeField();
-                if (flagSetFrom && flagSetTo) {
-                    Fragment childFragment = new CompareFragment();
-                    FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                    transaction.replace(R.id.child_Fragment, childFragment).commit();
-                }
                 break;
             case R.id.toDatePicker:
             case R.id.tvToDate:
                 flagSetTo = true;
                 curButton = 2;
                 setDateTimeField();
-                if (flagSetFrom && flagSetTo) {
-                    Fragment childFragment = new CompareFragment();
-                    FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                    transaction.replace(R.id.child_Fragment, childFragment).commit();
-                }
                 break;
         }
     }
@@ -100,12 +83,15 @@ public class ProgressFragment extends Fragment implements View.OnClickListener {
         String myFormat = "dd MMM, yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
         if (curButton == 1) {
-            fromDate = myCalendar;
-            tvFromDate.setText(sdf.format(myCalendar.getTime()));
+            fromDate = (Calendar)myCalendar.clone();
+            validDate();
+            tvFromDate.setText(sdf.format(fromDate.getTime()));
         } else {
-            toDate = myCalendar;
-            tvToDate.setText(sdf.format(myCalendar.getTime()));
+            toDate = (Calendar)myCalendar.clone();
+            validDate();
+            tvToDate.setText(sdf.format(toDate.getTime()));
         }
+        checkState(BAR_FRAG);
     }
     private void setDateTimeField() {
         new DatePickerDialog(getContext(), date,
@@ -126,7 +112,31 @@ public class ProgressFragment extends Fragment implements View.OnClickListener {
 
     };
     /////////////////////////////////////////
+    private void checkState(int idChildFrag) {
+        if (flagSetFrom && flagSetTo) {
 
+            Fragment childFragment;
+            if (idChildFrag == BAR_FRAG) {
+                BarChartFragment childChart = new BarChartFragment();
+                childFragment = childChart;
+                childChart.setChildDate(fromDate, toDate);
+
+            }
+            else
+                childFragment = new CompareFragment();
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            transaction.replace(R.id.child_Fragment, childFragment).commit();
+        }
+    }
+    private void validDate() {
+        if (fromDate != null && toDate != null) {
+            if (fromDate.compareTo(toDate) > 0) {
+                Calendar tmp = fromDate;
+                tmp.add(Calendar.DATE, 1);
+                toDate = tmp;
+            }
+        }
+    }
     /**
      * Handle for 2 child fragments
      */
