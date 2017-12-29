@@ -2,16 +2,10 @@ package com.example.tamnguyen.calorizeapp.Profile;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -23,44 +17,40 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.tamnguyen.calorizeapp.MainActivity;
 import com.example.tamnguyen.calorizeapp.R;
 
 import java.util.Calendar;
 import java.util.Locale;
 
-public class EditProfileActivity extends AppCompatActivity {
-
+public class CreateProfileActivity extends AppCompatActivity {
     private Profile profile;
     private EditText editTextName,editTextWeight,editTextHeight;
     private Spinner spinnerGender,spinnerTypeWeight,spinnerTypeHeight;
     private ImageView imageViewAvatar;
     private TextView textViewTitle,textViewBirthDay;
     private ImageButton btnBack,btnImageAvatar,btnBirthDay;
-    private Button btnSave;
+    private Button btnNext;
     private boolean tempTypeWeight,tempTypeHeight;
     private float tempOldWeight,tempNewWeight,tempOldHeight,tempNewHeight;
     private final int PICK_IMAGE_REQUEST = 1;
-    private final int RESULT_CODE_EDIT = 101;
     private String selectedImageUri = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_profile);
+
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-
         doInitControl();
-        profile = getIntent().getParcelableExtra("profile-edit");
-        if(profile==null)
-            profile = new Profile();
-
+        profile = new Profile();
+        doGetProfile();
         doSetView(profile);
-
         doOnChangeListener();
-
-
     }
 
     public void doOnChangeListener(){
@@ -72,8 +62,7 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
-        btnSave.setText("Save");
-        btnSave.setOnClickListener(new View.OnClickListener() {
+        btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(checkEmptyField()) {
@@ -91,15 +80,16 @@ public class EditProfileActivity extends AppCompatActivity {
                     if (selectedImageUri != null && !selectedImageUri.isEmpty())
                         profile.setUrlAvatar(selectedImageUri);
 
-                    Intent retIntent = new Intent();
-                    retIntent.putExtra("profile-edit-result", profile);
-                    setResult(RESULT_CODE_EDIT, retIntent);
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    intent.putExtra("profile-create-result", profile);
+                    startActivity(intent);
+
+                    // push 1 node child to users
 
                     finish();
                 }
             }
         });
-        textViewTitle.setText(R.string.edit_name_toolbar);
 
         btnImageAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,7 +113,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 month = calendar.get(Calendar.MONTH) + 1;
                 year = calendar.get(Calendar.YEAR);
 
-                @SuppressLint({"NewApi", "LocalSuppress"}) DatePickerDialog datePicker = new DatePickerDialog(EditProfileActivity.this, new DatePickerDialog.OnDateSetListener() {
+                @SuppressLint({"NewApi", "LocalSuppress"}) DatePickerDialog datePicker = new DatePickerDialog(CreateProfileActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int iYear, int iMonth, int iDay) {
                         if(iYear <= year && iMonth <= month && iDay <= day )
@@ -233,6 +223,7 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
     }
+
     public void doSetView(Profile profile){
         ArrayAdapter<CharSequence> adapterGender = ArrayAdapter.createFromResource(this,
                 R.array.Gender, android.R.layout.simple_spinner_item);
@@ -255,15 +246,15 @@ public class EditProfileActivity extends AppCompatActivity {
 
             if(profile.getUrlAvatar()!=null && !profile.getUrlAvatar().isEmpty())
                 Glide.with(this)
-                    .load(profile.getUrlAvatar())
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(imageViewAvatar);
+                        .load(profile.getUrlAvatar())
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(imageViewAvatar);
             else
                 Glide.with(this).load(R.mipmap.user).apply(RequestOptions.circleCropTransform()).into(imageViewAvatar);
 
             editTextName.setText(profile.getFullName());
 
-            if(profile.getGender()!=null && !profile.getGender().isEmpty() &&profile.getGender().equals("Male"))
+            if(profile.getGender()!=null && !profile.getGender().isEmpty() &&profile.getGender().equals("male"))
                 spinnerGender.setSelection(0);
             else
                 spinnerGender.setSelection(1);
@@ -302,6 +293,7 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
+
     public void doInitControl(){
         editTextName   = findViewById(R.id.nameInput);
         editTextWeight = findViewById(R.id.weightInput);
@@ -320,14 +312,8 @@ public class EditProfileActivity extends AppCompatActivity {
 
         imageViewAvatar = findViewById(R.id.profile_image);
 
-        btnSave = findViewById(R.id.btn_save_next);
+        btnNext = findViewById(R.id.btn_save_next);
 
-    }
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            selectedImageUri = data.getData().toString();
-            Glide.with(this).load(selectedImageUri).apply(RequestOptions.circleCropTransform()).into(imageViewAvatar);
-        }
     }
     public boolean checkEmptyField(){
         if(TextUtils.isEmpty(editTextName.getText().toString())){
@@ -343,6 +329,20 @@ public class EditProfileActivity extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+    public void doGetProfile(){
+        Toast.makeText(this, this.getIntent().getStringExtra("id"), Toast.LENGTH_SHORT).show();
+        profile = new Profile(
+                this.getIntent().getStringExtra("name"),
+                this.getIntent().getStringExtra("gender"),
+                this.getIntent().getStringExtra("birthday"),
+                this.getIntent().getStringExtra("picture"),
+                0,
+                0,
+                0,
+                false,
+                false);
+        profile.generateAge();
     }
 
 }

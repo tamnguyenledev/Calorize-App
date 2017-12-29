@@ -41,9 +41,9 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View retView;
-        doGetProfile();
         retView = inflater.inflate(R.layout.fragment_profile,container,false);
         doInitControl(retView);
+        doGetProfile();
         setView();
         return retView;
     }
@@ -63,47 +63,53 @@ public class ProfileFragment extends Fragment {
 
     }
     public void doGetProfile(){
-        profile = new Profile(
-                getActivity().getIntent().getStringExtra("name"),
-                getActivity().getIntent().getStringExtra("gender"),
-                getActivity().getIntent().getStringExtra("birthday"),
-                getActivity().getIntent().getStringExtra("picture"),
-                0,
-                69,
-                175,
-                false,
-                false);
-        profile.generateAge();
+        profile = getActivity().getIntent().getParcelableExtra("profile-create-result");
+        if(profile!=null)
+             profile.generateAge();
+        else{
+            // load từ firebase thông qua id
+        }
     }
     public void setView(){
-        textViewName.setText(profile.getFullName());
-        textViewAge.setText(String.format(Locale.ENGLISH,"%d years old",profile.getiAge()));
-        if(profile.getGender()!=null && !profile.getGender().isEmpty())
-        textViewGender.setText(profile.getGender().substring(0, 1).toUpperCase() + profile.getGender().substring(1));
-        textViewBirthDay.setText(profile.getDateOfBirth());
-        Glide.with(getActivity()).load(profile.getUrlAvatar()).apply(RequestOptions.circleCropTransform()).into(imageViewAvatar);
+        if(profile!=null) {
+            textViewName.setText(profile.getFullName());
+            textViewAge.setText(String.format(Locale.ENGLISH, "%d years old", profile.getiAge()));
+            if (profile.getGender() != null && !profile.getGender().isEmpty())
+                textViewGender.setText(profile.getGender().substring(0, 1).toUpperCase() + profile.getGender().substring(1));
+            textViewBirthDay.setText(profile.getDateOfBirth());
 
-        if(profile.getiWeight()!=0){
-            if (!profile.isbWeightType()) {
-                textViewWeight.setText(String.format(Locale.ENGLISH,"%.2f kg",profile.getiWeight()));
-            }
-            else{
-                textViewWeight.setText(String.format(Locale.ENGLISH,"%.2f pound",profile.getiWeight()));
-            }
+            if (profile.getUrlAvatar() != null && !profile.getUrlAvatar().isEmpty())
+                Glide.with(getActivity())
+                        .load(profile.getUrlAvatar())
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(imageViewAvatar);
+            else
+                Glide.with(getActivity())
+                        .load(R.mipmap.user)
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(imageViewAvatar);
+
+
+            if (profile.getiWeight() != 0) {
+                if (!profile.isbWeightType()) {
+                    textViewWeight.setText(String.format(Locale.ENGLISH, "%.2f kg", profile.getiWeight()));
+                } else {
+                    textViewWeight.setText(String.format(Locale.ENGLISH, "%.2f pound", profile.getiWeight()));
+                }
+            } else
+                textViewWeight.setText("null");
+
+            if (profile.getiHeight() != 0) {
+                if (!profile.isbHeightType()) {
+                    textViewHeight.setText(String.format(Locale.ENGLISH, "%.2f cm", profile.getiHeight()));
+                } else {
+                    textViewHeight.setText(String.format(Locale.ENGLISH, "%.2f foot", profile.getiHeight()));
+                }
+            } else
+                textViewHeight.setText("null");
         }
         else
-            textViewWeight.setText("null");
-
-        if(profile.getiHeight()!=0){
-            if (!profile.isbHeightType()) {
-                textViewHeight.setText(String.format(Locale.ENGLISH,"%.2f cm",profile.getiHeight()));
-            }
-            else{
-                textViewHeight.setText(String.format(Locale.ENGLISH,"%.2f foot",profile.getiHeight()));
-            }
-        }
-        else
-            textViewHeight.setText("null");
+            Glide.with(getActivity()).load(R.mipmap.user).apply(RequestOptions.circleCropTransform()).into(imageViewAvatar);
     }
     public void doInitControl(View view){
         textViewName = view.findViewById(R.id.profile_name);
@@ -123,7 +129,9 @@ public class ProfileFragment extends Fragment {
             if(resultCode==101) // edit
             {
                 profile = data.getParcelableExtra("profile-edit-result");
+                profile.generateAge();
                 setView();
+                // se update lai firebase ở đ
             }
         }
     }

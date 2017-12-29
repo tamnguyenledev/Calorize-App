@@ -51,7 +51,7 @@ public class BarChartActivity extends AppCompatActivity implements SeekBar.OnSee
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.fragment_barchart);
+        setContentView(R.layout.fragment_barchart_test);
 
         tvX = findViewById(R.id.tvXMax);
         tvY = findViewById(R.id.tvYMax);
@@ -304,5 +304,11 @@ public class BarChartActivity extends AppCompatActivity implements SeekBar.OnSee
 
     @Override
     public void onNothingSelected() { }
+
+    @Override
+    protected void onDestroy() {
+        finish();
+        super.onDestroy();
+    }
 }
 

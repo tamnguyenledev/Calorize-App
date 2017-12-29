@@ -21,6 +21,13 @@ public class Profile implements Parcelable {
     * bHeightType ... false: cm | true: foot
     * */
 
+    public Profile() {
+        this.fullName = this.gender = this. dateOfBirth= this.urlAvatar = "";
+        this.iAge = 0;
+        this.iWeight = this.iHeight = (float)0.0;
+        this.bWeightType = this.bHeightType = false;
+    }
+
     public Profile(String fullName, String gender, String dateOfBirth, String urlAvatar, int iAge, float iWeight, float iHeight, boolean bWeightType, boolean bHeightType) {
         this.fullName = fullName;
         this.gender = gender;
@@ -56,6 +63,24 @@ public class Profile implements Parcelable {
         }
     };
 
+    public float generateBmi(){
+        if(!bHeightType && !bWeightType){
+            return (float)(iWeight /(iHeight*iHeight * 0.01));
+        }
+        else if(bHeightType && !bWeightType){
+            float tempConvert = convertFeet2Cm(iHeight);
+            return (float)(iWeight/(tempConvert * tempConvert * 0.01));
+        }
+        else if(!bHeightType && bWeightType){
+            float tempConvert = convertPound2Kilogram(iWeight);
+            return (float)(tempConvert/(iHeight*iHeight*0.01));
+        }
+        else{
+            float tempConvertHeight = convertFeet2Cm(iHeight);
+            float tempConvertWeight = convertPound2Kilogram(iWeight);
+            return(float)(tempConvertWeight/(tempConvertHeight*tempConvertHeight*0.01));
+        }
+    }
     public int generateAge(){
         if(dateOfBirth!=null &&!dateOfBirth.isEmpty()){
             String year = dateOfBirth.substring(dateOfBirth.lastIndexOf("/") + 1);
