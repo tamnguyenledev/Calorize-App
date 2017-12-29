@@ -8,17 +8,16 @@
 
   <LinearLayout
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
+      android:layout_height="110dp"
       android:orientation="horizontal"
-      android:layout_margin="@dimen/large_vertical_margin"
-      android:gravity="center_horizontal"
-      >
+      android:layout_marginTop="32dp"
+      android:layout_weight="1"
+      android:gravity="center_horizontal">
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/rectangle"
-        >
+        android:background="@drawable/rectangle">
 
       <TextView
           android:layout_width="90dp"
@@ -81,9 +80,11 @@
 
   </LinearLayout>
 
-  <LinearLayout
+  <FrameLayout
+      android:id="@+id/child_Fragment"
       android:layout_width="match_parent"
-      android:layout_height="match_parent">
+      android:layout_height="match_parent"
+      android:layout_weight="1">
 
-  </LinearLayout>
+  </FrameLayout>
 </LinearLayout>

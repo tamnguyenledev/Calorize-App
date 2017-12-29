@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +23,16 @@ import java.util.Locale;
 /**
  * A simple {@link Fragment} subclass.
  */
+
+/**
+ * IN THIS MAIN FRAGMENT, THERE WILL BE ANOTHER 2 CHILD FRAGMENTS
+ * NAMED COMPARE FRAGMENT AND BARCHART FRAGMENT
+ */
 public class ProgressFragment extends Fragment implements View.OnClickListener {
     ImageButton fromDatePicker;
     ImageButton toDatePicker;
     TextView tvToDate, tvFromDate;
     Calendar myCalendar = Calendar.getInstance();
-
     int curButton;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -46,6 +51,17 @@ public class ProgressFragment extends Fragment implements View.OnClickListener {
 
         fromDatePicker.setOnClickListener(this);
         toDatePicker.setOnClickListener(this);
+        /**
+         * CHILD FRAGMENT BEGAN HERE
+         */
+        /*
+        Fragment childFragment = new CompareFragment();
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.replace(R.id.child_Fragment, childFragment).commit();
+        */
+        Fragment childFragment = new BarChartFragment();
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.replace(R.id.child_Fragment, childFragment).commit();
     }
 
     @Override
@@ -94,4 +110,9 @@ public class ProgressFragment extends Fragment implements View.OnClickListener {
     };
     /////////////////////////////////////////
 
+    /**
+     * Handle for 2 child fragments
+     */
+
 }
+
