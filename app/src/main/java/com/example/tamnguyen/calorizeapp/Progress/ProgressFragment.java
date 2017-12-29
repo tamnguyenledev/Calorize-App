@@ -33,7 +33,9 @@ public class ProgressFragment extends Fragment implements View.OnClickListener {
     ImageButton toDatePicker;
     TextView tvToDate, tvFromDate;
     Calendar myCalendar = Calendar.getInstance();
+    Calendar fromDate, toDate;
     int curButton;
+    boolean flagSetFrom =false, flagSetTo = false;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -69,13 +71,25 @@ public class ProgressFragment extends Fragment implements View.OnClickListener {
         switch(v.getId()) {
             case R.id.fromDatePicker:
             case R.id.tvFromDate:
+                flagSetFrom = true;
                 curButton = 1;
                 setDateTimeField();
+                if (flagSetFrom && flagSetTo) {
+                    Fragment childFragment = new CompareFragment();
+                    FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                    transaction.replace(R.id.child_Fragment, childFragment).commit();
+                }
                 break;
             case R.id.toDatePicker:
             case R.id.tvToDate:
+                flagSetTo = true;
                 curButton = 2;
                 setDateTimeField();
+                if (flagSetFrom && flagSetTo) {
+                    Fragment childFragment = new CompareFragment();
+                    FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                    transaction.replace(R.id.child_Fragment, childFragment).commit();
+                }
                 break;
         }
     }
@@ -85,10 +99,13 @@ public class ProgressFragment extends Fragment implements View.OnClickListener {
     private void updateLabel() {
         String myFormat = "dd MMM, yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-        if (curButton == 1)
+        if (curButton == 1) {
+            fromDate = myCalendar;
             tvFromDate.setText(sdf.format(myCalendar.getTime()));
-        else
+        } else {
+            toDate = myCalendar;
             tvToDate.setText(sdf.format(myCalendar.getTime()));
+        }
     }
     private void setDateTimeField() {
         new DatePickerDialog(getContext(), date,

@@ -3,7 +3,6 @@ package com.example.tamnguyen.calorizeapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -15,14 +14,10 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import com.example.tamnguyen.calorizeapp.Diary.Diary;
-import com.example.tamnguyen.calorizeapp.Diary.DiaryDatabase;
 import com.example.tamnguyen.calorizeapp.Diary.DiaryFoodList;
 import com.example.tamnguyen.calorizeapp.Diary.DiaryFragment;
 import com.example.tamnguyen.calorizeapp.Diary.OnItemListener;
 import com.example.tamnguyen.calorizeapp.FoodList.Food;
-import com.example.tamnguyen.calorizeapp.FoodList.FoodDatabase;
-import com.example.tamnguyen.calorizeapp.FoodList.FoodList;
 import com.example.tamnguyen.calorizeapp.FoodList.FoodListFragment;
 import com.example.tamnguyen.calorizeapp.FoodList.OnItemClickListener;
 import com.example.tamnguyen.calorizeapp.Profile.ProfileFragment;
@@ -122,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
             public Fragment getItem(int position) {
                 switch (position) {
                     case 2:
-                        return new Fragment();
+                        return new ProgressFragment();
                     case 3:
                         return new ProfileFragment();
                     case 1:
