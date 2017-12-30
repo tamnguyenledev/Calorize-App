@@ -12,7 +12,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
+import com.example.tamnguyen.calorizeapp.Diary.Diary;
+import com.example.tamnguyen.calorizeapp.Diary.DiaryDatabase;
 import com.example.tamnguyen.calorizeapp.Diary.DiaryFoodList;
 import com.example.tamnguyen.calorizeapp.Diary.DiaryFragment;
 import com.example.tamnguyen.calorizeapp.Diary.OnItemListener;
@@ -22,8 +25,12 @@ import com.example.tamnguyen.calorizeapp.FoodList.OnItemClickListener;
 import com.example.tamnguyen.calorizeapp.Profile.ProfileFragment;
 import com.example.tamnguyen.calorizeapp.Progress.ProgressFragment;
 import com.gigamole.navigationtabstrip.NavigationTabStrip;
+import com.google.firebase.FirebaseApp;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -144,7 +151,22 @@ public class MainActivity extends AppCompatActivity {
 
                             @Override
                             public void onLongClick(DiaryFoodList diaryFoodList, int position) {
+                                //TODO: Delete Food Item
+                                DiaryDatabase.getInstance().removeFoodFromDiary(
+                                        formatDate(DiaryDatabase.getInstance().getCalendar()),
+                                        diaryFoodList.getItems().get(position),
+                                        new DiaryDatabase.OnCompleteListener() {
+                                            @Override
+                                            public void onSuccess(Diary diary) {
+                                                Toast.makeText(MainActivity.this,"Your food is deleted",Toast.LENGTH_SHORT).show();
+                                            }
 
+                                            @Override
+                                            public void onFailure(int code) {
+                                                Toast.makeText(MainActivity.this,"Something wrong! Try again",Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                );
                             }
 
                             @Override
@@ -197,5 +219,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    private String formatDate(Calendar calendar){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        return simpleDateFormat.format(calendar.getTime());
     }
 }

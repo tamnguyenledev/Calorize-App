@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,6 +90,7 @@ public class DiaryFragment extends Fragment {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
             Diary diary = DiaryDatabase.createDiaryFromSnapshot(dataSnapshot);
+            currentDiary = diary;
             updateUI(diary);
         }
 
@@ -128,14 +130,32 @@ public class DiaryFragment extends Fragment {
 
     private void setRecyclerViewAndAdapter(Diary diary) {
 
-        breakfastRv.setAdapter(new DiaryMealAdapter(diary.breakfastList, listener));
-        lunchRv.setAdapter(new DiaryMealAdapter(diary.lunchList, listener));
-        dinnerRv.setAdapter(new DiaryMealAdapter(diary.dinnerList, listener));
+        DiaryMealAdapter bfAdapter = new DiaryMealAdapter(getActivity(),diary.breakfastList, listener);
+        breakfastRv.setAdapter(bfAdapter);
+        DiaryMealAdapter.DiaryMealAdaptertItemTouchHelperCallback itemTouchHelperCallback = bfAdapter.new DiaryMealAdaptertItemTouchHelperCallback(
+                0, ItemTouchHelper.RIGHT
+        );
+        //new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(breakfastRv);
+
+        DiaryMealAdapter lnAdapter = new DiaryMealAdapter(getActivity(),diary.lunchList, listener);
+        lunchRv.setAdapter(lnAdapter);
+        DiaryMealAdapter.DiaryMealAdaptertItemTouchHelperCallback itemTouchHelperCallback2 = lnAdapter.new DiaryMealAdaptertItemTouchHelperCallback(
+                0, ItemTouchHelper.RIGHT
+        );
+        //new ItemTouchHelper(itemTouchHelperCallback2).attachToRecyclerView(lunchRv);
+
+        DiaryMealAdapter dnAdapter = new DiaryMealAdapter(getActivity(),diary.dinnerList, listener);
+        dinnerRv.setAdapter(dnAdapter);
+        DiaryMealAdapter.DiaryMealAdaptertItemTouchHelperCallback itemTouchHelperCallback3 = dnAdapter.new DiaryMealAdaptertItemTouchHelperCallback(
+                0, ItemTouchHelper.RIGHT
+        );
+        //new ItemTouchHelper(itemTouchHelperCallback3).attachToRecyclerView(dinnerRv);
+
     }
 
     private void setupProgressBar(Diary diary) {
         //Progress Bar for Fat
-        if (diary.neededFat != 0 && diary.neededFat != 0) {
+        if (diary.fat > 0 && diary.neededFat > 0) {
             if (diary.fat >= diary.neededFat)
                 progressFat.setProgress(1);
             else
@@ -146,7 +166,7 @@ public class DiaryFragment extends Fragment {
             progressFat.startAnimation();
         }
         //Progress Bar for Carb
-        if (diary.neededCarbs != 0 && diary.neededCarbs != 0) {
+        if (diary.carbs > 0 && diary.neededCarbs > 0) {
             if (diary.carbs >= diary.neededCarbs)
                 progressFat.setProgress(1);
             else
@@ -157,7 +177,7 @@ public class DiaryFragment extends Fragment {
             progressCarb.startAnimation();
         }
         //Progress Bar for Protein
-        if (diary.neededProtein != 0 && diary.neededProtein != 0) {
+        if (diary.protein > 0 && diary.neededProtein > 0) {
             if (diary.protein >= diary.neededProtein)
                 progressFat.setProgress(1);
             else
@@ -168,7 +188,7 @@ public class DiaryFragment extends Fragment {
             progressProtein.startAnimation();
         }
         //Progress Bar for Calories
-        if (diary.neededCalories != 0 && diary.neededCalories != 0) {
+        if (diary.calories > 0 && diary.neededCalories > 0) {
             if (diary.calories >= diary.neededCalories)
                 progressFat.setProgress(1);
             else

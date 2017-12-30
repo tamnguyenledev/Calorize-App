@@ -10,16 +10,32 @@
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground"
     >
-
     <RelativeLayout
+        android:id="@+id/background"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete"
+            android:textColor="@android:color/white"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/foreground"
+        android:layout_width="match_parent"
+        android:background="@color/colorWhite"
         android:layout_height="@dimen/food_item_card_view_size">
 
         <!-- add food image here -->
         <ImageView
             android:id="@+id/smallFoodImage"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentStart="true"
             app:srcCompat="@drawable/plus_circle_outline"
             android:layout_centerVertical="true"

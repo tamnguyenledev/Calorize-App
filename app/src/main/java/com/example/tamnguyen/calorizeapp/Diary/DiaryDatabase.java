@@ -133,7 +133,6 @@ public class DiaryDatabase {
         new CheckingTask(this::getCurrentDiaryImp, listener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-
     public void getDiaryByInterval(Calendar calendar1, Calendar calendar2, OnBatchCompleteListener listener){
         String date1 = formatDate(calendar1);
         String date2 = formatDate(calendar2);
@@ -273,11 +272,11 @@ public class DiaryDatabase {
                 //Add Food to Database
                 Map<String,Object> data = diaryFood.toDatabase();
                 String key = DiaryDatabase.this.diaryRef.child(date).child(FOOD_LIST).push().getKey();
-                DiaryDatabase.this.diaryRef.child(date).child(FOOD_LIST).child(key).setValue(data);
                 mutableData.child("carbs").setValue(diary.carbs);
                 mutableData.child("fat").setValue(diary.fat);
                 mutableData.child("protein").setValue(diary.protein);
                 mutableData.child("calories").setValue(diary.calories);
+                mutableData.child("food_list").child(key).setValue(data);
                 return Transaction.success(mutableData);
             }
 
@@ -297,6 +296,32 @@ public class DiaryDatabase {
         //Add new listener to dbRef
         diaryRef.child(formatDate(mCalendar))
                 .addValueEventListener(this.valueEventListener);
+    }
+    public void removeFoodFromDiary(String date, DiaryFood diaryFood,OnCompleteListener listener){
+        this.diaryRef.child(date).runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                //Update calories,carbs,... of Diary
+                Diary diary = mutableData.getValue(Diary.class);
+                diary.carbs -= diaryFood.getFood().getCarb()*diaryFood.num_of_units;
+                diary.protein-= diaryFood.getFood().getProtein()*diaryFood.num_of_units;
+                diary.fat -= diaryFood.getFood().getFat()*diaryFood.num_of_units;
+                diary.calories-=diaryFood.getFood().getCalorie()*diaryFood.num_of_units;
+                //Add Food to Database
+                String key = diaryFood.getID();
+                mutableData.child("carbs").setValue(diary.carbs);
+                mutableData.child("fat").setValue(diary.fat);
+                mutableData.child("protein").setValue(diary.protein);
+                mutableData.child("calories").setValue(diary.calories);
+                mutableData.child("food_list").child(key).setValue(null);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+                listener.onSuccess(createDiaryFromSnapshot(dataSnapshot));
+            }
+        });
     }
     /**
      * Key to access Corresponding Fields of Diary on database

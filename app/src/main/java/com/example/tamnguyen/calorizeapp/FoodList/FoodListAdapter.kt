@@ -9,6 +9,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.example.tamnguyen.calorizeapp.R
 import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder
+import android.support.v7.widget.helper.ItemTouchHelper.Callback.getDefaultUIUtil
+import android.R.attr.foreground
+import android.graphics.Canvas
+import android.support.v7.widget.helper.ItemTouchHelper
+import com.bumptech.glide.Glide
+
 
 /**
  * Created by hoangdung on 12/17/17.
@@ -48,7 +54,9 @@ public class FoodListAdapter(val mContext: Context, val mFoodList: FoodList) : R
             foodName.text = food.foodName
             foodCalo.text = food.calorie.toString()
             foodUnit.text = Food.formatMeasurement(food,1.toDouble());
-
+            Glide.with(mContext).load(food.photoUrl).into(foodAdd)
         }
     }
+
+
 }
