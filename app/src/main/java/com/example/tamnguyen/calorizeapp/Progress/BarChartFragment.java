@@ -62,17 +62,17 @@ public class BarChartFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         DiaryDatabase.getInstance().getDiaryByInterval(childFromDate, childToDate, new DiaryDatabase.OnBatchCompleteListener() {
-                    @Override
-                    public void onSuccess(ArrayList<Diary> result) {
-                        caloResult = (ArrayList<Double>)result.clone();
+            @Override
+            public void onSuccess(ArrayList<Diary> result) {
+                caloResult = (ArrayList<Double>)result.clone();
 
-                    }
+            }
 
-                    @Override
-                    public void onFailure(int code) {
-
-                    }
-                });
+            @Override
+            public void onFailure(int code) {
+                Log.e("Error", "Could not find Database, error code: " + code);
+            }
+        });
 
         mChart = view.findViewById(R.id.chart1);
         mChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
@@ -158,18 +158,23 @@ public class BarChartFragment extends Fragment {
         double range;
         if (caloResult != null)
             range = Collections.max(caloResult);
-        else
+        else {
+            caloResult = new ArrayList<>();
+            for (int i = 0; i < difDate+1; ++i) {
+                caloResult.add((double) 0);
+            }
             range = 50;
+        }
         ArrayList<BarEntry> yVals1 = new ArrayList<>();
 
         for (int i = (int) start; i < start + difDate + 1; i++) {
             float mult = ((float)range + 1);
-            float val = (float) (Math.random() * mult);
+            double val = (float) (Math.random() * mult);
             //double val =  caloResult.get(i-(int)start);
             if (Math.random() * 100 < 25) {
-                yVals1.add(new BarEntry(i, val, getResources().getDrawable(R.drawable.star)));
+                yVals1.add(new BarEntry(i, (float) val, getResources().getDrawable(R.drawable.star)));
             } else {
-                yVals1.add(new BarEntry(i, val));
+                yVals1.add(new BarEntry(i, (float) val));
             }
         }
 
@@ -182,13 +187,13 @@ public class BarChartFragment extends Fragment {
             mChart.getData().notifyDataChanged();
             mChart.notifyDataSetChanged();
         } else {
-            set1 = new BarDataSet(yVals1, "The year 2017");
+            set1 = new BarDataSet(yVals1, "Progress in 2017");
 
             set1.setDrawIcons(false);
 
             set1.setColors(ColorTemplate.MATERIAL_COLORS);
 
-            ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
+            ArrayList<IBarDataSet> dataSets = new ArrayList<>();
             dataSets.add(set1);
 
             BarData data = new BarData(dataSets);

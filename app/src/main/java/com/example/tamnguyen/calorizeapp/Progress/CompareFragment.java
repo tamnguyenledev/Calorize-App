@@ -20,28 +20,4 @@ public class CompareFragment extends android.support.v4.app.Fragment {
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_compare, container, false);
     }
-    /*
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void messageFromChildFragment(Uri uri);
-    }
-    */
 }
