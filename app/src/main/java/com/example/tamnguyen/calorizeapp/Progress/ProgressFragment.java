@@ -86,6 +86,8 @@ public class ProgressFragment extends Fragment implements View.OnClickListener {
             fromDate = (Calendar)myCalendar.clone();
             validDate();
             tvFromDate.setText(sdf.format(fromDate.getTime()));
+            if (toDate != null)
+                tvToDate.setText(sdf.format(toDate.getTime()));
         } else {
             toDate = (Calendar)myCalendar.clone();
             validDate();
